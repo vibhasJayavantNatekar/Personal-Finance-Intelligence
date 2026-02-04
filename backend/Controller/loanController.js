@@ -38,7 +38,7 @@ const getLoanbyId = async (req , res)=>{
     const {id} = req.params
 
     try {
-        const loan = await Loan.findById({id})
+        const loan = await Loan.findById(id)
         res.status(200).json({loan})
     } catch (error) {
         res.status(500).json(error.message)
@@ -50,25 +50,32 @@ const getLoanbyId = async (req , res)=>{
 const updateLoan = async (req , res)=>{
 
    const{id} = req.params;
-   const {userID , loanType , principleAmount  ,  interestRate ,  tenure ,  emi ,   startDate , loanStatus} = req.body;
+   const {loanType , principleAmount  ,  interestRate ,  tenure ,  emi ,   startDate , loanStatus} = req.body;
 
    try {
-    const updatedLoan = await Loan.findByIdAndUpdate({id},{userID,loanType,principleAmount,interestRate,tenure,emi,startDate,loanStatus})
-    res.statua(200).json({updateLoan})
+    const updatedLoan = await Loan.findByIdAndUpdate(id,{loanType,principleAmount,interestRate,tenure,emi,startDate,loanStatus})
+    res.status(200).json({updatedLoan})
    } catch (error) {
 
-    res.statua(500).json(error)
+    res.status(500).json(error.message)
     
    }
-
 
 }
 
 //delete loan
 
 const deleteLoan = async (req , res)=>{
-    res.statua(200).json("Delete")
+    const {id} = req.params
+
+    try {
+        const delLoan = await Loan.getLoanbyIdAndDelete(id)
+        res.status(200).json({delLoan})
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
 }
+
 
 module.exports = {create , getLoans , getLoanbyId , updateLoan , deleteLoan }
 
