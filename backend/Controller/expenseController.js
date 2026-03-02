@@ -10,11 +10,11 @@ const createExpense = async (req, res) => {
     const { userID, amt, category, date } = req.body
 
     try {
-        const expense = await Expenses.create({ userID, amt, category, date })
+        const expense = await Expenses.create({ userID , amt, category, date })
         res.status(200).json(expense)
     } catch (error) {
 
-        res.status(500).json(error)
+        res.status(500).json(error.message)
     }
 }
 
@@ -31,7 +31,7 @@ const getExpenses = async (req, res) => {
     }
 }
 
-//Get Expenses by ID
+//Get Expenses by ID 
 
 const getExpensesByID = async (req, res) => {
     const { _id } = req.params
@@ -42,6 +42,19 @@ const getExpensesByID = async (req, res) => {
 
     } catch (error) {
 
+        res.status(500).json(error)
+    }
+}
+
+// Get Expenses by userID
+
+const getExpensesByUserID =  async (req , res)=>{
+    const{userID} = req.params
+
+    try {
+        const expenses = await Expenses.find({userID})
+        res.status(200).json(expenses)
+    } catch (error) {
         res.status(500).json(error)
     }
 }
@@ -120,6 +133,6 @@ const spendingByCategory = async (req, res) => {
 }
 
 
-module.exports = { createExpense, getExpenses, updateExpense, deleteExpense, getExpensesByID, getTotalExpenses, spendingByCategory, monthTomonthSpending }
+module.exports = { createExpense, getExpenses, updateExpense, deleteExpense, getExpensesByID, getExpensesByUserID , getTotalExpenses, spendingByCategory, monthTomonthSpending }
 
 

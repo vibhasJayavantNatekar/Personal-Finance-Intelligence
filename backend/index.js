@@ -5,18 +5,14 @@ const expenseRoutes = require('./Routes/expenseRoute')
 const investmentRoutes = require("./Routes/investmentRoute")
 const loanRoutes = require('./Routes/loanRoutes')
 const healthRoutes = require('./Routes/healthRoute')
-const finnhub = require('finnhub')
-
 
 const app = express()
-
 
 app.use(express.json())
 
 //DB Connection
 
 connect()
-
 
 //Routes
 app.use('/user/api/v1/',userRoutes)

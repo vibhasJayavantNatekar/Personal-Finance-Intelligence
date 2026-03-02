@@ -1,5 +1,5 @@
 const express = require('express')
-const {create , getLoans , getLoanbyId ,updateLoan , deleteLoan} = require('../Controller/loanController')
+const {create , getLoans , getLoanbyId , getLoansByuserID ,updateLoan , deleteLoan  , getloanSummary } = require('../Controller/loanController')
 
 const router = express.Router()
 
@@ -10,6 +10,14 @@ router.post('/',create)
 router.get('/',getLoans)
 
 router.get('/:id',getLoanbyId)
+
+router.get('/loans/:userID' , getLoansByuserID)
+
+router.get('/loansummary/:userID' , getloanSummary)
+
+// router.get('/totalemi/:userID', getTotalEmi)
+
+// router.get('/incomeemiratio/:userID', getIncEmiRatio )
 
 router.put('/:id',updateLoan)
 

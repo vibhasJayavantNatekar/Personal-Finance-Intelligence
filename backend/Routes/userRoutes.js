@@ -10,8 +10,8 @@ router.delete('/:id',deleteUser)
 
 
 //user Profile
-router.post('/:id/createProfile',createProfile)
-router.get('/:id/profile',getProfile)
+router.post('/createProfile/:id',createProfile)
+router.get('/profile/:id',getProfile)
 
 
 module.exports = router

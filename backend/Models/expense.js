@@ -11,19 +11,19 @@ const expenseSchema = mongoose.Schema(
 
         },
         amt:{
-            type:String,
+            type:Number,
             required:true
 
         },
         category:{
             type:String,
-            enum:["food","travel","bills"],
+            enum:["food","travel","bills" , "rent","groceries","utilities","internet","medical","education","transport","fuel",  "insurance","shopping","entertainment","dining_out","travel","subscriptions","tax","other"],
             default:"bills"
 
         },
         date:{
             type:Date,
-            default:currentDate.toLocaleString()
+            default: Date.now
 
         }
     }
@@ -31,3 +31,6 @@ const expenseSchema = mongoose.Schema(
 
 
 module.exports = mongoose.model('expense' , expenseSchema)
+
+
+

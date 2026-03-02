@@ -73,3 +73,6 @@ module.exports = mongoose.model('loan', loanSchema)
 // startDate
 
 // loanStatus (ACTIVE / CLOSED)
+
+
+

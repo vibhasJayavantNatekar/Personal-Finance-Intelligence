@@ -8,39 +8,43 @@ const userSchema = mongoose.Schema(
     {
         name:{
             type:String,
-            required:true
-
+            required:[true , 'Please enter an Name']
         },
         email:{
             type:String,
-            required:true,
-            unique:true
+            required:[true, 'Please enter an email'],
+            unique:[true , 'email is already use ' ]
         },
         password : {
             type:String ,
             required:true ,
+            minlength:[3,"Minimum 3 characters required."]
 
         }
 
     }
 )
 
+userSchema.pre("save" , async function (next) {
+    
+})
+
 userSchema.statics.createUser = async function (name , email , password) {
 
-    //Validate
-    if(!name || !email){
-        throw Error ("All Fields are required")
-    }
+    // //Validate
+    // if(!name || !email){
+    //     throw Error ("All Fields are required")
+    // }
 
-    if(!validator.isEmail(email)){
-        throw Error('Email is not valid')
-    }
+    // if(!validator.isEmail(email)){
+    //     throw Error('Email is not valid')
+    // }
     
-    const exists = await this.findOne({email})
+    // const exists = await this.findOne({email})
 
-    if(exists){
-        throw Error("Email is already use !")
-    }
+    // if(exists){
+    //     throw Error("Email is already use !")
+    // }
 
     //Hash the password
     const salt = await bcrypt.genSalt(10);

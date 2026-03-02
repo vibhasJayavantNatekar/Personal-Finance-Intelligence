@@ -5,10 +5,10 @@ const UserProfile = require('../Models/userprofileModel')
 //Create new User
 
 const createUser = async (req, res) => {
-    const { name, email , password } = req.body
+    const { name, email, password } = req.body
     try {
-        const user = await User.createUser(name ,email , password)
-        res.status(200).json({ message: "Create User" , user :user })
+        const user = await User.createUser(name, email, password)
+        res.status(200).json({ message: "Create User", user: user })
 
     } catch (error) {
 
@@ -18,18 +18,27 @@ const createUser = async (req, res) => {
 
 //Create user Profile
 
-const createProfile = async (req, res)=>{
-    const { monthly_income,risk_preference,last_updated} = req.body
-    const {id} = req.params
+const createProfile = async (req, res) => {
+    const { monthly_income, risk_preference, employment_type } = req.body
+    const { id } = req.params
 
     try {
-        const profile = await  UserProfile.create({userID : id,monthly_income,risk_preference,last_updated})
-        
-        res.status(200).json({profile})
+
+        const existingUser = await User.findById(id)
+
+        if (!existingUser) {
+            return res.status(404).json({ message: "User not found with this id", id })
+        }
+
+        // const existProfile = await UserProfile.find({ user })
+
+        const profile = await UserProfile.create({ userID: id, monthly_income, risk_preference, employment_type })
+
+        res.status(200).json({ profile })
     } catch (error) {
 
-        res.status(500).json(error)
-        
+        res.status(500).json(error.message)
+
     }
 }
 
@@ -38,14 +47,14 @@ const createProfile = async (req, res)=>{
 const getUser = async (req, res) => {
 
     try {
-        
+
         const users = await User.find()
-        res.status(200).json({users})
+        res.status(200).json({ users })
 
     } catch (error) {
 
         res.status(500).json(error)
-        
+
     }
 
 }
@@ -54,48 +63,57 @@ const getUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
 
-    const {_id} = req.params
+    const { id } = req.params
 
     try {
-        const user = await User.find(_id)
-        res.status(200).json({user:user})
+
+
+        const user = await User.findById(id)
+        res.status(200).json({ user: user })
     } catch (error) {
 
         res.status(500).json(error.message)
-        
+
     }
 
 }
 
 //Get User Profile
 
-const getProfile = async (req, res) =>{
+const getProfile = async (req, res) => {
 
-    const {userID} = req.params
+    const { userID } = req.params
 
     try {
-        const profile = await UserProfile.find({userID})
-        res.status(200).json({profile})
+        const profile = await UserProfile.find({ userID })
+        res.status(200).json({ profile })
     } catch (error) {
-        
+
         res.status(500).json(error)
     }
-   
+
 }
 
 //Update existing user
 
 const updateUser = async (req, res) => {
 
-    const {id} = req.params
-    const {name , email , password} =  req.body
+    const { id } = req.params
+    const { name, email, password } = req.body
 
     try {
-        const user  = await User.findByIdAndUpdate(id  , {name , email , password})
-        res.status(200).json({user:user})
+
+        const existingUser = await User.findById(id)
+
+        if (!existingUser) {
+            return res.status(404).json({ message: "User not found with this id", id })
+        }
+
+        const user = await User.findByIdAndUpdate(id, { name, email, password })
+        res.status(200).json({ user: user })
     } catch (error) {
-        
-        res.status(500).json(error)
+
+        res.status(500).json(error.message)
     }
 }
 
@@ -103,23 +121,30 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
     try {
-        await UserProfile.findByIdAndDelete(id)
+
+        const existingUser = await User.findById(id)
+
+        if (!existingUser) {
+            return res.status(404).json({ message: "User not found with this id", id })
+        }
+
+        await UserProfile.findByIdAndDelete({ userID: id })
         await User.findByIdAndDelete(id)
-        
+
         res.status(200).json("Delete successfully.")
     } catch (error) {
 
         res.status(500).json(error.message)
-        
+
     }
 
 }
 
 
 
-module.exports = { createUser, getUser, getUserById, updateUser, deleteUser , createProfile , getProfile }
+module.exports = { createUser, getUser, getUserById, updateUser, deleteUser, createProfile, getProfile }
 
 
