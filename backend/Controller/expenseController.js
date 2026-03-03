@@ -49,11 +49,12 @@ const getExpensesByID = async (req, res) => {
 // Get Expenses by userID
 
 const getExpensesByUserID =  async (req , res)=>{
-    const{userID} = req.params
+    // const{userID} = req.params
+    const userID =  req.user.id;
 
     try {
         const expenses = await Expenses.find({userID})
-        res.status(200).json(expenses)
+        res.status(200).json({expenses})
     } catch (error) {
         res.status(500).json(error)
     }

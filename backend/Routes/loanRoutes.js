@@ -1,27 +1,28 @@
 const express = require('express')
+const {requireAuth} = require('../Middleware/authMiddleware')
 const {create , getLoans , getLoanbyId , getLoansByuserID ,updateLoan , deleteLoan  , getloanSummary } = require('../Controller/loanController')
 
 const router = express.Router()
 
 // Base url - http://localhost:5000/loan/api/v1
 
-router.post('/',create)
+router.post('/',requireAuth, create)
 
-router.get('/',getLoans)
+router.get('/',requireAuth, getLoans)
 
-router.get('/:id',getLoanbyId)
+router.get('/:id',requireAuth, getLoanbyId)
 
-router.get('/loans/:userID' , getLoansByuserID)
+router.get('/loans' ,requireAuth, getLoansByuserID)
 
-router.get('/loansummary/:userID' , getloanSummary)
+router.get('/loansummary' ,requireAuth, getloanSummary)
 
 // router.get('/totalemi/:userID', getTotalEmi)
 
 // router.get('/incomeemiratio/:userID', getIncEmiRatio )
 
-router.put('/:id',updateLoan)
+router.put('/:id',requireAuth, updateLoan)
 
-router.delete('/:id',deleteLoan)
+router.delete('/:id',requireAuth, deleteLoan)
 
 
 

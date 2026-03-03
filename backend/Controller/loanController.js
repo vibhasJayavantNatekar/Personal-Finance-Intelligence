@@ -7,9 +7,10 @@ const {getLoanFullSummary} = require('../Services/loan.serice')
 //create loan
 
 const create = async (req ,res)=>{
-    const {userID , loanType , principleAmount  ,  interestRate ,  tenure ,  emi ,   startDate , loanStatus} = req.body
-        
 
+    const userID = req.user.id
+    const { loanType , principleAmount  ,  interestRate ,  tenure ,  emi ,   startDate , loanStatus} = req.body
+        
     try {
             
         const userExist = await   User.findById(userID)
@@ -57,7 +58,8 @@ const getLoanbyId = async (req , res)=>{
 //get Loan by user ID
 
 const getLoansByuserID = async (req , res)=>{
-    const {userID} = req.params
+    // const {userID} = req.params
+    const userID = req.user.id
 
     try {
         const loans = await Loan.find({userID})
@@ -99,7 +101,8 @@ const deleteLoan = async (req , res)=>{
 }
 
 const getloanSummary = async (req,res)=>{
-      const {userID} = req.params
+    //   const {userID} = req.params
+      const userID = req.user.id
 
       try {
         const summary = await getLoanFullSummary(userID)

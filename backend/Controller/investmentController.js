@@ -6,8 +6,9 @@ const investment = require('../Models/investment')
 //Create Investment
 
 const createInvestment = async (req, res) => {
-
-    const { userID, assetType, assetName, assetSymbol, investedAmt, quantity, purchaseDate, investmentStatus, } = req.body
+     
+    const userID  = req.user.id
+    const { assetType, assetName, assetSymbol, investedAmt, quantity, purchaseDate, investmentStatus, } = req.body
 
     try {
         const investment = await Investment.create({ userID, assetType, assetName, assetSymbol, investedAmt, quantity, purchaseDate , investmentStatus })
@@ -80,7 +81,10 @@ const deleteInvestment = async (req, res) => {
 //Closed Investment 
 
 const Closed = async(req,res) =>{
-    const {userID} = req.params
+    
+    // const {userID} = req.params
+
+    const userID = req.user.id
     const {sellDate , sellAmount} = req.body
 
     try {
