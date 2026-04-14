@@ -16,84 +16,85 @@ const getTotalExpenseByUser = async (userID) => {
     {
       $group: {
         _id: "$userID",
-        totalExpenses: { $sum: { $toDouble: "$amt" } }
+        totalExpenses: { $sum: "$amt" }
       }
     }
   ])
 
-  console.log(expenses.totalExpenses);
-  
+
 
 
 
   return expenses.length ? expenses[0].totalExpenses : 0
-  
+
 }
 
 
 //Spend by particular in each month
 
 const monthTomonthTrend = async (userID) => {
-const trend = await Expenses.aggregate([
-  {
-    $match: {
-      userID: new mongoose.Types.ObjectId(userID)
+  const trend = await Expenses.aggregate([
+    {
+      $match: {
+        userID: new mongoose.Types.ObjectId(userID)
+      }
+    },
+    {
+      $group: {
+        _id: {
+          month: {
+            $dateToString: { format: "%Y-%m", date: "$date" }
+          }
+        },
+        totalAmt: { $sum: { $toDouble: "$amt" } }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        month: "$_id.month",
+        totalAmt: 1
+      }
+    },
+    {
+      $sort: { month: 1 }
     }
-  },
-  {
-    $group: {
-      _id: {
-        month: {
-          $dateToString: { format: "%Y-%m", date: "$date" }
-        }
-      },
-      totalAmt: { $sum: { $toDouble: "$amt" } }
-    }
-  },
-  {
-    $project: {
-      _id: 0,
-      month: "$_id.month",
-      totalAmt: 1
-    }
-  },
-  {
-    $sort: { month: 1 }
-  }
-])
+  ])
 
 
-return trend
+  return trend
 }
 
 //spend by category by particular user
 
 const spendByCategory = async (userID) => {
 
-  const expenses =
-    await Expenses.aggregate([
-      {
-        $group: {
-          _id: {
-            userID:  new mongoose.Types.ObjectId(userID),
-            category: '$category'
-          },
-          totalAmt: { $sum: { $toDouble: "$amt" } }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          
-          category: "$_id.category",
-          totalAmt: 1
-        }
+  const expenses = await Expenses.aggregate([
+    {
+      $match: {
+        userID: new mongoose.Types.ObjectId(userID)
       }
-    ])
+    },
+    {
+      $group: {
+        _id: {
+          category: "$category"
+        },
+        totalAmt: { $sum: "$amt" } // no need for $toDouble
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        category: "$_id.category",
+        totalAmt: 1
+      }
+    }
+  ])
 
+  
+  console.log(expenses.length);
 
-    console.log(expenses.length);
-    
   return expenses
 
 }

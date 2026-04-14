@@ -9,12 +9,14 @@ const router = express.Router()
 router.post('/',requireAuth, create)
 
 router.get('/',requireAuth, getLoans)
+router.get('/loansummary' ,requireAuth, getloanSummary)
+router.get('/loans' ,requireAuth, getLoansByuserID)
 
 router.get('/:id',requireAuth, getLoanbyId)
 
-router.get('/loans' ,requireAuth, getLoansByuserID)
 
-router.get('/loansummary' ,requireAuth, getloanSummary)
+
+
 
 // router.get('/totalemi/:userID', getTotalEmi)
 

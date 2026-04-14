@@ -7,7 +7,8 @@ const { getTotalExpenseByUser, spendByCategory, monthTomonthTrend } = require('.
 
 const createExpense = async (req, res) => {
 
-    const { userID, amt, category, date } = req.body
+    const userID = req.user.id
+    const {  amt, category, date } = req.body
 
     try {
         const expense = await Expenses.create({ userID , amt, category, date })
@@ -22,6 +23,9 @@ const createExpense = async (req, res) => {
 
 const getExpenses = async (req, res) => {
 
+   
+    
+
     try {
         const expenses = await Expenses.find().populate('userID')
         res.status(200).json({ expenses })
@@ -34,7 +38,7 @@ const getExpenses = async (req, res) => {
 //Get Expenses by ID 
 
 const getExpensesByID = async (req, res) => {
-    const { _id } = req.params
+    const { _id } = req.user.id
 
     try {
         const user = await Expenses.find({ _id }).populate('userID')
@@ -94,7 +98,7 @@ const deleteExpense = async (req, res) => {
 //getTotalExpenses
 
 const getTotalExpenses = async (req, res) => {
-    const { userID } = req.params
+    const  userID  = req.user.id
   
     try {
         const totalExpenses = await getTotalExpenseByUser(userID)
@@ -108,7 +112,7 @@ const getTotalExpenses = async (req, res) => {
 //Monthly Spending
 
 const monthTomonthSpending = async (req, res) => {
-    const { userID } = req.params
+    const  userID  = req.user.id
 
     try {
         const monthlySpending = await monthTomonthTrend(userID)
@@ -123,7 +127,7 @@ const monthTomonthSpending = async (req, res) => {
 //getSpendByCategory 
 
 const spendingByCategory = async (req, res) => {
-    const { userID } = req.params
+    const  userID  = req.user.id
 
     try {
         const spendByCat = await spendByCategory(userID)

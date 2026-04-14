@@ -20,19 +20,19 @@ const createUser = async (req, res) => {
 
 const createProfile = async (req, res) => {
     const { monthly_income, risk_preference, employment_type } = req.body
-    const { id } = req.params
+    const  userId =  req.user.id
 
     try {
 
-        const existingUser = await User.findById(id)
+        const existingUser = await User.find({userId})
 
         if (!existingUser) {
-            return res.status(404).json({ message: "User not found with this id", id })
+            return res.status(404).json({ message: "User not found with this id", userId })
         }
 
         // const existProfile = await UserProfile.find({ user })
 
-        const profile = await UserProfile.create({ userID: id, monthly_income, risk_preference, employment_type })
+        const profile = await UserProfile.create({ userID: userId, monthly_income, risk_preference, employment_type })
 
         res.status(200).json({ profile })
     } catch (error) {
@@ -82,10 +82,10 @@ const getUserById = async (req, res) => {
 
 const getProfile = async (req, res) => {
 
-    const { userID } = req.params
+    const  userId = req.user.id
 
     try {
-        const profile = await UserProfile.find({ userID })
+        const profile = await UserProfile.find({ userID  : userId })
         res.status(200).json({ profile })
     } catch (error) {
 

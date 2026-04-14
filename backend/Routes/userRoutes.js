@@ -1,6 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const {createUser , getUser , getUserById , updateUser , deleteUser , createProfile , getProfile} = require('../Controller/userController')
+const { requireAuth } = require('../Middleware/authMiddleware')
+
+
+
+//user Profile
+router.post('/createProfile', requireAuth, createProfile)
+router.get('/profile', requireAuth, getProfile)
 
 router.get('/',getUser)
 router.post('/',createUser)
@@ -9,9 +16,6 @@ router.put('/:id',updateUser)
 router.delete('/:id',deleteUser)
 
 
-//user Profile
-router.post('/createProfile/:id',createProfile)
-router.get('/profile/:id',getProfile)
 
 
 module.exports = router

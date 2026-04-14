@@ -19,8 +19,8 @@ router.get('/:_id', requireAuth, getExpensesByID )
 
 
 
-router.put("/:id",requireAuth, updateExpense)
-router.delete("/:id", requireAuth, deleteExpense)
+router.put("/:id",requireAuth, updateExpense) //:id = expenses Id
+router.delete("/:id", requireAuth, deleteExpense) //:id = expenses Id
 
 
 

@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const {expenseDiscipline}  = require('../Services/health.service')
 
 const score = async (req, res)=> {
-    const {userID} = req.params;
+    const userID = req.user.id
       
     try {
         const score = await expenseDiscipline(userID);

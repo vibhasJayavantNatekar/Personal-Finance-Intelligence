@@ -24,6 +24,9 @@ const createInvestment = async (req, res) => {
 
 const getInvestment = async (req, res) => {
 
+     console.log(req.user);
+
+
     try {
         const investments = await Investment.find()
         res.status(200).json({ investments })
@@ -36,7 +39,9 @@ const getInvestment = async (req, res) => {
 //getInvestmentById
 
 const getInvestmentById = async (req, res) => {
+     console.log(req.user);
     
+
     const {id} = req.params
 
     try {
@@ -74,6 +79,23 @@ const deleteInvestment = async (req, res) => {
         res.status(200).json({ message: "Delete Successfilly." })
     } catch (error) {
         res.status(500).json(error)
+    }
+
+}
+
+//Get Investment By UserID
+
+const getInvestmentByUserId = async (req, res) => {
+     console.log(req.user);
+    
+
+    const userID = req.user.id
+
+    try {
+        const investment = await Investment.find({userID})
+        res.status(200).json({investment})
+    } catch (error) {
+        res.status(500).json(error.message)
     }
 
 }
@@ -127,4 +149,4 @@ const Active = async (req , res)=> {
 
 // KTSA79F4XQTYE2PP api key
 
-module.exports = { createInvestment, getInvestment, getInvestmentById, updateInvestment, deleteInvestment , Closed , Sold ,Active }
+module.exports = { createInvestment, getInvestment, getInvestmentById, updateInvestment, deleteInvestment , getInvestmentByUserId , Closed , Sold ,Active }
