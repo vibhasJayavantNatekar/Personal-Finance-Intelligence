@@ -1,0 +1,75 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.login_wrapper{
+
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #F9FAFB;
+
+}
+
+.login_heading{
+    color: #1E3A8A ;
+    margin: 1rem;
+    text-align: center;
+}
+
+.login_container{
+    width: max-content;
+    height: max-content;
+    border: 2px solid black;
+    border-radius: 10%;
+    background-color: #FFFFFF ;
+}
+
+.form-conatiner{
+    margin: 2rem 3rem;
+}
+.form-conatiner form{
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.form-conatiner form .emailInput , .form-conatiner form .passInput {
+    display: flex;
+    flex-direction: column;
+ 
+}
+
+label{
+    color: #374151;
+}
+
+input {
+    background-color:#D1D5DB;
+    border-color: #1E3A8A;
+}
+.btnLogin{
+
+    background-color: #1E3A8A ;
+    color: white;
+    width: 100%;
+    align-items: center;
+    padding: .2rem;
+    
+
+}
+.btnLogin:hover {
+    background-color: #162E6E;
+
+
+}
+.gotoRegi{
+    padding: 1rem;
+    color: cadetblue;
+    float: left;
+    
+}
