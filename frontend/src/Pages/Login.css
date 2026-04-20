@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-.login_wrapper{
+.auth_wrapper{
 
     
     display: flex;
@@ -15,13 +15,13 @@
 
 }
 
-.login_heading{
+.auth_heading{
     color: #1E3A8A ;
     margin: 1rem;
     text-align: center;
 }
 
-.login_container{
+.auth_container{
     width: max-content;
     height: max-content;
     border: 2px solid black;
@@ -29,16 +29,16 @@
     background-color: #FFFFFF ;
 }
 
-.form-conatiner{
+.form-container{
     margin: 2rem 3rem;
 }
-.form-conatiner form{
+.form-container form{
     margin: 1rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
-.form-conatiner form .emailInput , .form-conatiner form .passInput {
+.form-container form .input-group{
     display: flex;
     flex-direction: column;
  
@@ -51,23 +51,24 @@ label{
 input {
     background-color:#D1D5DB;
     border-color: #1E3A8A;
+    
 }
-.btnLogin{
 
-    background-color: #1E3A8A ;
+.authBtn > input {
+      background-color: #1E3A8A ;
     color: white;
     width: 100%;
     align-items: center;
     padding: .2rem;
     
-
 }
-.btnLogin:hover {
+
+.authBtn:hover {
     background-color: #162E6E;
 
 
 }
-.gotoRegi{
+.switchAuth{
     padding: 1rem;
     color: cadetblue;
     float: left;
