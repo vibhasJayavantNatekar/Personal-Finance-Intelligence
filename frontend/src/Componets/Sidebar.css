@@ -1,0 +1,21 @@
+.sidebar_wrapper{
+background-color: #1E3A8A ;
+float: left;
+width: 20%;
+height: 100vh;
+}
+
+.sidebar_container{
+    text-align: center;
+    
+    display: block;     
+  align-content: center; 
+  height: 300px;
+}
+
+.sidebar_itemContainer >ul{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}

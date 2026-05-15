@@ -6,7 +6,7 @@ const {getLoanFullSummary} = require('../Services/loan.serice')
 
 //create loan
 
-const create = async (req ,res)=>{
+const create = async (req ,res , next)=>{
 
     const userID = req.user.id
     const { loanType , principleAmount  ,  interestRate ,  tenure ,  emi ,   startDate , loanStatus} = req.body
@@ -22,28 +22,45 @@ const create = async (req ,res)=>{
         const loan = await Loan.create({userID , loanType , principleAmount , interestRate , tenure , emi, startDate , loanStatus})
         res.status(200).json(loan)
     } catch (error) {
-        res.status(500).json(error.message)
+       // res.status(500).json(error.message)
+
+        const err = {
+            status : 500,
+            message : error.message,
+            extraDetails : "Fill all the details"
+        }
+
+        next(err)
     }
 
 }
 
 // get Loans
 
-const getLoans = async (req , res)=>{
+const getLoans = async (req , res , next)=>{
 
 
    try {
     const loans = await Loan.find().populate('userID')
     res.status(200).json({loans})
    } catch (error) {
-    res.status(500).json(error.message)
+   // res.status(500).json(error.message)
+
+    const err = {
+            status : 500,
+            message : error.message,
+            extraDetails : "Error while fetching info.."
+        }
+
+        next(err)
+
    }
 
 }
 
 //get Loan by id
 
-const getLoanbyId = async (req , res)=>{
+const getLoanbyId = async (req , res  , next)=>{
 
     const {id} = req.params
 
@@ -51,13 +68,20 @@ const getLoanbyId = async (req , res)=>{
         const loan = await Loan.findById(id)
         res.status(200).json({loan})
     } catch (error) {
-        res.status(500).json(error.message)
+        //res.status(500).json(error.message)
+         const err = {
+            status : 500,
+            message : error.message,
+            extraDetails : "Error while fetching info.."
+        }
+
+        next(err)
     }
 }
 
 //get Loan by user ID
 
-const getLoansByuserID = async (req , res)=>{
+const getLoansByuserID = async (req , res , next)=>{
     // const {userID} = req.params
     const userID = req.user.id
 
@@ -65,13 +89,21 @@ const getLoansByuserID = async (req , res)=>{
         const loans = await Loan.find({userID})
         res.status(200).json({loans})
     } catch (error) {
-        res.status(500).json(error.message)
+      //  res.status(500).json(error.message)
+
+       const err = {
+            status : 500,
+            message : error.message,
+            extraDetails : "Error while fetching info.."
+        }
+
+        next(err)
     }
 }
 
 //update loan 
 
-const updateLoan = async (req , res)=>{
+const updateLoan = async (req , res , next)=>{
 
    const{id} = req.params;
    const {loanType , principleAmount  ,  interestRate ,  tenure ,  emi ,   startDate , loanStatus} = req.body;
@@ -81,7 +113,15 @@ const updateLoan = async (req , res)=>{
     res.status(200).json({updatedLoan})
    } catch (error) {
 
-    res.status(500).json(error.message)
+  //  res.status(500).json(error.message)
+
+   const err = {
+            status : 500,
+            message : error.message,
+            extraDetails : " Fill all details for update.. "
+        }
+
+        next(err)
     
    }
 
@@ -89,18 +129,26 @@ const updateLoan = async (req , res)=>{
 
 //delete loan
 
-const deleteLoan = async (req , res)=>{
+const deleteLoan = async (req , res , next)=>{
     const {id} = req.params
 
     try {
         const delLoan = await Loan.getLoanbyIdAndDelete(id)
         res.status(200).json({delLoan})
     } catch (error) {
-        res.status(500).json(error.message)
+       // res.status(500).json(error.message)
+
+        const err = {
+            status : 500,
+            message : error.message,
+            extraDetails : "Error while delete loan.."
+        }
+
+        next(err)
     }
 }
 
-const getloanSummary = async (req,res)=>{
+const getloanSummary = async (req,res , next)=>{
     //   const {userID} = req.params
       const userID = req.user.id
 
@@ -108,7 +156,15 @@ const getloanSummary = async (req,res)=>{
         const summary = await getLoanFullSummary(userID)
         res.status(200).json({summary})
       } catch (error) {
-        res.status(500).json(error.message)
+        //res.status(500).json(error.message)
+
+         const err = {
+            status : 500,
+            message : error.message,
+            extraDetails : "Error while fetching info.."
+        }
+
+        next(err)
         
       }
 

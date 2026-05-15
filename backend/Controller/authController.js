@@ -39,9 +39,9 @@ const logIn = async (req, res) => {
         const user = await User.logIn(email, password)
         const token = createToken(user._id)
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxage * 1000 })
-        res.status(200).json({user: user._id , token : token})
+        res.status(200).json({ user: user._id, token: token })
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(400).json(error.message)
 
     }
 
