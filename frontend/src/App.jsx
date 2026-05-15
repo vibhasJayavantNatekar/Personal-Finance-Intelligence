@@ -20,6 +20,18 @@ function App() {
           <Route path='/register' element={<Register/>} />
           <Route path="/dash" element={<Dashboard/>} />
 
+          <Route path="/healthIn" element={<Dashboard/>} />
+          <Route path="/expenses" element={<Dashboard/>} />
+          <Route path="/investments" element={<Dashboard/>} />
+
+          <Route path="/loan" element={<Dashboard/>} />
+          <Route path="/sipCalc" element={<Dashboard/>} />
+          <Route path="/taxCalc" element={<Dashboard/>} />
+          <Route path="/profile" element={<Dashboard/>} />
+          <Route path="/logout" element={<Dashboard/>} />
+
+
+
         </Routes>
 
 

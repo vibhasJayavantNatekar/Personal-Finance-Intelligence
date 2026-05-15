@@ -1,21 +1,84 @@
-.sidebar_wrapper{
-background-color: #1E3A8A ;
-float: left;
-width: 20%;
-height: 100vh;
+.sidebar_wrapper {
+  background-color: #0F172A;
+  float: left;
+  width: 20%;
+  height: 100vh;
 }
 
-.sidebar_container{
-    text-align: center;
-    
-    display: block;     
-  align-content: center; 
+.sidebar_container {
+  text-align: center;
+  display: block;
+  align-content: center;
   height: 300px;
+  color: #F9FAFB;
+}
+.sidebar_itemWrappe{
+  margin-top: 3rem;
+  padding: 1rem;
+  margin-left:1rem;
+
 }
 
-.sidebar_itemContainer >ul{
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+
+.logo {
+  background-color: wheat;
+  height: 7rem;
+  margin: .5rem;
 }
+
+.itemContainer {
+  margin-left: 1rem;
+  padding-left: 1rem;
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.itemCat {
+  color: #6B7280;
+  position: relative;
+  
+}
+
+.itemCat::before {
+    content: "";
+    position: absolute;
+    width: 9rem;
+    height: 1px;
+   
+    background-color: rgba(255,255,255,0.3);
+    bottom: 6px;
+    left: 31%;
+
+}
+
+.itemCat::after {
+    content: "";
+    position: absolute;
+    width: .9rem;
+    height: 1px;
+
+    background-color: rgba(255,255,255,0.3);
+    bottom: 6px;
+    right: 102%;
+  
+}
+
+.itemContainer >ul{
+  list-style: none;
+  padding: 0;
+
+
+}
+
+.sidebarItem{
+  text-decoration: none;
+  color: white;
+  margin-bottom: .5rem;
+}
+
+.activeLink{
+   /* background-color:#D88B52; */
+   color:#D88B52;
+   padding: .2rem;
+}
+
