@@ -1,20 +1,27 @@
 import React from 'react'
 import Sidebar from '../Componets/Sidebar'
+import Navbar from '../Componets/Navbar'
 
 const Dashboard = () => {
   return (
     <>
-    
-    <div className="section_wrapper">
+ <div className="dashboard_wrapper">
 
-        <Sidebar/>
+    <Sidebar />
 
-           <div className="section_container">
+    <div className="main_section">
 
+        <Navbar />
 
-           </div>
+        <div className="dashboard_content">
+
+         
+
+        </div>
 
     </div>
+
+</div>
 
     </>
   )

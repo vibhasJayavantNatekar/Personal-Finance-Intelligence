@@ -1,0 +1,15 @@
+.dashboard_wrapper {
+    display: flex;
+    height: 100vh;
+     background-color: #0F172A;
+}
+
+.main_section {
+    flex: 1;
+}
+
+.dashboard_content {
+    padding: 20px;
+    /* background-color: #0F172A;
+    height: 90%; */
+}

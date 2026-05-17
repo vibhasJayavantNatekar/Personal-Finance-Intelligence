@@ -1,3 +1,8 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .sidebar_wrapper {
   background-color: #0F172A;
   float: left;

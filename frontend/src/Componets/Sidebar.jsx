@@ -1,6 +1,7 @@
 import React from 'react'
 import '../Componets/Sidebar.css'
 import { NavLink } from 'react-router-dom'
+import {FaHome, FaWallet} from 'react-icons/fa'
 
 const Sidebar = () => {
     return (
@@ -21,7 +22,7 @@ const Sidebar = () => {
                                 <li>
                                     <NavLink to='/dash' className={({ isActive }) =>
                                         isActive ? "activeLink sidebarItem" : "sidebarItem"
-                                    } > Dashboard </NavLink>
+                                    } > <span><FaHome/>  </span>Dashboard </NavLink>
 
                                 </li>
 

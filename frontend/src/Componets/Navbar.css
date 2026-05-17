@@ -1,0 +1,123 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.navbar{
+    width:100%;
+    height:75px;
+
+   background-color: #1E293B;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 30px;
+
+    border-bottom: 1px solid #374151;
+}
+
+
+.navbar_left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+
+.navbar_right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+
+.theme_btn{
+    width:45px;
+    height:45px;
+
+    border:none;
+    outline:none;
+
+    border-radius:50%;
+
+       background-color: #1E293B;
+
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    font-size:18px;
+    color:#333;
+
+    transition:0.3s;
+}
+
+.theme_btn:hover{
+    background-color:#D88B52;
+    color:white;
+}
+
+/* PROFILE SECTION */
+
+.profile_section{
+    width:48px;
+    height:48px;
+
+    border-radius:50%;
+
+    background-color: #1E293B;
+
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:34px;
+    color:#555;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.profile_section:hover{
+    background-color:#D88B52;
+    color:white;
+}
+
+/* LOGOUT BUTTON */
+
+.logout_btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    padding:12px 18px;
+
+    border:none;
+    outline:none;
+
+    border-radius:10px;
+
+    background-color: #1E293B;
+
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:15px;
+    font-weight:500;
+
+    transition:0.3s;
+}
+
+.logout_btn:hover{
+    opacity:0.9;
+}
