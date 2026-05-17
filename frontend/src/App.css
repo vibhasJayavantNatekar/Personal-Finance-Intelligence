@@ -1,4 +1,4 @@
-.dashboard_wrapper {
+.dashboard_wrapper  ,.section_wrapper {
     display: flex;
     height: 100vh;
      background-color: #0F172A;
@@ -6,10 +6,176 @@
 
 .main_section {
     flex: 1;
+    
 }
 
-.dashboard_content {
+.dashboard_content , .section_content {
     padding: 20px;
     /* background-color: #0F172A;
     height: 90%; */
+}
+
+.top_part{
+    display: flex;
+    flex-direction: row;
+    margin: 1rem;
+    gap: 3rem;
+}
+
+.expense_card{
+    color: wheat;
+    width: 26rem;
+    height: 12rem;
+    background-color: #1F2937;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 1.5rem;
+    padding: 1rem;
+    gap: .5rem;
+    
+}
+.expense_left{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: .7rem;
+    width: 65%;
+}
+ .expense_heading{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+
+} 
+.heading_left{
+     display:flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .4rem;
+}
+
+.expense_amount{
+    color: #D88B52;
+    font-size: 1.5rem;
+}
+
+
+.expense_icon >img{
+    height: 5.rem;
+    width: 5rem;
+}
+
+.details_btn{
+    width: fit-content;
+
+   
+padding: .5rem .5rem;
+    border: none;
+    border-radius: .2rem;
+    background-color: #D88B52;
+
+    color: white;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+.details_btn:hover{
+    opacity: .9;
+}
+
+
+
+.financial_summary{
+    width: 35rem;
+    height: 12rem;
+
+    background-color: #1F2937;
+
+    border-radius: 1.5rem;
+
+    padding: 1.2rem 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    border: 1px solid #374151;
+}
+
+.summary_heading{
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.summary_heading h2{
+    color: #F9FAFB;
+    font-size: 1.7rem;
+}
+
+.summary_heading p{
+    color: #9CA3AF;
+    font-size: .95rem;
+    padding: 0rem;
+}
+
+.summary_items{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary_item{
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+}
+
+.summary_icon{
+    width: 3.3rem;
+    height: 3.3rem;
+
+    border-radius: 1rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.4rem;
+}
+
+.assets_icon{
+    background-color: rgba(255,255,255,0.15);
+    color: white;
+}
+
+.liabilities_icon{
+    background-color: rgba(0, 201, 167, 0.2);
+    color: #00C9A7;
+}
+
+.worth_icon{
+    background-color: rgba(216, 139, 82, 0.2);
+    color: #D88B52;
+}
+
+.summary_content{
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.summary_content p{
+    color: #9CA3AF;
+    font-size: .95rem;
+    margin: 0rem;
+}
+
+.summary_content h3{
+    color: #F9FAFB;
+    font-size: 1.4rem;
 }

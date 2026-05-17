@@ -6,6 +6,13 @@ import Login from './Pages/Login'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Register from './Pages/Register'
 import Dashboard from './Pages/Dashboard'
+import HealthIn from './Pages/HealthIn'
+import Expenses from './Pages/Expenses'
+import Investment from './Pages/Investment'
+import Loan from './Pages/Loan'
+import SipCalculator from './Pages/SipCalculator'
+import TaxCalculator from './Pages/TaxCalculator'
+import Profile from './Pages/Profile'
 
 
 function App() {
@@ -20,14 +27,14 @@ function App() {
           <Route path='/register' element={<Register/>} />
           <Route path="/dash" element={<Dashboard/>} />
 
-          <Route path="/healthIn" element={<Dashboard/>} />
-          <Route path="/expenses" element={<Dashboard/>} />
-          <Route path="/investments" element={<Dashboard/>} />
+          <Route path="/healthIn" element={<HealthIn/> } />
+          <Route path="/expenses" element={ <Expenses/> } />
+          <Route path="/investments" element={ <Investment/> } />
 
-          <Route path="/loan" element={<Dashboard/>} />
-          <Route path="/sipCalc" element={<Dashboard/>} />
-          <Route path="/taxCalc" element={<Dashboard/>} />
-          <Route path="/profile" element={<Dashboard/>} />
+          <Route path="/loan" element={ <Loan/> } />
+          <Route path="/sipCalc" element={ <SipCalculator/> } />
+          <Route path="/taxCalc" element={ <TaxCalculator/> } />
+          <Route path="/profile" element={ <Profile/> } />
           <Route path="/logout" element={<Dashboard/>} />
 
 

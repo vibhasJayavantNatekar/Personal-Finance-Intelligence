@@ -2,11 +2,12 @@ import React from 'react'
 import Sidebar from '../Componets/Sidebar'
 import Navbar from '../Componets/Navbar'
 
-const HealthIn = () => {
-    return (
-
-        <>
-            <div className="section_wrapper">
+const Investment = () => {
+  return (
+ 
+    <>
+    
+         <div className="section_wrapper">
 
                 <Sidebar />
 
@@ -23,9 +24,10 @@ const HealthIn = () => {
                 </div>
 
             </div>
-        </>
 
-    )
+    </>
+
+  )
 }
 
-export default HealthIn
+export default Investment

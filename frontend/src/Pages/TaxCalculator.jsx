@@ -1,12 +1,13 @@
 import React from 'react'
-import Sidebar from '../Componets/Sidebar'
 import Navbar from '../Componets/Navbar'
+import Sidebar from '../Componets/Sidebar'
 
-const HealthIn = () => {
-    return (
-
-        <>
-            <div className="section_wrapper">
+const TaxCalculator = () => {
+  return (
+    
+    <>
+    
+         <div className="section_wrapper">
 
                 <Sidebar />
 
@@ -23,9 +24,11 @@ const HealthIn = () => {
                 </div>
 
             </div>
-        </>
+    
 
-    )
+    </>
+
+  )
 }
 
-export default HealthIn
+export default TaxCalculator
