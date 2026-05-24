@@ -1,3 +1,7 @@
+body{
+   overflow: hidden;
+}
+
 .dashboard_wrapper  ,.section_wrapper {
     display: flex;
     height: 100vh;
@@ -6,7 +10,12 @@
 
 .main_section {
     flex: 1;
-    
+
+    height: 100vh;
+
+    margin-left: 20%;
+
+    overflow-y: auto;
 }
 
 .dashboard_content , .section_content {
@@ -178,4 +187,121 @@ padding: .5rem .5rem;
 .summary_content h3{
     color: #F9FAFB;
     font-size: 1.4rem;
+}
+
+.second_part{
+    margin: 1.2rem;
+    display: flex;
+    flex-direction: row;
+    gap: .9rem;
+}
+
+.stats_cards_container{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 1.5rem;
+}
+
+.stats_card{
+    width: 15rem;
+    height: 14rem;
+
+    background-color: #1F2937;
+
+    border-radius: 1rem;
+
+    padding: 1.2rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    border: 1px solid #374151;
+
+    transition: .3s ease;
+}
+
+.stats_card:hover{
+    transform: translateY(-3px);
+}
+
+.stats_top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stats_heading{
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+}
+
+.stats_icon{
+    width: 2.7rem;
+    height: 2.7rem;
+
+    border-radius: 50%;
+
+    background-color: rgba(255,255,255,0.15);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.2rem;
+}
+
+.stats_heading h3{
+    color: #D1D5DB;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.stats_menu{
+    color: #9CA3AF;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.stats_middle{
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+}
+
+.expense_text{
+    color: #FF4D4D;
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.income_text{
+    color: #00C9A7;
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+
+.stats_bottom p{
+    color: #9CA3AF;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.chart_container{
+    width: 35rem;
+    height: 30rem;
+
+    background-color: #1F2937;
+
+    border-radius: 1rem;
+
+    padding: 1.5rem;
+
+    border: 1px solid #374151;
+}
+
+.chart_container h2{
+    color: #F9FAFB;
+    margin-bottom: 1rem;
 }

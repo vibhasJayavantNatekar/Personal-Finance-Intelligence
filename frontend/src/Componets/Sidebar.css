@@ -1,11 +1,14 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 .sidebar_wrapper {
   background-color: #0F172A;
-  float: left;
+  position: fixed;
+  left: 0;
+  top: 0;
   width: 20%;
   height: 100vh;
 }
@@ -17,10 +20,11 @@
   height: 300px;
   color: #F9FAFB;
 }
-.sidebar_itemWrappe{
+
+.sidebar_itemWrappe {
   margin-top: 3rem;
   padding: 1rem;
-  margin-left:1rem;
+  margin-left: 1rem;
 
 }
 
@@ -41,49 +45,48 @@
 .itemCat {
   color: #6B7280;
   position: relative;
-  
+
 }
 
 .itemCat::before {
-    content: "";
-    position: absolute;
-    width: 9rem;
-    height: 1px;
-   
-    background-color: rgba(255,255,255,0.3);
-    bottom: 6px;
-    left: 31%;
+  content: "";
+  position: absolute;
+  width: 9rem;
+  height: 1px;
+
+  background-color: rgba(255, 255, 255, 0.3);
+  bottom: 6px;
+  left: 31%;
 
 }
 
 .itemCat::after {
-    content: "";
-    position: absolute;
-    width: .9rem;
-    height: 1px;
+  content: "";
+  position: absolute;
+  width: .9rem;
+  height: 1px;
 
-    background-color: rgba(255,255,255,0.3);
-    bottom: 6px;
-    right: 102%;
-  
+  background-color: rgba(255, 255, 255, 0.3);
+  bottom: 6px;
+  right: 102%;
+
 }
 
-.itemContainer >ul{
+.itemContainer>ul {
   list-style: none;
   padding: 0;
 
 
 }
 
-.sidebarItem{
+.sidebarItem {
   text-decoration: none;
   color: white;
   margin-bottom: .5rem;
 }
 
-.activeLink{
-   /* background-color:#D88B52; */
-   color:#D88B52;
-   padding: .2rem;
+.activeLink {
+  /* background-color:#D88B52; */
+  color: #D88B52;
+  padding: .2rem;
 }
-
