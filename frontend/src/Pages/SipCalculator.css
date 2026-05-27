@@ -1,0 +1,351 @@
+/* PAGE */
+
+.calculators_page{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    width: 100%;
+}
+
+
+
+/* HEADER */
+
+.calculators_header{
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.calculators_header h2{
+    color: #F9FAFB;
+    margin: 0;
+}
+
+.calculators_header p{
+    color: #9CA3AF;
+    margin: 0;
+}
+
+
+
+/* MAIN WORKSPACE */
+
+.sip_workspace{
+    display: grid;
+
+    grid-template-columns:
+        minmax(18rem,22rem)
+        minmax(0,1fr)
+        minmax(16rem,18rem);
+
+    gap: 1.5rem;
+
+    width: 100%;
+
+    align-items: start;
+}
+
+
+
+/* LEFT SECTION */
+
+.sip_calculator_section{
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    padding: 1.5rem;
+
+    height: fit-content;
+}
+
+
+
+/* SIP TOGGLE */
+
+.sip_toggle_wrapper{
+    display: flex;
+
+    gap: 1rem;
+
+    margin-bottom: 2rem;
+}
+
+.sip_toggle{
+    padding: .7rem 1.3rem;
+
+    border-radius: 2rem;
+
+    color: #9CA3AF;
+
+    cursor: pointer;
+
+    transition: .3s ease;
+
+    font-weight: 600;
+}
+
+.active_toggle{
+    background-color: rgba(16,185,129,0.15);
+
+    color: #10B981;
+}
+
+
+
+/* INPUTS */
+
+.calculator_inputs{
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1.5rem;
+}
+
+.input_group{
+    display: flex;
+
+    flex-direction: column;
+
+    gap: .7rem;
+}
+
+.input_group label{
+    color: #D1D5DB;
+
+    font-size: .95rem;
+}
+
+.input_group input{
+    width: 100%;
+
+    background-color: #111827;
+
+    border: 1px solid #374151;
+
+    color: white;
+
+    padding: .9rem 1rem;
+
+    border-radius: .7rem;
+
+    outline: none;
+
+    font-size: .95rem;
+}
+
+
+
+/* BUTTON */
+
+.calculate_btn{
+    background-color: #10B981;
+
+    color: white;
+
+    border: none;
+
+    padding: .9rem 1rem;
+
+    border-radius: .7rem;
+
+    cursor: pointer;
+
+    transition: .3s ease;
+
+    font-size: .95rem;
+}
+
+.calculate_btn:hover{
+    opacity: .9;
+}
+
+
+
+/* CENTER RESULTS */
+
+.calculator_results{
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1.5rem;
+
+    min-width: 0;
+}
+
+
+
+/* RESULT CARDS */
+
+.result_cards{
+    display: flex;
+
+    gap: 1rem;
+
+       width: 190%;
+}
+
+.result_card{
+    flex: 1;
+
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    padding: .9rem 1rem;
+
+    min-height: 5.5rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+.result_card p{
+    color: #9CA3AF;
+
+    margin-bottom: .3rem;
+
+    font-size: .88rem;
+}
+
+.result_card h3{
+    color: #F9FAFB;
+
+    margin: 0;
+
+    font-size: 1.2rem;
+
+    word-break: break-word;
+}
+
+.positive_text{
+    color: #10B981 !important;
+}
+
+
+
+/* CHART */
+
+.calculator_chart{
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    height: 22rem;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    color: #6B7280;
+
+    width: 100%;
+}
+
+
+
+/* BREAKDOWN */
+
+.investment_breakdown{
+    background-color: #1F2937;
+    border: 1px solid #374151;
+    border-radius: 1rem;
+    padding: 1.3rem;
+    display: flex;
+    gap: 2rem;
+}
+
+.breakdown_item{
+    flex: 1;
+}
+
+.breakdown_item p{
+    color: #9CA3AF;
+    margin-bottom: .4rem;
+    font-size: .9rem;
+}
+
+.breakdown_item h4{
+    color: #F9FAFB;
+    margin: 0;
+}
+
+
+
+/* RIGHT SIDE CALCULATORS */
+
+.popular_calculators{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 7rem;
+}
+
+
+
+/* CALCULATOR CARDS */
+
+.calculator_card{
+    background-color: #1F2937;
+    border: 1px solid #374151;
+    border-radius: 1rem;
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: .3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+}
+
+.calculator_card:hover{
+    transform: translateY(-2px);
+    border-color: #10B981;
+}
+
+.calculator_card h3{
+    color: #F9FAFB;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.calculator_card p{
+    color: #9CA3AF;
+    margin: 0;
+    font-size: .9rem;
+    line-height: 1.4rem;
+}
+
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px){
+
+    .sip_workspace{
+        grid-template-columns: 1fr;
+    }
+
+    .result_cards{
+        flex-direction: column;
+    }
+
+    .popular_calculators{
+        position: static;
+    }
+
+}

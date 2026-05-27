@@ -1,0 +1,532 @@
+.section_wrapper {
+    height: 100%;
+}
+
+.expenses_strip , .expenses_card {
+    width: 100%;
+
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    padding: 1rem 1.5rem;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 1rem;
+}
+
+.strip_item .expenses_card_item {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: .4rem;
+
+    flex: 1;
+}
+
+.strip_label p , .expenses_card_label p {
+    color: #9CA3AF;
+
+    font-size: .9rem;
+
+    margin: 0;
+}
+
+.strip_value , .expenses_card_value  {
+    font-size: 1.5rem;
+
+    font-weight: 600;
+}
+
+.expense_value {
+    color: #EF4444;
+}
+
+.category_value {
+    color: #D88B52;
+}
+
+.strip_divider , .expenses_card_divider  {
+    width: 1px;
+
+    height: 3rem;
+
+    background-color: #374151;
+}
+
+.expenses_workspace {
+    display: grid;
+    background-color: #1F2937;
+
+    grid-template-columns: 18rem 1fr;
+
+    gap: 1.5rem;
+
+    margin-top: 1.5rem;
+
+    align-items: start;
+    border: 2px solid red;
+}
+
+
+
+
+.expenses_content{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+
+
+.expenses_toolbar{
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    padding: 1.2rem;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.toolbar_left{
+    display: flex;
+
+    flex-direction: column;
+
+    gap: .3rem;
+}
+
+.toolbar_left h2{
+    color: #F9FAFB;
+
+    margin: 0;
+}
+
+.toolbar_left p{
+    color: #9CA3AF;
+
+    margin: 0;
+}
+
+.toolbar_right{
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.search_input{
+    background-color: #111827;
+
+    border: 1px solid #374151;
+
+    color: white;
+
+    padding: .8rem 1rem;
+
+    border-radius: .7rem;
+
+    outline: none;
+}
+
+.import_btn,
+.add_expense_btn{
+    border: none;
+
+    padding: .8rem 1.2rem;
+
+    border-radius: .7rem;
+
+    cursor: pointer;
+
+    transition: .3s ease;
+}
+
+.import_btn{
+    background-color: #374151;
+
+    color: white;
+}
+
+.add_expense_btn{
+    background-color: #D88B52;
+
+    color: white;
+}
+
+.import_btn:hover,
+.add_expense_btn:hover{
+    opacity: .9;
+}
+
+.expenses_strip{
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    padding: 1rem 1.5rem;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.strip_item{
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: .4rem;
+}
+
+.strip_label{
+    color: #9CA3AF;
+
+    margin: 0;
+}
+
+.expense_value{
+    color: #EF4444;
+
+    margin: 0;
+
+    font-size: 1.6rem;
+}
+
+.category_value{
+    color: #D88B52;
+
+    margin: 0;
+
+    font-size: 1.6rem;
+}
+
+.strip_divider{
+    width: 1px;
+
+    height: 3rem;
+
+    background-color: #374151;
+}
+
+.expenses_transactions{
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    padding: 1.2rem;
+}
+
+.transactions_header h3{
+    color: #F9FAFB;
+
+    margin-bottom: 1.5rem;
+}
+
+.table_heading,
+.transaction_row{
+    display: grid;
+
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+
+    align-items: center;
+
+    padding: 1rem 0;
+}
+
+.table_heading{
+    border-bottom: 1px solid #374151;
+
+    color: #9CA3AF;
+
+    font-weight: 600;
+}
+
+.transaction_row{
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+
+    color: #F9FAFB;
+}
+
+.category_tag{
+    background-color: rgba(216,139,82,0.15);
+
+    color: #D88B52;
+
+    padding: .4rem .8rem;
+
+    border-radius: 2rem;
+
+    width: fit-content;
+}
+
+.amount_text{
+    color: #EF4444;
+
+    font-weight: 600;
+}
+
+
+
+.expenses_analytics{
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    padding: 1.2rem;
+
+    min-height: 22rem;
+}
+
+.analytics_header h3{
+    color: #F9FAFB;
+
+    margin-bottom: 1.5rem;
+}
+
+.analytics_placeholder{
+    height: 18rem;
+
+    border-radius: 1rem;
+
+    border: 2px dashed #374151;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    color: #6B7280;
+}
+
+
+
+/* INSIGHTS */
+
+.spending_insights{
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    padding: 1.2rem;
+}
+
+.insights_header h3{
+    color: #F9FAFB;
+
+    margin-bottom: 1.5rem;
+}
+
+.insight_item{
+    background-color: rgba(255,255,255,0.04);
+
+    border-left: 4px solid #D88B52;
+
+    padding: 1rem;
+
+    border-radius: .8rem;
+
+    margin-bottom: 1rem;
+}
+
+.insight_item p{
+    color: #D1D5DB;
+
+    margin: 0;
+}
+
+.expenses_calendar{
+    background-color: #1F2937;
+
+    border: 1px solid #374151;
+
+    border-radius: 1rem;
+
+    padding: 1.2rem;
+}
+
+
+
+/* HEADER */
+
+.calendar_header{
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 1.5rem;
+}
+
+.calendar_header h3{
+    color: #F9FAFB;
+
+    margin: 0;
+}
+
+.calendar_actions{
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.calendar_actions p{
+    color: #F9FAFB;
+
+    margin: 0;
+
+    font-weight: 600;
+}
+
+.calendar_actions button{
+    background-color: #111827;
+
+    border: 1px solid #374151;
+
+    color: white;
+
+    width: 2rem;
+
+    height: 2rem;
+
+    border-radius: .5rem;
+
+    cursor: pointer;
+}
+
+
+
+/* WEEK DAYS */
+
+.calendar_weekdays{
+    display: grid;
+
+    grid-template-columns: repeat(7,1fr);
+
+    margin-bottom: 1rem;
+}
+
+.calendar_weekdays p{
+    color: #9CA3AF;
+
+    text-align: center;
+
+    margin: 0;
+
+    font-weight: 600;
+}
+
+
+
+/* CALENDAR GRID */
+
+.calendar_grid{
+    display: grid;
+
+    grid-template-columns: repeat(7,1fr);
+
+    gap: 1rem;
+}
+
+
+
+/* DAY CARD */
+
+.calendar_day{
+    background-color: #111827;
+
+    border: 1px solid #374151;
+
+    border-radius: .8rem;
+
+    min-height: 7rem;
+
+    padding: .8rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    transition: .3s ease;
+}
+
+.calendar_day:hover{
+    transform: translateY(-2px);
+
+    border-color: #D88B52;
+}
+
+.day_number{
+    color: #F9FAFB;
+
+    font-weight: 600;
+}
+
+.day_expense{
+    background-color: rgba(239,68,68,0.15);
+
+    color: #EF4444;
+
+    padding: .35rem .6rem;
+
+    border-radius: .5rem;
+
+    width: fit-content;
+
+    font-size: .9rem;
+
+    font-weight: 600;
+}
+
+
+
+/* ACTIVE DAY */
+
+.active_day{
+    border-color: #D88B52;
+}
+
+
+
+/* EMPTY DAYS */
+
+.empty_day{
+    background-color: transparent;
+
+    border: none;
+}
+
