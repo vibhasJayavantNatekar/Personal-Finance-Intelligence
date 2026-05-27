@@ -1,0 +1,127 @@
+.tax_page{
+    display:flex;
+    flex-direction:column;
+    gap:1.5rem;
+    width:100%;
+}
+
+.tax_header{
+    display:flex;
+    flex-direction:column;
+    gap:.3rem;
+}
+
+.tax_header h2{
+    color:#F9FAFB;
+    margin:0;
+}
+
+.tax_header p{
+    color:#9CA3AF;
+    margin:0;
+}
+
+.tax_workspace{
+    display:grid;
+    grid-template-columns:1fr 22rem;
+    gap:1.5rem;
+    align-items:start;
+}
+
+.tax_inputs{
+    background-color:#1F2937;
+    border:1px solid #374151;
+    border-radius:1rem;
+    padding:1.5rem;
+    display:flex;
+    flex-direction:column;
+    gap:2rem;
+}
+
+.tax_section{
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+}
+
+.tax_section h3{
+    color:#F9FAFB;
+    margin:0;
+}
+
+.tax_input_group{
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+}
+
+.tax_input_group label{
+    color:#D1D5DB;
+    font-size:.92rem;
+}
+
+.tax_input_group input{
+    background-color:#111827;
+    border:1px solid #374151;
+    color:white;
+    padding:.85rem 1rem;
+    border-radius:.7rem;
+    outline:none;
+}
+
+.tax_results{
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    position:sticky;
+    top:1rem;
+}
+
+.tax_result_card{
+    background-color:#1F2937;
+    border:1px solid #374151;
+    border-radius:1rem;
+    padding:1rem;
+}
+
+.tax_result_card p{
+    color:#9CA3AF;
+    margin-bottom:.4rem;
+}
+
+.tax_result_card h3{
+    color:#F9FAFB;
+    margin:0;
+    font-size:1.2rem;
+}
+
+.positive_text{
+    color:#10B981!important;
+}
+
+.danger_text{
+    color:#EF4444!important;
+}
+
+.calculate_tax_btn{
+    background-color:#10B981;
+    border:none;
+    color:white;
+    padding:.9rem 1rem;
+    border-radius:.7rem;
+    cursor:pointer;
+    font-size:.95rem;
+    margin-top:1rem;
+}
+
+@media (max-width:1100px){
+
+    .tax_workspace{
+        grid-template-columns:1fr;
+    }
+
+    .tax_results{
+        position:static;
+    }
+
+}
