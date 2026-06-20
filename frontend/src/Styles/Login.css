@@ -1,80 +1,204 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+.login_page{
+    min-height:100vh;
+    background:#041237;
+    display:flex;
+    overflow:hidden;
 }
 
-.auth_wrapper{
-
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #F9FAFB;
-
+.login_left{
+    width:35%;
+    background:#1D293D;
+    border-right:1px solid #374151;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:2rem;
 }
 
-.auth_heading{
-    color: #1E3A8A ;
-    margin: 1rem;
-    text-align: center;
+.brand_section h1{
+    color:#F8FAFC;
+    font-size:2.5rem;
+    margin-bottom:.4rem;
 }
 
-.auth_container{
-    width: max-content;
-    height: max-content;
-    border: 2px solid black;
-    border-radius: 10%;
-    background-color: #FFFFFF ;
+.brand_section p{
+    color:#D18A4D;
+    font-size:1rem;
+    line-height:1.5;
 }
 
-.form-container{
-    margin: 2rem 3rem;
-}
-.form-container form{
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-.form-container form .input-group{
-    display: flex;
-    flex-direction: column;
- 
+.feature_list{
+    display:flex;
+    flex-direction:column;
+    gap:.8rem;
+    margin-top:2rem;
 }
 
-label{
-    color: #374151;
+.feature_item{
+    color:#F8FAFC;
+    background:rgba(255,255,255,.03);
+    border:1px solid #374151;
+    border-radius:.8rem;
+    padding:.9rem 1rem;
+    font-size:.95rem;
 }
 
-input {
-    background-color:#D1D5DB;
-    border-color: #1E3A8A;
-    
+.login_right{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:1rem;
 }
 
-.authBtn > input {
-      background-color: #1E3A8A ;
-    color: white;
-    width: 100%;
-    align-items: center;
-    padding: .2rem;
-    
+.login_card,
+.register_card{
+    width:100%;
+    max-width:480px;
+    background:#1D293D;
+    border:1px solid #374151;
+    border-radius:1rem;
+    padding:1.5rem;
 }
 
-.authBtn:hover {
-    background-color: #162E6E;
-
-
-}
-.switchAuth{
-    padding: 1rem;
-    color: cadetblue;
-    float: left;
-    
+.login_card_header{
+    margin-bottom:1rem;
 }
 
-.errmsg{
-    color: #8B0000;
+.login_card_header h2{
+    color:#F8FAFC;
+    margin-bottom:.25rem;
+}
+
+.login_card_header p{
+    color:#A7B1C2;
+}
+
+.login_field{
+    display:flex;
+    flex-direction:column;
+    gap:.25rem;
+    margin-bottom:.4rem;
+}
+
+.login_field label{
+    color:#F8FAFC;
+    font-size:.9rem;
+}
+
+.login_field input,
+.login_field select{
+    background:#041237;
+    border:1px solid #374151;
+    border-radius:.7rem;
+    padding:.75rem .9rem;
+    color:#F8FAFC;
+    outline:none;
+    width:100%;
+    box-sizing:border-box;
+}
+
+.login_field input:focus,
+.login_field select:focus{
+    border-color:#D18A4D;
+}
+
+.input_error{
+    border-color:#FF5252 !important;
+}
+
+.error_text{
+    min-height:14px;
+    font-size:.75rem;
+    color:#FF5252;
+    margin:0;
+}
+
+.login_btn{
+    width:100%;
+    border:none;
+    background:#D18A4D;
+    color:#F8FAFC;
+    padding:.8rem;
+    border-radius:.7rem;
+    cursor:pointer;
+    font-weight:600;
+    margin-top:.5rem;
+}
+
+.login_btn:hover{
+    opacity:.9;
+}
+
+.register_actions{
+    display:flex;
+    gap:.75rem;
+    margin-top:.5rem;
+}
+
+.back_btn{
+    flex:1;
+    border:1px solid #374151;
+    background:#041237;
+    color:#F8FAFC;
+    border-radius:.7rem;
+    cursor:pointer;
+    padding:.8rem;
+}
+
+.register_actions .login_btn{
+    flex:1;
+    margin-top:0;
+}
+
+.login_footer{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:.4rem;
+    margin-top:1rem;
+    flex-wrap:wrap;
+}
+
+.login_footer p{
+    color:#A7B1C2;
+    margin:0;
+}
+
+.login_footer span{
+    color:#D18A4D;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.login_footer span:hover{
+    text-decoration:underline;
+}
+
+@media(max-width:900px){
+
+    .login_page{
+        flex-direction:column;
+        overflow:auto;
+    }
+
+    .login_left{
+        width:100%;
+        border-right:none;
+        border-bottom:1px solid #374151;
+        padding:1.5rem;
+    }
+
+    .brand_section{
+        text-align:center;
+    }
+
+    .feature_list{
+        margin-top:1rem;
+    }
+
+    .login_card,
+    .register_card{
+        max-width:100%;
+    }
 }

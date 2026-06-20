@@ -1,133 +1,210 @@
 import React from 'react'
 import '../Styles/Login.css'
-import { useState  } from 'react'
+import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import logo from '../assets/logo.png'
+
 
 const Login = () => {
-  const naviagte = useNavigate()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, seterror] = useState({})
-  const [servererror, setServererror] = useState("")
-  const [loading, setloading] = useState(false)
+    const naviagte = useNavigate()
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [error, seterror] = useState({})
+    const [servererror, setServererror] = useState("")
+    const [loading, setloading] = useState(false)
+    const [formData, setFormData] = useState({})
 
-  const validate = async (e) => {
+    
 
-    let newErrors = {}
+    const validate = async (e) => {
 
-    console.log(email);
-    console.log(password);
-    console.log(email.trim().length);
+        let newErrors = {}
 
-    if (!email.trim().length) {
-      newErrors.email = "Email is required"
+        console.log(email);
+        console.log(password);
+        console.log(email.trim().length);
 
-    }
+        if (!email.trim().length) {
+            newErrors.email = "Email is required"
 
-    if (!password.trim().length) {
-      newErrors.password = "Password is required"
-
-    }
-    seterror(newErrors)
-    if (Object.keys(newErrors).length > 0) {
-      return
-    }
-
-
-    try {
-
-
-      const result = await axios.post(
-        `http://localhost:5000/auth/api/v1/login`,
-        { email, password },
-        {
-          withCredentials: true
         }
-      )
 
-      alert("Login ")
-      console.log(result.data.token);
+        if (!password.trim().length) {
+            newErrors.password = "Password is required"
 
-      naviagte('/dash')
+        }
+        seterror(newErrors)
+        if (Object.keys(newErrors).length > 0) {
+            return
+        }
+
+
+        try {
+
+
+            const result = await axios.post(
+                `http://localhost:5000/auth/api/v1/login`,
+                { email, password },
+                {
+                    withCredentials: true
+                }
+            )
+
+            alert("Login ")
+            console.log(result.data.token);
+
+            naviagte('/dash')
 
 
 
 
-    } catch (err) {
+        } catch (err) {
 
-      setServererror("User not found")
+            setServererror("User not found")
 
-      console.log("Failed to fetch info", err.message);
+            console.log("Failed to fetch info", err.message);
+
+
+        }
 
 
     }
 
+    const handleLogin = async (e) => {
 
-  }
+        e.preventDefault();
 
-  const handleLogin = async (e) => {
-
-    e.preventDefault();
-
-    await validate()
+        await validate()
 
 
-  }
+    }
 
-   return (
+    const navigate = useNavigate();
+
+    return (
         <>
-            <div className="auth_wrapper">
+            <div className="login_page">
 
-                <div className="auth_container">
+                <div className="login_left">
 
-                    <h3 className="auth_heading">Login</h3>
+                    <div className="brand_section">
 
-                    <div className="form-container">
-                        <form onSubmit={handleLogin} >
+                        <h1>
+                            FinPilot
+                        </h1>
+
+                        <p>
+                            Personal Finance Intelligence Platform
+                        </p>
+
+                    </div>
+
+                    <div className="feature_list">
+
+                        <div className="feature_item">
+                            ✓ Track Expenses
+                        </div>
+
+                        <div className="feature_item">
+                            ✓ Manage Investments
+                        </div>
+
+                        <div className="feature_item">
+                            ✓ Track Loans & EMI
+                        </div>
+
+                        <div className="feature_item">
+                            ✓ Financial Health Insights
+                        </div>
+
+                        <div className="feature_item">
+                            ✓ Net Worth Tracking
+                        </div>
+
+                    </div>
+
+                </div>
 
 
 
-                            <div className="input-group">
-                                <label>Email</label>
-                                <input type="email"
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    value={email}
+
+
+                <div className="login_right">
+
+                    <div className="login_card ">
+
+                        <div className="login_card_header">
+
+                            <h2>
+                                Welcome Back
+                            </h2>
+
+                            <p>
+                                Sign in to continue to FinPilot
+                            </p>
+
+                        </div>
+
+
+
+                        <form>
+
+                            <div className="login_field">
+
+                                <label>
+                                    Email Address
+                                </label>
+
+                                <input
+                                    type="email"
+                                    placeholder="Enter your email"
                                 />
-                                {
-                                    error.email && <p className="errmsg">{error.email}</p>
-                                }
+
                             </div>
 
-                            <div className="input-group">
-                                <label>Password</label>
-                                <input type="password"
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    value={password}
-                                />
 
-                                {
-                                    error.password && <p className="errmsg">{error.password}</p>
-                                }
+
+                            <div className="login_field">
+
+                                <label>
+                                    Password
+                                </label>
+
+                                <input
+                                    type="password"
+                                    placeholder="Enter your password"
+                                />
 
                             </div>
 
 
 
-                            <div className="authBtn">
+                            <button
+                                type="submit"
+                                className="login_btn"
+                            >
 
-                                <input type="submit"
-                                    value="Login"
-                                    className="btnAuth"
-                                />
-                            </div>
+                                Login
+
+                            </button>
 
                         </form>
-                     {
-                        servererror && <p className="errmsg" >{servererror}</p>
-                     }
-                        <NavLink to="/register">
-                            <p className="switchAuth">New User?</p>
-                        </NavLink>
+
+
+
+                        <div className="login_footer">
+
+                            <p>
+                                Don't have an account?
+                            </p>
+
+                            <span
+                                onClick={() => navigate("/register")}
+                            >
+                                Register
+                            </span>
+
+                        </div>
 
                     </div>
 
@@ -137,7 +214,7 @@ const Login = () => {
         </>
     )
 
-  
+
 }
 
 export default Login
