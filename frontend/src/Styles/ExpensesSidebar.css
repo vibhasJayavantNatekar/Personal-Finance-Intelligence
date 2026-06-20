@@ -1,0 +1,116 @@
+.section_sidebar_wrapper {
+    background-color: #1f2937;
+    color: white;
+     padding: 0 1.5rem;
+    border: 1px solid #4e4a4a;
+    border-radius: 1rem;
+    margin-top:1rem ;
+}
+
+
+.section_sidebar_section {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem;
+    gap: 1rem;
+}
+
+.view_mode {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    padding: .9rem;
+}
+
+.view_mode_heading {
+    font-weight: 400;
+    padding-bottom: .3rem;
+}
+
+.view_mode_items {
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+}
+
+.view_mode_item {
+    padding-bottom: .8rem;
+    font-weight: lighter;
+    color: #9a9a9c;
+    padding: 1rem;
+    padding-right: 8rem;
+    cursor: pointer;
+}
+
+.active_view_mode_item {
+    background-color: rgba(216, 139, 82, 0.2);
+    color: #D88B52;
+    padding-right: 8rem;
+    border-radius: .5rem;
+
+}
+
+.section_sidebar_dropdown {
+    padding: .9rem;
+
+}
+
+.section_sidebar_dropdown_heading {
+    font-weight: 400;
+    padding-bottom: .3rem;
+    margin-bottom: .5rem;
+}
+
+.section_sidebar_dropdown_options {
+    padding: 1rem;
+    width: 85%;
+    margin-left: .8rem;
+    background-color: #0F172A;
+    border: 1px solid #374151;
+    border-radius: 1rem;
+    padding: 1rem 1.2rem;
+    color: #F9FAFB;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+    transition: .3s ease;
+}
+
+.section_sidebar_month_filter {
+    margin-left: 1.5rem;
+
+}
+
+.month_list {
+    padding-bottom: .3rem;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+
+
+}
+
+.month_filter_item {
+    width: 85%;
+
+   
+    border-radius: 1rem;
+    padding: 1rem 1.2rem;
+    color: #F9FAFB;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+    transition: .3s ease;
+}
+
+.active_month_filter_item {
+    background-color: #3e2d39;
+    
+   
+    padding: 1rem 1.2rem;
+    color: #ef403f;
+   
+
+}

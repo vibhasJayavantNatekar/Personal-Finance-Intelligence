@@ -1,0 +1,267 @@
+ .health_insights_page {
+     display: flex;
+
+     flex-direction: column;
+
+     gap: 2rem;
+ }
+
+
+
+ /* HEADER */
+
+ .healthPage_health_header {
+     display: flex;
+
+     flex-direction: column;
+
+     gap: .5rem;
+     margin-bottom: 1rem;
+ }
+
+ .healthPage_health_header h2 {
+     color: #F9FAFB;
+
+     margin: 0;
+
+     font-size: 1.8rem;
+ }
+
+ .healthPage_health_header p {
+     color: #9CA3AF;
+
+     margin: 0;
+ }
+
+
+
+ /* GRID */
+
+ .healthPage_insights_grid {
+     display: grid;
+
+     grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+
+     gap: 1.5rem;
+ }
+
+
+
+ /* CARD */
+
+ .healthPage_insight_card {
+     background-color: #1F2937;
+
+     border: 1px solid #374151;
+
+     border-radius: 1rem;
+
+     padding: 1.5rem;
+
+     display: flex;
+
+     flex-direction: column;
+
+     gap: 1rem;
+
+     transition: .3s ease;
+ }
+
+ .healthPage_insight_card:hover {
+     transform: translateY(-3px);
+ }
+
+
+
+ /* TOP */
+
+ .healthPage_insight_top {
+     display: flex;
+
+     align-items: center;
+
+     gap: .8rem;
+ }
+
+ .healthPage_insight_top h3 {
+     color: #F9FAFB;
+
+     margin: 0;
+
+     font-size: 1rem;
+ }
+
+
+
+ /* DESCRIPTION */
+
+ .healthPage_insight_card p {
+     color: #D1D5DB;
+
+     margin: 0;
+
+     line-height: 1.5rem;
+ }
+
+
+
+ /* TYPE */
+
+ .healthPage_insight_card span {
+     width: fit-content;
+
+     padding: .45rem .9rem;
+
+     border-radius: 2rem;
+
+     font-size: .82rem;
+
+     font-weight: 600;
+ }
+
+
+
+ /* INDICATOR */
+
+ .healthPage_insight_indicator {
+     width: .8rem;
+
+     height: .8rem;
+
+     border-radius: 50%;
+ }
+
+
+
+ /* SAFE */
+
+ .safe_card {
+     border-color: rgba(16, 185, 129, .35);
+ }
+
+ .safe_indicator {
+     background-color: #10B981;
+ }
+
+ .safe_card span {
+     background-color: rgba(16, 185, 129, .15);
+
+     color: #10B981;
+ }
+
+
+
+ /* WARNING */
+
+ .warning_card {
+     border-color: rgba(245, 158, 11, .35);
+ }
+
+ .warning_indicator {
+     background-color: #F59E0B;
+ }
+
+ .warning_card span {
+     background-color: rgba(245, 158, 11, .15);
+
+     color: #F59E0B;
+ }
+
+
+
+ /* INFO */
+
+ .info_card {
+     border-color: rgba(59, 130, 246, .35);
+ }
+
+ .info_indicator {
+     background-color: #3B82F6;
+ }
+
+ .info_card span {
+     background-color: rgba(59, 130, 246, .15);
+
+     color: #3B82F6;
+ }
+
+
+
+ /* DANGER */
+
+ .danger_card {
+     border-color: rgba(239, 68, 68, .35);
+ }
+
+ .danger_indicator {
+     background-color: #EF4444;
+ }
+
+ .danger_card span {
+     background-color: rgba(239, 68, 68, .15);
+
+     color: #EF4444;
+ }
+
+
+
+ /* SUMMARY */
+
+ .healthPage_health_summary {
+     display: grid;
+
+     grid-template-columns: repeat(2, 1fr);
+
+     gap: 1.5rem;
+     margin-top: 1.8rem;
+ }
+
+ .healthPage_summary_box {
+     background-color: #1F2937;
+
+     border: 1px solid #374151;
+
+     border-radius: 1rem;
+
+     padding: 1.5rem;
+ }
+
+ .healthPage_summary_box h4 {
+     color: #F9FAFB;
+
+     margin: 0 0 1rem 0;
+ }
+
+ .healthPage_summary_box p {
+     color: #D1D5DB;
+
+     margin: 0;
+
+     line-height: 1.5rem;
+ }
+
+ .healthPage_summary_status {
+     width: fit-content;
+
+     background-color: rgba(16, 185, 129, .15);
+
+     color: #10B981;
+
+     padding: .6rem 1rem;
+
+     border-radius: 2rem;
+
+     font-weight: 600;
+ }
+
+
+
+ /* RESPONSIVE */
+ /* 
+@media (max-width:768px){
+
+    .healthPage_health_summary{
+        grid-template-columns:1fr;
+    }
+
+}  */

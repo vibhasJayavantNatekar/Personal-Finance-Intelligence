@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import Navbar from '../Componets/Navbar'
-import Sidebar from '../Componets/Sidebar'
-import '../Pages/TaxCalculator.css'
+import Navbar from  '../Components/Navbar'
+import Sidebar from '../Components/Sidebar'
+import '../Styles/TaxCalculator.css'
 
 const TaxCalculator = () => {
 

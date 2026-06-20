@@ -1,10 +1,9 @@
 import React from 'react'
-import Sidebar from '../Componets/Sidebar'
-import Navbar from '../Componets/Navbar'
-import Card from '../Componets/Card'
-import { } from 'react-icons'
-import { FaExpeditedssl } from 'react-icons/fa'
-import Exp from '../assets/icons/exp.png'
+import '../Styles/Dashboard.css'
+import Sidebar from '../Components/Sidebar'
+import Navbar from '../Components/Navbar'
+import Exp from '../assets/exp.png'
+import Live_market_strip from '../Components/Live_market_strip'
 import {
   LineChart,
   Line,
@@ -12,16 +11,12 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer
-} from "recharts";
-import Live_market_strip from '../Componets/Live_market_strip'
+} from "recharts"
+import { FaExpeditedssl } from 'react-icons/fa'
 
 const Dashboard = () => {
 
-  const now = new Date();
-  const monthName = new Date().toLocaleString('en-US', { month: 'long' });
-  console.log(monthName); // "May"
-
-  const data = [
+   const data = [
     {
       month: "Jan",
       income: 4000,
@@ -52,7 +47,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="section_wrapper">
+     <div className="section_wrapper">
 
         <Sidebar />
 
@@ -162,7 +157,7 @@ const Dashboard = () => {
 
             <Live_market_strip/>
 
-            <div className="second_part">
+             <div className="second_part">
 
 
               <div className="stats_cards_container">
@@ -328,7 +323,7 @@ const Dashboard = () => {
 
               </div>
 
-              <div className="chart_container">
+              <div className=" dash_chart_container">
 
                 <h2>Income and Expense Trends</h2>
 
@@ -373,9 +368,11 @@ const Dashboard = () => {
         </div>
 
       </div>
-
     </>
   )
 }
 
-export default Dashboard
+export default Dashboard 
+
+
+

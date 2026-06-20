@@ -1,0 +1,253 @@
+/* .section_content{
+    padding:1.5rem;
+}
+
+.section_content .profile_header{
+    background:#1F2937;
+    border:1px solid #374151;
+    border-radius:1rem;
+    padding:1.5rem;
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    margin-bottom:1.5rem;
+}
+
+.section_content .profile_avatar{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:#2563EB;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.5rem;
+    font-weight:700;
+    flex-shrink:0;
+}
+
+.section_content .profile_info h2{
+    color:#F9FAFB;
+    margin:0;
+}
+
+.section_content .profile_info p{
+    color:#9CA3AF;
+    margin-top:.5rem;
+}
+
+.section_content .profile_section{
+    background:#1F2937;
+    border:1px solid #374151;
+    border-radius:1rem;
+    padding:1.5rem;
+    margin-bottom:1.5rem;
+}
+
+.section_content .profile_section h3{
+    color:#F9FAFB;
+    margin-bottom:1.5rem;
+}
+
+.section_content .profile_grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:1rem;
+}
+
+.section_content .profile_field{
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+}
+
+.section_content .profile_field label{
+    color:#D1D5DB;
+}
+
+.section_content .profile_field input,
+.section_content .profile_field select{
+    width:100%;
+    box-sizing:border-box;
+    padding:.8rem 1rem;
+    border-radius:.75rem;
+    border:1px solid #374151;
+    background:#111827;
+    color:#F9FAFB;
+    outline:none;
+}
+
+.section_content .profile_summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1rem;
+    margin-bottom:1.5rem;
+}
+
+.section_content .summary_card{
+    background:#1F2937;
+    border:1px solid #374151;
+    border-radius:1rem;
+    padding:1.5rem;
+}
+
+.section_content .summary_card p{
+    color:#9CA3AF;
+    margin-bottom:.75rem;
+}
+
+.section_content .summary_card h3{
+    color:#F9FAFB;
+    margin:0;
+}
+
+.section_content .profile_actions{
+    display:flex;
+    gap:1rem;
+}
+
+.section_content .profile_actions button{
+    padding:.8rem 1.5rem;
+    border:none;
+    border-radius:.75rem;
+    background:#2563EB;
+    color:white;
+    cursor:pointer;
+}
+
+@media(max-width:768px){
+
+    .section_content .profile_grid{
+        grid-template-columns:1fr;
+    }
+
+    .section_content .profile_summary{
+        grid-template-columns:1fr;
+    }
+
+} */.section_content .profile_header{
+    background:#1F2937;
+    border:1px solid #374151;
+    border-radius:1rem;
+    padding:1.5rem;
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    margin-bottom:1.5rem;
+}
+
+.section_content .profile_avatar{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:#2563EB;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1.5rem;
+    font-weight:700;
+}
+
+.section_content .profile_info h2{
+    color:#F9FAFB;
+    margin:0;
+}
+
+.section_content .profile_info p{
+    color:#9CA3AF;
+    margin-top:.4rem;
+}
+
+.section_content .profile_card{
+    background:#1F2937;
+    border:1px solid #374151;
+    border-radius:1rem;
+    padding:1.5rem;
+    margin-bottom:1.5rem;
+}
+
+.section_content .profile_card h3{
+    color:#F9FAFB;
+    margin-bottom:1.5rem;
+}
+
+.section_content .profile_grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:1rem;
+}
+
+.section_content .profile_field{
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+}
+
+.section_content .profile_field label{
+    color:#D1D5DB;
+}
+
+.section_content .profile_field input,
+.section_content .profile_field select{
+    width:100%;
+    padding:.8rem 1rem;
+    border-radius:.75rem;
+    border:1px solid #374151;
+    background:#111827;
+    color:#F9FAFB;
+    box-sizing:border-box;
+    outline:none;
+}
+
+.section_content .profile_summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1rem;
+    margin-bottom:1.5rem;
+}
+
+.section_content .summary_card{
+    background:#1F2937;
+    border:1px solid #374151;
+    border-radius:1rem;
+    padding:1.5rem;
+}
+
+.section_content .summary_card p{
+    color:#9CA3AF;
+    margin-bottom:.75rem;
+}
+
+.section_content .summary_card h3{
+    color:#F9FAFB;
+    margin:0;
+}
+
+.section_content .profile_actions{
+    display:flex;
+    gap:1rem;
+}
+
+.section_content .profile_actions button{
+    padding:.8rem 1.5rem;
+    border:none;
+    border-radius:.75rem;
+    background:#2563EB;
+    color:#fff;
+    cursor:pointer;
+    font-weight:600;
+}
+
+@media(max-width:768px){
+
+    .section_content .profile_grid{
+        grid-template-columns:1fr;
+    }
+
+    .section_content .profile_summary{
+        grid-template-columns:1fr;
+    }
+
+}

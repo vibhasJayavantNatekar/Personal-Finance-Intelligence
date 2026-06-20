@@ -1,12 +1,12 @@
-import "./Navbar.css"
+import React from 'react'
 import { FaMoon, FaUserCircle } from "react-icons/fa"
 import { FiLogOut } from "react-icons/fi"
+import '../Styles/Navbar.css'
 
-function Navbar() {
-
-    return (
-        <>
-            <nav className="navbar">
+const Navbar = () => {
+  return (
+   <>
+     <nav className="navbar">
 
                 <div className="navbar_left">
 
@@ -35,8 +35,8 @@ function Navbar() {
                 </div>
 
             </nav>
-        </>
-    )
+   </>
+  )
 }
 
 export default Navbar

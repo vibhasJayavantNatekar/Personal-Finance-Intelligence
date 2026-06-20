@@ -1,184 +1,372 @@
 import React, { useState } from 'react'
-import Sidebar from '../Componets/Sidebar'
-import Navbar from '../Componets/Navbar'
-import '../Pages/Expenses.css'
-import ExpensesSidebar from '../Componets/ExpensesSidebar'
-
+import '../Styles/Expenses.css'
+import Sidebar from '../Components/Sidebar'
+import Navbar from '../Components/Navbar'
+import ExpensesSidebar from '../Components/ExpensesSidebar'
+import { useSearchParams } from 'react-router-dom'
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 const Expenses = () => {
 
-  const [view, setView] = useState("list")
+  const [ShowExpensesModal, setShowExpensesModal] = useState(false)
+  const [setviewmode, setSetviewmode] = useState('List')
+  const [expensesType, setExpensesType] = useState('All')
+  const [month, setMonth] = useState('Jan 2026')
+  const [selectedType, setSelectedType] = useState('All')
+  const [selectTPP, setselectTPP] = useState("10")
+
+  const [expenseData, setExpenseData] = useState({
+
+    amt: "",
+    category: "",
+    date: ""
+
+
+  })
+
+  const handleAddExpense = async (e) => {
+    e.preventDefault()
+
+    alert("Entry Added")
+
+    setShowExpensesModal(false)
+
+    setExpenseData({
+      amt: "",
+      category: "",
+      date: ""
+    })
+
+  }
+
+  const COLORS = [
+    "#10B981",
+    "#3B82F6",
+    "#F59E0B",
+    "#EC4899",
+    "#8B5CF6",
+    "#EF4444",
+    "#06B6D4"
+  ]
+
+  const chartData = [
+
+    {
+      category: "Food",
+      amount: 5000
+    },
+
+    {
+      category: "Travel",
+      amount: 3000
+    },
+
+    {
+      category: "Bills",
+      amount: 2000
+    },
+
+    {
+      category: "Shopping",
+      amount: 1500
+    }
+
+  ]
+  const totalExpense = chartData.reduce(
+    (sum, item) => sum + item.amount,
+    0
+  )
+
 
 
   const year = 2026
 
-  const month = 4
+  const monthno = 4
   // May because January = 0
 
   const totalDays =
-    new Date(year, month + 1, 0).getDate()
-
+    new Date(year, monthno + 1, 0).getDate()
 
   return (
+    <div className="section_wrapper">
 
-    <>
+      <Sidebar />
 
+      <div className="main_section">
 
+        <Navbar />
 
-      <div className="section_wrapper">
+        <div className="section_content expenses_section">
 
-        <Sidebar />
-
-        <div className="main_section">
-
-          <Navbar />
-
-          <div className="section_content expenses_page">
-
-            <div className="expenses_overview">
-
-              <div className=" expenses_card">
-
-                <div className=" expenses_card_item">
-                  <div className="expenses_card_label">
-                    <p>Today Expense</p>
-                  </div>
-
-                  <div className=" expense_value expenses_card_value ">
-                    ₹1,250
-                  </div>
-                </div>
-
-                <div className=" expenses_card_divider"></div>
-
-                <div className=" expenses_card_item">
-                  <div className="expenses_card_label">
-                    <p>Highest Category</p>
-                  </div>
-
-                  <div className=" category_value expenses_card_value">
-                    Food
-                  </div>
-                </div>
-
-                <div className=" expenses_card_divider"></div>
-
-                <div className=" expenses_card_item">
-                  <div className="expenses_card_label ">
-                    <p>This Month</p>
-                  </div>
-
-                  <div className=" expense_value expenses_card_value">
-                    ₹32,000
-                  </div>
-                </div>
-
+          <div className="expenses_overview overview">
+            <div className="expenses_overview_card overview_card">
+              <div className="expenses_overview_card_label overview_card_label">
+                <p>Total Expenses</p>
               </div>
-
+              <div className="expenses_overview_card_values overview_card_values">
+                $ 5000
+              </div>
             </div>
 
-            <div className='expenses_workspace'>
+            <div className="expenses_overview_card_divider overview_card_divider"></div>
 
 
-              <div className='expenses_sidebar_container' >
-                <ExpensesSidebar />
+            <div className="expenses_overview_card overview_card">
+              <div className="expenses_overview_card_label overview_card_label">
+                <p>Highest Category</p>
+              </div>
+              <div className="expenses_overview_card_values card_category_value overview_card_values ">
+                Food
+              </div>
+            </div>
 
+            <div className="expenses_overview_card_divider overview_card_divider "></div>
+
+
+
+            <div className="expenses_overview_card overview_card">
+              <div className="expenses_overview_card_label overview_card_label">
+                <p>This Month</p>
+              </div>
+              <div className="expenses_overview_card_values overview_card_values">
+                $ 5000
+              </div>
+            </div>
+
+
+          </div>
+
+          <div className="expenses_workspace">
+
+            <div className="section_sidebar_container">
+              <ExpensesSidebar
+                view={setviewmode}
+                setview={setSetviewmode}
+                month={month}
+                setmonth={setMonth}
+                selectedType={selectedType}
+                setSelectedType={setSelectedType}
+                TPP={selectTPP}
+                setTPP={setselectTPP}
+              />
+            </div>
+
+            <div className="section_content">
+
+              <div className="section_toolbar">
+                <div className="toolbar_left">
+                  <h2 className="toolbar_heading">
+                    Expenses
+                  </h2>
+
+                  <p>Track and analyze your spending</p>
+                </div>
+
+                <div className="toolbar_right">
+                  <input
+                    type="text"
+                    placeholder="Search expenses"
+                    className="search_input"
+                  />
+
+                  <button className="import_btn">
+                    Import Statement
+                  </button>
+
+                  <button className="add_expense_btn"
+                    onClick={() => setShowExpensesModal(true)}>
+                    Add Expense
+                  </button>
+                </div>
               </div>
 
-              <div className="expenses_content">
-
-                {/* Toolbar */}
-
-                <div className="expenses_toolbar">
-
-                  <div className="toolbar_left">
-
-                    <h2>Expenses</h2>
-
-                    <p>
-                      Track and analyze your spending
-                    </p>
-
-                  </div>
+              {ShowExpensesModal && (
+                <div div className="modal_overlay">
 
 
-                  <div className="toolbar_right">
 
-                    <input
-                      type="text"
-                      placeholder="Search expenses"
-                      className="search_input"
-                    />
+                  <div className="modal">
 
-                    <button className="import_btn">
-                      Import Statement
-                    </button>
 
-                    <button className="add_expense_btn">
-                      Add Expense
-                    </button>
+
+                    {/* HEADER */}
+
+                    <div className="modal_header">
+
+                      <h2>
+
+                        Add Expense
+
+                      </h2>
+
+
+
+                      <button
+                        className="close_modal_btn"
+                        onClick={() => setShowExpensesModal(false)}
+                      >
+
+                        ✕
+
+                      </button>
+
+                    </div>
+
+
+
+
+
+
+
+
+                    {/* Form */}
+
+                    <form className="form"
+                      onSubmit={handleAddExpense}
+                    >
+
+
+
+
+
+
+                      <div className="form_group">
+
+                        <label>
+
+                          Amount
+
+                        </label>
+
+
+
+                        <input
+                          type="number"
+                          placeholder="Enter amount"
+                          value={expenseData.amt}
+                          onChange={(e) =>
+
+                            setExpenseData({
+
+                              ...expenseData,
+
+                              amt: e.target.value
+
+                            })
+
+                          }
+                        />
+
+                      </div>
+
+                      <div className="form_group">
+
+                        <label>
+
+                          Category
+
+                        </label>
+
+
+                        <select
+                          value={expenseData.category}
+                          onChange={(e) =>
+
+                            setExpenseData({
+
+                              ...expenseData,
+
+                              category: e.target.value
+
+                            })
+
+                          }
+                        >
+
+                          <option value="food">
+
+                            Food
+
+                          </option>
+
+                          <option value="travel">
+
+                            Travel
+
+                          </option>
+
+                          <option value="rent">
+
+                            Rent
+
+                          </option>
+
+                        </select>
+
+                      </div>
+
+                      <div className="form_group">
+
+                        <label>
+
+                          Date
+
+                        </label>
+
+
+                        <input
+                          type="date"
+                          onChange={(e) =>
+                            setExpenseData({
+                              ...expenseData,
+                              date: e.target.value
+                            })
+                          }
+                        />
+
+                      </div>
+
+
+
+                      {/* BUTTONS */}
+
+                      <div className="form_actions">
+
+
+
+                        <button
+                          type="button"
+                          className="cancel_btn"
+                          onClick={() => setShowExpensesModal(false)}
+                        >
+
+                          Cancel
+
+                        </button>
+
+
+
+
+
+                        <button
+                          type="submit"
+                          className="save_btn"
+                        >
+
+                          Save Expense
+
+                        </button>
+
+                      </div>
+
+                    </form>
 
                   </div>
 
                 </div>
-
-
-
-                {/* Overview Strip */}
-
-                {/* <div className="expenses_strip">
-
-                  <div className="strip_item">
-
-                    <p className="strip_label">
-                      Today Expense
-                    </p>
-
-                    <h3 className="expense_value">
-                      ₹1,250
-                    </h3>
-
-                  </div>
-
-
-                  <div className="strip_divider"></div>
-
-
-                  <div className="strip_item">
-
-                    <p className="strip_label">
-                      Highest Category
-                    </p>
-
-                    <h3 className="category_value">
-                      Food
-                    </h3>
-
-                  </div>
-
-
-                  <div className="strip_divider"></div>
-
-
-                  <div className="strip_item">
-
-                    <p className="strip_label">
-                      This Month
-                    </p>
-
-                    <h3 className="expense_value">
-                      ₹32,000
-                    </h3>
-
-                  </div>
-
-                </div> */}
-
-
-
-                {/* Transactions */}
-
-             { view == "list" &&  <div className="expenses_transactions">
+              )}
+              {setviewmode === "List" &&
+                <div className="expenses_transactions">
 
                   <div className="transactions_header">
 
@@ -189,20 +377,20 @@ const Expenses = () => {
 
                   <div className="transaction_table">
 
-                    <div className="table_heading">
+                    <div className="exp_table_heading table_heading">
 
-                      <p>Title</p>
+                      <p>Date</p>
                       <p>Category</p>
                       <p>Amount</p>
-                      <p>Date</p>
+                      <p>Tags </p>
+
 
                     </div>
 
 
-                    <div className="transaction_row">
+                    <div className="exp_transaction_row transaction_row">
 
-                      <p>Swiggy Order</p>
-
+                      <p>24 May 2026</p>
                       <span className="category_tag">
                         Food
                       </span>
@@ -211,14 +399,14 @@ const Expenses = () => {
                         ₹450
                       </p>
 
-                      <p>24 May 2026</p>
+                      <p>Purchse</p>
 
                     </div>
 
 
-                    <div className="transaction_row">
+                    <div className="exp_transaction_row transaction_row">
 
-                      <p>Uber Ride</p>
+                      <p>23 May 2026</p>
 
                       <span className="category_tag">
                         Travel
@@ -228,14 +416,16 @@ const Expenses = () => {
                         ₹780
                       </p>
 
-                      <p>23 May 2026</p>
+                      <p>Purchse</p>
+
+
 
                     </div>
 
 
-                    <div className="transaction_row">
+                    <div className="exp_transaction_row transaction_row">
 
-                      <p>Netflix</p>
+                      <p>22 May 2026</p>
 
                       <span className="category_tag">
                         Entertainment
@@ -245,17 +435,20 @@ const Expenses = () => {
                         ₹499
                       </p>
 
-                      <p>22 May 2026</p>
+                      <p>Purchse</p>
+
+
+
 
                     </div>
 
                   </div>
 
-                </div> 
+                </div>
 
-             }
+              }
 
-             { view == "calender" &&
+              {setviewmode === "Calendar" &&
                 <div className="calendar_grid">
 
                   {
@@ -291,87 +484,231 @@ const Expenses = () => {
                   }
 
                 </div>
+              }
 
-                }
+              {setviewmode === "Analytical" &&
+                <div className="analytical_view">
 
+                  <div className="analytical_card_container card_container">
 
+                    <div className="analytical_card card">
 
+                      <p className='analytical_card_label card_label'>Highest Expenses</p>
 
+                      <h3 className="analytical_card_values card_value" >Rent (2000)</h3>
 
+                    </div>
 
-                {/* Analytics */}
+                    <div className="analytical_card card">
 
-                <div className="expenses_analytics">
+                      <p className='analytical_card_label card_label'>Lowest Expense</p>
 
-                  <div className="analytics_header">
+                      <h3 className="analytical_card_values card_value" >₹300(Food)</h3>
 
-                    <h3>Expense Analytics</h3>
+                    </div>
+                    {selectedType === "All" &&
+                      <div className="analytical_card card">
+
+                        <p className='analytical_card_label card_label'>Average Expense</p>
+
+                        <h3 className="analytical_card_values card_value" >₹900</h3>
+
+                      </div>
+                    }
+                    {selectedType === "All" &&
+                      <div className="analytical_card card">
+
+                        <p className='analytical_card_label card_label'>Most Used Category</p>
+
+                        <h3 className="analytical_card_values card_value" > Food </h3>
+
+                      </div>
+                    }
+                    {selectedType !== "All" &&
+                      <div className="analytical_card card">
+
+                        <p className='analytical_card_label card_label'>Total Spending</p>
+
+                        <h3 className="analytical_card_values card_value" > ₹1500 </h3>
+
+                      </div>
+
+                    }
+                    {selectedType !== "All" &&
+                      <div className="analytical_card card">
+
+                        <p className='analytical_card_label card_label'>{selectedType} Transactions</p>
+
+                        <h3 className="analytical_card_values card_value" > 5 </h3>
+
+                      </div>
+
+                    }
 
                   </div>
 
+                  <div className="chart_container">
 
-                  <div className="analytics_placeholder">
+                    <h3>
 
-                    Chart Section
+                      Category Spending
+
+                    </h3>
+
+                    <div className="chart_content">
+
+                      {/* CHART */}
+
+                      <div className="chart_left">
+
+                        <ResponsiveContainer
+                          width="100%"
+                          height={320}
+                        >
+
+                          <PieChart>
+
+                            <Pie
+                              data={chartData}
+                              dataKey="amount"
+                              nameKey="category"
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={130}
+                              innerRadius={70}
+                            >
+
+                              {
+                                chartData.map((entry, index) => (
+
+                                  <Cell
+                                    key={index}
+                                    fill={COLORS[index % COLORS.length]}
+                                  />
+
+                                ))
+                              }
+
+                            </Pie>
+
+
+
+                            <text
+                              x="50%"
+                              y="48%"
+                              textAnchor="middle"
+                              fill="#F9FAFB"
+                              fontSize="28"
+                              fontWeight="700"
+                            >
+
+                              ₹{totalExpense.toLocaleString()}
+
+                            </text>
+
+
+
+                            <text
+                              x="50%"
+                              y="58%"
+                              textAnchor="middle"
+                              fill="#9CA3AF"
+                              fontSize="16"
+                            >
+
+                              Total
+
+                            </text>
+
+                          </PieChart>
+
+                        </ResponsiveContainer>
+
+                      </div>
+
+
+
+                      {/* LEGEND */}
+
+                      <div className="chart_breakdown">
+
+                        {
+
+                          chartData.map((item, index) => {
+
+                            const percentage = (
+
+                              (item.amount / totalExpense) * 100
+
+                            ).toFixed(0)
+
+                            return (
+
+                              <div
+                                className="breakdown_item"
+                                key={index}
+                              >
+
+                                <div className="breakdown_left">
+
+                                  <span
+                                    className="breakdown_dot"
+                                    style={{
+                                      backgroundColor:
+                                        COLORS[index % COLORS.length]
+                                    }}
+                                  ></span>
+
+                                  <p>
+
+                                    {item.category}
+
+                                  </p>
+
+                                </div>
+
+
+
+                                <h5>
+
+                                  {percentage}%
+
+                                </h5>
+
+                              </div>
+
+                            )
+
+                          })
+
+                        }
+
+                      </div>
+
+                    </div>
 
                   </div>
 
                 </div>
 
 
+              }
 
-                {/* Insights */}
-
-                <div className="spending_insights">
-
-                  <div className="insights_header">
-
-                    <h3>Spending Insights</h3>
-
-                  </div>
-
-
-                  <div className="insight_item">
-
-                    <p>
-                      Food spending increased 18% this month
-                    </p>
-
-                  </div>
-
-
-                  <div className="insight_item">
-
-                    <p>
-                      Travel expenses are lower this week
-                    </p>
-
-                  </div>
-
-
-                  <div className="insight_item">
-
-                    <p>
-                      Shopping expenses are higher than average
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </div>
 
 
             </div>
 
+
           </div>
+
+
+
 
         </div>
 
       </div>
 
-    </>
-
+    </div >
   )
 }
 

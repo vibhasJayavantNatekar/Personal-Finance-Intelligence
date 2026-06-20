@@ -236,27 +236,167 @@
 
 
 /* CHART */
-
+ 
 .calculator_chart{
-    background-color: #1F2937;
+    background-color:#1F2937;
 
-    border: 1px solid #374151;
+    border:1px solid #374151;
 
-    border-radius: 1rem;
+    border-radius:1rem;
 
-    height: 22rem;
+    padding:1.5rem;
 
-    display: flex;
+    min-height:24rem;
 
-    justify-content: center;
+    display:flex;
 
-    align-items: center;
+    flex-direction:column;
 
-    color: #6B7280;
-
-    width: 100%;
+    gap:2rem;
 }
 
+
+
+/* HEADER */
+
+.chart_header h3{
+    color:#F9FAFB;
+
+    margin:0 0 .4rem 0;
+}
+
+.chart_header p{
+    color:#9CA3AF;
+
+    margin:0;
+}
+
+
+
+/* WRAPPER */
+
+.growth_chart_wrapper{
+    display:flex;
+
+    gap:1rem;
+
+    flex:1;
+}
+
+
+
+/* Y AXIS */
+
+.growth_y_axis{
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    color:#6B7280;
+
+    font-size:.85rem;
+}
+
+
+
+/* CHART */
+
+.growth_chart{
+    position:relative;
+
+    flex:1;
+
+    border-left:1px solid #374151;
+
+    border-bottom:1px solid #374151;
+
+    overflow:hidden;
+}
+
+
+
+/* AREA */
+
+.growth_area{
+    position:absolute;
+
+    inset:0;
+
+    background:
+    linear-gradient(
+        to top,
+        rgba(16,185,129,.25),
+        rgba(16,185,129,.02)
+    );
+
+    clip-path:polygon(
+        0% 100%,
+        0% 85%,
+        20% 72%,
+        40% 58%,
+        60% 40%,
+        80% 22%,
+        100% 5%,
+        100% 100%
+    );
+}
+
+
+
+/* POINTS */
+
+.growth_points{
+    position:relative;
+
+    width:100%;
+
+    height:100%;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:flex-end;
+}
+
+
+
+/* SINGLE POINT */
+
+.growth_point{
+    position:relative;
+
+    width:.9rem;
+    height:.9rem;
+
+    background-color:#10B981;
+
+    border-radius:50%;
+
+    z-index:2;
+}
+
+
+
+/* LABEL */
+
+.growth_point span{
+    position:absolute;
+
+    bottom:-2rem;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:#9CA3AF;
+
+    font-size:.82rem;
+
+    white-space:nowrap;
+}
 
 
 /* BREAKDOWN */

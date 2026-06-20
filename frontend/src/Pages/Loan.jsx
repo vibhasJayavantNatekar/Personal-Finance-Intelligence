@@ -1,30 +1,1285 @@
-import React from 'react'
-import Navbar from '../Componets/Navbar'
-import Sidebar from '../Componets/Sidebar'
-
+import React, { useState } from 'react'
+import '../Styles/Loan.css'
+import Sidebar from '../Components/Sidebar'
+import Navbar from '../Components/Navbar'
+import LoanSidebar from '../Components/LoanSidebar'
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
 
 const Loan = () => {
+
+  const [ShowLoanModal, setShowLoanModal] = useState(false)
+  const [viewmode, setViewmode] = useState("List")
+  const [selectType, setselectType] = useState("ALL")
+  const [selectStatus, setselectStatus] = useState("ALL")
+  const [selectTPP, setselectTPP] = useState("10")
+
+  const [loanData, setLoanData] = useState({
+
+    loanType: "",
+    principleAmt: "",
+    interestRate: "",
+    tenure: "",
+    EMI: "",
+    startDate: "",
+    loanStatus: "",
+    notes: ""
+
+  })
+
+  const emiData = [
+    {
+      loanType: "Home",
+      emi: 18000
+    },
+    {
+      loanType: "Car",
+      emi: 7000
+    },
+    {
+      loanType: "Personal",
+      emi: 3000
+    }
+  ]
+
+  const analyticalConfig = {
+    ALL_ALL: {
+      cards: [
+        {
+          label: "Total EMI Burden",
+          value: "12%"
+        },
+        {
+          label: "Risk Level",
+          value: "Low"
+        },
+        {
+          label: "Active Loans",
+          value: "3"
+        },
+        {
+          label: "Monthly EMI",
+          value: " 28,000"
+        }
+      ]
+    },
+
+    ALL_ACTIVE: {
+      cards: [
+        {
+          label: "Total EMI Burden",
+          value: "12%"
+        },
+        {
+          label: "Risk Level",
+          value: "Low"
+        },
+        {
+          label: "Active Loans",
+          value: "3"
+        },
+        {
+          label: "Monthly EMI",
+          value: " 28,000"
+        }
+      ]
+    },
+
+    ALL_COMPLETED: {
+      cards: [{
+        label: "Closed Loans",
+        value: "2"
+      },
+      {
+        label: "Total Amount Repaid",
+        value: " 6,50,000"
+      },
+      {
+        label: "Average Laon Size",
+        value: " 3,25,000"
+      },
+      {
+        label: "Largest Closed Loan",
+        value: "Education Loan"
+      }
+      ]
+    },
+
+    HOME_ALL: {
+      cards: [
+        {
+          label: "Total Home Loans",
+          value: "1"
+        },
+        {
+          label: "Average EMI",
+          value: " 18,000"
+        },
+        {
+          label: "Average Interest Rate",
+          value: "8.5%"
+        },
+        {
+          label: "Largest Home Loan",
+          value: " 25,00,000"
+        }
+      ]
+    },
+
+    HOME_ACTIVE: {
+      cards: [
+        {
+          label: "Monthly EMI",
+          value: " 18,000"
+        },
+        {
+          label: "Interest Rate",
+          value: "8.5%"
+        },
+        {
+          label: "Remaining Tenure",
+          value: "120 Months"
+        },
+        {
+          label: "Risk Level",
+          value: "Medium"
+        }
+      ]
+    },
+
+    HOME_COMPLETED: {
+      cards: [
+        {
+          label: "Amount Repaid",
+          value: " 12,00.00"
+        },
+        {
+          label: "Interest Paid",
+          value: " 3,00,000"
+        },
+        {
+          label: "Loan Duration",
+          value: "15 Years"
+        },
+        {
+          label: "Closure Status",
+          value: "Completed"
+        }
+      ]
+    },
+
+    CAR_ALL: {
+      cards: [
+        {
+          label: "Total Car Loans",
+          value: "3"
+        },
+        {
+          label: "Average EMI",
+          value: " 7,000"
+        },
+        {
+          label: "Average Interest Rate",
+          value: "9%"
+        },
+        {
+          label: "Largest Car Loan",
+          value: " 8,00,000"
+        }
+      ]
+    },
+
+    CAR_ACTIVE: {
+      cards: [
+        {
+          label: "Monthly EMI",
+          value: " 7,000"
+        },
+        {
+          label: "Interest Rate",
+          value: "9%"
+        },
+        {
+          label: "Remainning Tenure",
+          value: "36 Months"
+        },
+        {
+          label: "Risk Level",
+          value: "Low"
+        }
+      ]
+    },
+
+    CAR_COMPLETED: {
+      cards: [
+        {
+          label: "Amount Repaid",
+          value: " 4,50,000"
+        },
+        {
+          label: "Interest Paid",
+          value: " 60,0000"
+        },
+        {
+          label: "Loan Duration",
+          value: "5 Years"
+        },
+        {
+          label: "Closure Status",
+          value: "Completed"
+        }
+      ]
+    },
+
+    EDUCATION_ALL: {
+      cards: [
+        {
+          label: "Toatl Education Loan",
+          value: "2"
+        },
+        {
+          label: "Average EMI",
+          value: " 9,600"
+        },
+        {
+          label: "Average Interest Rate",
+          value: "7.2%"
+        },
+        {
+          label: "Largest Education Loan",
+          value: " 4,00,000"
+        }
+      ]
+    },
+
+    EDUCATION_ACTIVE: {
+      cards: [
+        {
+          label: "Monthly EMI",
+          value: " 9,600"
+        },
+        {
+          label: "Interest Rate",
+          value: "7.2%"
+        },
+        {
+          label: "Remaining Tenure",
+          value: "14 Months"
+        },
+        {
+          label: "Risk Level",
+          value: "Low"
+        }
+      ]
+    },
+
+    EDUCATION_COMPLETED: {
+      cards: [
+        {
+          label: "Amount Repaid",
+          value: " 4,80,000"
+        },
+        {
+          label: "Interest Paid",
+          value: " 80,000"
+        },
+        {
+          label: "Loan Duration",
+          value: "4 Years"
+        },
+        {
+          label: "Closure Status",
+          value: "Completed"
+        }
+      ]
+    },
+
+    PERSONAL_ALL: {
+      cards: [
+        {
+          label: "Toatl Personal Loan",
+          value: "4"
+        },
+        {
+          label: "Average EMI",
+          value: " 5,000"
+        },
+        {
+          label: "Average Interest Rate",
+          value: "12%"
+        },
+        {
+          label: "Largest Personal Loan",
+          value: " 3,00,000"
+        }
+      ]
+    },
+
+    PERSONAL_ACTIVE: {
+      cards: [
+        {
+          label: "Monthly EMI",
+          value: " 4,000"
+        },
+        {
+          label: "Interest Rate",
+          value: "12%"
+        },
+        {
+          label: "Remaining Tenure",
+          value: "24 Months"
+        },
+        {
+          label: "Risk Level",
+          value: "Medium"
+        }
+      ]
+    },
+
+    PERSONAL_COMPLETED: {
+      cards: [
+        {
+          label: "Amount Repaid",
+          value: " 2,50,000"
+        },
+        {
+          label: "Interest Paid",
+          value: " 50,000"
+        },
+        {
+          label: "Loan Duration",
+          value: " 2 Years"
+        },
+        {
+          label: "Closure Status",
+          value: "Completed"
+        }
+      ]
+    },
+
+
+  }
+
+  const allocationCardConfig = {
+
+    ALL_ALL: {
+      cards: [
+        {
+          label: "Largest Loan Type",
+          value: "Home Loan (60%)"
+        },
+        {
+          label: "Smallest Loan Type",
+          value: "Personal Loan (10%)"
+        },
+        {
+          label: "Loan Types",
+          value: "4"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹25,00,000"
+        }
+      ]
+    },
+
+    ALL_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Loan Type",
+          value: "Home Loan (70%)"
+        },
+        {
+          label: "Smallest Active Loan Type",
+          value: "Education Loan (5%)"
+        },
+        {
+          label: "Active Loan Types",
+          value: "3"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹18,00,000"
+        }
+      ]
+    },
+
+    ALL_CLOSED: {
+      cards: [
+        {
+          label: "Largest Closed Loan Type",
+          value: "Education Loan (50%)"
+        },
+        {
+          label: "Smallest Closed Loan Type",
+          value: "Personal Loan (10%)"
+        },
+        {
+          label: "Closed Loan Types",
+          value: "2"
+        },
+        {
+          label: "Total Repaid",
+          value: "₹7,00,000"
+        }
+      ]
+    },
+
+    HOME_ALL: {
+      cards: [
+        {
+          label: "Largest Home Loan",
+          value: "₹25,00,000"
+        },
+        {
+          label: "Smallest Home Loan",
+          value: "₹15,00,000"
+        },
+        {
+          label: "Home Loans",
+          value: "2"
+        },
+        {
+          label: "Total Home Borrowed",
+          value: "₹40,00,000"
+        }
+      ]
+    },
+
+    HOME_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Home Loan",
+          value: "₹25,00,000"
+        },
+        {
+          label: "Smallest Active Home Loan",
+          value: "₹25,00,000"
+        },
+        {
+          label: "Active Home Loans",
+          value: "1"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹20,00,000"
+        }
+      ]
+    },
+
+    HOME_CLOSED: {
+      cards: [
+        {
+          label: "Largest Closed Home Loan",
+          value: "₹15,00,000"
+        },
+        {
+          label: "Smallest Closed Home Loan",
+          value: "₹15,00,000"
+        },
+        {
+          label: "Closed Home Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹15,00,000"
+        }
+      ]
+    },
+
+    EDUCATION_ALL: {
+      cards: [
+        {
+          label: "Largest Education Loan",
+          value: "₹4,00,000"
+        },
+        {
+          label: "Smallest Education Loan",
+          value: "₹2,00,000"
+        },
+        {
+          label: "Education Loans",
+          value: "2"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹6,00,000"
+        }
+      ]
+    },
+
+    EDUCATION_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Education Loan",
+          value: "₹4,00,000"
+        },
+        {
+          label: "Smallest Active Education Loan",
+          value: "₹4,00,000"
+        },
+        {
+          label: "Active Education Loans",
+          value: "1"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹1,20,000"
+        }
+      ]
+    },
+
+    EDUCATION_CLOSED: {
+      cards: [
+        {
+          label: "Largest Closed Education Loan",
+          value: "₹2,00,000"
+        },
+        {
+          label: "Smallest Closed Education Loan",
+          value: "₹2,00,000"
+        },
+        {
+          label: "Closed Education Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹2,00,000"
+        }
+      ]
+    },
+
+    CAR_ALL: {
+      cards: [
+        {
+          label: "Largest Car Loan",
+          value: "₹8,00,000"
+        },
+        {
+          label: "Smallest Car Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Car Loans",
+          value: "2"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹13,00,000"
+        }
+      ]
+    },
+
+    CAR_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Car Loan",
+          value: "₹8,00,000"
+        },
+        {
+          label: "Smallest Active Car Loan",
+          value: "₹8,00,000"
+        },
+        {
+          label: "Active Car Loans",
+          value: "1"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹5,00,000"
+        }
+      ]
+    },
+
+    CAR_CLOSED: {
+      cards: [
+        {
+          label: "Largest Closed Car Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Smallest Closed Car Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Closed Car Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹5,00,000"
+        }
+      ]
+    },
+
+    PERSONAL_ALL: {
+      cards: [
+        {
+          label: "Largest Personal Loan",
+          value: "₹3,00,000"
+        },
+        {
+          label: "Smallest Personal Loan",
+          value: "₹1,00,000"
+        },
+        {
+          label: "Personal Loans",
+          value: "3"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹5,00,000"
+        }
+      ]
+    },
+
+    PERSONAL_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Personal Loan",
+          value: "₹3,00,000"
+        },
+        {
+          label: "Smallest Active Personal Loan",
+          value: "₹1,50,000"
+        },
+        {
+          label: "Active Personal Loans",
+          value: "2"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹3,50,000"
+        }
+      ]
+    },
+
+    PERSONAL_CLOSED: {
+      cards: [
+        {
+          label: "Largest Closed Personal Loan",
+          value: "₹1,00,000"
+        },
+        {
+          label: "Smallest Closed Personal Loan",
+          value: "₹1,00,000"
+        },
+        {
+          label: "Closed Personal Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹1,00,000"
+        }
+      ]
+    }
+
+  }
+
+  const currentAnalysisConfig = analyticalConfig[`${selectType}_${selectStatus}`]
+  const currentAllocationConfig = allocationCardConfig[`${selectType}_${selectStatus}`]
+
+  const maxEmi = Math.max(
+    ...emiData.map(item => item.emi)
+  )
+
+  const handleAddLoan = async (e) => {
+  
+    e.preventDefault()
+
+    alert("Added")
+    console.log(loanData)
+    setShowLoanModal(false)
+
+    setLoanData({
+    loanType: "",
+    principleAmt: "",
+    interestRate: "",
+    tenure: "",
+    EMI: "",
+    startDate: "",
+    loanStatus: "",
+    notes: ""
+    })
+
+  }
+
   return (
     <>
 
-         <div className="section_wrapper">
+      <div className="section_wrapper">
 
-                <Sidebar />
+        <Sidebar />
 
-                <div className="main_section">
+        <div className="main_section">
 
-                    <Navbar />
+          <Navbar />
 
-                    <div className="section_content">
+          <div className="section_content">
+
+            <div className="expenses_overview overview">
+              <div className="expenses_overview_card overview_card">
+                <div className="expenses_overview_card_label overview_card_label card_label">
+                  <p>Active Loans</p>
+                </div>
+                <div className="expenses_overview_card_values overview_card_values">
+                  2
+                </div>
+              </div>
+
+              <div className="expenses_overview_card_divider overview_card_divider"></div>
+
+
+              <div className="expenses_overview_card overview_card">
+                <div className="expenses_overview_card_label overview_card_label">
+                  <p>Total Principle</p>
+                </div>
+                <div className="expenses_overview_card_values card_category_value overview_card_values ">
+                  $ 5000
+                </div>
+              </div>
+
+              <div className="expenses_overview_card_divider overview_card_divider "></div>
+
+
+
+              <div className="expenses_overview_card overview_card">
+                <div className="expenses_overview_card_label overview_card_label">
+                  <p>Monthly Emi</p>
+                </div>
+                <div className="expenses_overview_card_values overview_card_values">
+                  $ 500
+                </div>
+              </div>
+
+
+              <div className="expenses_overview_card overview_card">
+                <div className="expenses_overview_card_label overview_card_label">
+                  <p>Emi Ratio</p>
+                </div>
+                <div className="expenses_overview_card_values overview_card_values">
+                  $ 5000
+                </div>
+              </div>
+
+
+            </div>
+
+
+            <div className="section_workspace">
+              <div className="section_sidebar_container">
+                <LoanSidebar
+
+                  view={viewmode}
+                  setview={setViewmode}
+                  selectType={selectType}
+                  setselectType={setselectType}
+                  selectStatus={selectStatus}
+                  setselectStatus={setselectStatus}
+                  selectTPP={selectTPP}
+                  setselectTPP={setselectTPP}
+
+
+
+                />
+
+              </div>
+
+
+              <div className="section_content">
+
+                <div className="section_toolbar">
+                  <div className="toolbar_left">
+                    <h2 className="toolbar_heading">
+                      Loans
+                    </h2>
+
+                    <p>Manage and track your liabilities</p>
+                  </div>
+
+                  <div className="toolbar_right">
+                    <input
+                      type="text"
+                      placeholder="Search loans"
+                      className="search_input"
+                    />
+
+                    <button className="import_btn">
+                      Import Statement
+                    </button>
+
+                    <button className="add_expense_btn"
+                      onClick={() => setShowLoanModal(true)}>
+                      Add Loan
+                    </button>
+                  </div>
+                </div>
+
+                {ShowLoanModal && (
+                  <div div className="modal_overlay">
+
+
+
+                    <div className="modal">
+
+
+
+                      {/* HEADER */}
+
+                      <div className="modal_header">
+
+                        <h2>
+
+                          Add Loan
+
+                        </h2>
+
+
+
+                        <button
+                          className="close_modal_btn"
+                          onClick={() => setShowLoanModal(false)}
+                        >
+
+                          ✕
+
+                        </button>
+
+                      </div>
+
+
+
+
+
+
+
+
+                      {/* Form */}
+
+                      <form className="form"
+                        onSubmit={handleAddLoan}
+                      >
+
+
+
+
+
+
+                        <div className="form_group">
+
+                          <label>
+
+                            Loan Type
+
+                          </label>
+
+                          <select
+                            value={loanData.assetType}
+                            onChange={(e) => {
+                              setLoanData({
+                                ...loanData,
+                                assetType: e.target.value
+                              })
+                            }}
+                          >
+                            <option value="Personal">Persoanl</option>
+                            <option value="Home">Home</option>
+                            <option value="Education">Education</option>
+                            <option value="Car">Car</option>
+
+                          </select>
+
+
+
+                        </div>
+
+                        <div className="form_group">
+
+                          <label>
+
+                            Principle Amount
+
+                          </label>
+
+
+                           <input 
+                           type="number" 
+                           value={loanData.principleAmt}
+                           onChange={(e)=>{setLoanData({
+                            ...loanData,
+                            principleAmt:e.target.value
+                           })}}
+                           />
+
+                        </div>
+                        
+                        <div className="form_group">
+                          <label>
+                            Interest Rate
+                          </label>
+                           
+                           <input 
+                           type="number"
+                           value={loanData.interestRate}
+                           onChange={(e)=>{
+                            setLoanData({
+                              ...loanData,
+                              interestRate: e.target.value
+                            })
+                           }}
+                           />
+
+                        </div>
+
+                        <div className="form_group">
+                          <label>
+                            Tenure (Months)
+                          </label>
+
+                          <input 
+                          type="number"
+                          value={loanData.tenure}
+                          onChange={(e)=>{setLoanData({
+                            ...loanData,
+                            tenure: e.target.value
+                          })}}
+                          />
+                        </div>
+
+
+                        <div className="form_group">
+                          <label>
+
+                            EMI
+
+                          </label>
+
+                          <input 
+                          type="number"
+                          value={loanData.EMI}
+                          onChange={(e)=>{setLoanData({
+                            ...loanData,
+                            EMI: e.target.value
+                          })}}
+                          />
+
+                        </div>
+
+                        <div className="form_group">
+                          <label>
+                              
+                              Start Date
+                             
+                          </label>
+
+                          <input 
+                           type="date"
+                           value={loanData.startDate}
+                           onChange={(e)=>{
+                            setLoanData({
+                              ...loanData,
+                              startDate: e.target.value
+                            })
+                           }}
+                          />
+
+                        </div>
+
+
+                        <div className="form_group">
+                            
+                            <select 
+                            value={loanData.loanStatus}
+                            onChange={(e)=>{
+                              setLoanData({
+                                ...loanData,
+                                loanStatus: e.target.value
+                              })
+                            }}
+                            >
+                                   <option value="Active">Active</option>
+                                   <option value="Completed">Completed</option>
+
+                            </select>
+
+                        </div>
+
+{/* 
+                        <div className="form_group">
+
+                          <label>
+
+                            Date
+
+                          </label>
+
+
+                          <input
+                            type="date"
+                            onChange={(e) =>
+                              setExpenseData({
+                                ...expenseData,
+                                date: e.target.value
+                              })
+                            }
+                          />
+
+                        </div> */}
+
+
+
+                        {/* BUTTONS */}
+
+                        <div className="form_actions">
+
+
+
+                          <button
+                            type="button"
+                            className="cancel_btn"
+                            onClick={() => setShowExpensesModal(false)}
+                          >
+
+                            Cancel
+
+                          </button>
+
+
+
+
+
+                          <button
+                            type="submit"
+                            className="save_btn"
+                          >
+
+                            Save Expense
+
+                          </button>
+
+                        </div>
+
+                      </form>
+
+                    </div>
+
+                  </div>
+                )}
+
+                {/* List */}
+
+                {viewmode === "List" &&
+                  <div className="expenses_transactions">
+
+                    <div className="transactions_header">
+
+                      <h3>Expense </h3>
+
+                    </div>
+
+
+                    <div className="transaction_table">
+
+                      <div className="table_heading">
+
+                        <p>Start Date</p>
+                        <p>Loan Type</p>
+                        <p>EMI</p>
+                        <p>TENURE </p>
+                        <p>Loan Status</p>
+
+                      </div>
+
+
+                      <div className="transaction_row">
+
+                        <p>24 May 2026</p>
+                        <span className="category_tag">
+                          HOME
+                        </span>
+
+                        <p className="amount_text">
+                          ₹450
+                        </p>
+
+                        <p>4.5 YEARS</p>
+                        <p>ACTIVE</p>
+
+                      </div>
+
+
+                      <div className="transaction_row">
+
+                        <p>23 May 2026</p>
+
+                        <span className="category_tag">
+                          PERSONAL
+                        </span>
+
+                        <p className="amount_text">
+                          ₹780
+                        </p>
+
+                        <p>6 YEARS</p>
+                        <p>CLOSED</p>
+
+
+
+                      </div>
+
+
+                      <div className="transaction_row">
+
+                        <p>22 May 2026</p>
+
+                        <span className="category_tag">
+                          EDUCATION
+                        </span>
+
+                        <p className="amount_text">
+                          ₹499
+                        </p>
+
+                        <p>10 YEARS</p>
+                        <p>ACTIVE</p>
+
+
+
+
+                      </div>
+
+                    </div>
+
+                  </div>
+                }
+
+                {viewmode === "Analytical" &&
+                  <div className="analytical_view">
+
+
+                    <div className="analytical_view_card_container card_container">
+
+                      {
+                        currentAnalysisConfig.cards.map((card, index) => (
+                          <div className="analytical_view_card card" key={index}>
+                            <div className="analytical_view_card_label card_label">
+                              <h4>{card.label}</h4>
+                            </div>
+                            <div className="analytical_view_card_values card_values">
+
+                              {card.value}
+                            </div>
+                          </div>
+                        ))
+
+                      }
+
 
 
 
                     </div>
 
-                </div>
+                    <div className="emi_analysis">
+
+                      <h3>
+
+                        EMI Analysis
+
+                      </h3>
+
+                      <div className="emi_analysis_list">
+
+                        {
+
+                          emiData.map((loan, index) => (
+
+                            <div
+                              className="emi_row"
+                              key={index}
+                            >
+
+                              <div className="emi_name">
+
+                                {loan.loanType}
+
+                              </div>
+
+
+
+                              <div className="emi_bar_wrapper">
+
+                                <div
+                                  className="emi_bar"
+                                  style={{
+                                    width: `${(loan.emi / maxEmi) * 100
+                                      }%`
+                                  }}
+                                ></div>
+
+                              </div>
+
+
+
+                              <div className="emi_amount">
+
+                                ₹{loan.emi.toLocaleString()}
+
+                              </div>
+
+                            </div>
+
+                          ))
+
+                        }
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                }
+
+                {viewmode === "Allocation" &&
+                  <div className="allocation_view">
+                    <div className="allocation_summary">
+                      {
+                        currentAllocationConfig.cards.map((card, index) => (
+                          <div className="allcation_summary_card" key={index}>
+                            <div className="allocation_summary_card card_label">
+                              <h4>{card.label}</h4>
+                            </div>
+
+                            <div className="allocation_summary_card card_value">
+                              {card.value}
+                            </div>
+                          </div>
+
+                        ))
+                      }
+                    </div>
+                  </div>
+
+                }
+
+              </div>
 
             </div>
-    
+
+
+
+
+
+
+
+          </div>
+
+        </div>
+
+      </div>
+
     </>
   )
 }

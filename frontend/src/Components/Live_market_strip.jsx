@@ -1,5 +1,5 @@
 import React from 'react'
-import '../Componets/Live_market_strip.css'
+import '../Styles/Live_market_strip.css'
 
 const Live_market_strip = () => {
 

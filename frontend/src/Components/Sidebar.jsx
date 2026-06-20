@@ -1,28 +1,30 @@
 import React from 'react'
-import '../Componets/Sidebar.css'
+import Logo from '../assets/logo.png'
 import { NavLink } from 'react-router-dom'
+import '../Styles/Sidebar.css'
 import {FaHome, FaWallet} from 'react-icons/fa'
-
 const Sidebar = () => {
-    return (
-        <>
+  return (
 
-            <div className="sidebar_wrapper">
+    <>
+      <div className="sidebar_wrapper">
                 <div className="sidebar_container">
                     <div className="sidebar_itemWrapper">
 
                         <div className="logo">
-
-
+                             <img
+                                src={Logo}
+                                alt="Logo"
+                            />
                         </div>
 
                         <div className="itemContainer">
-                            <h6 className="itemCat">Overview</h6>
+                            <h3 className="itemCat">Overview</h3>
                             <ul>
                                 <li>
                                     <NavLink to='/dash' className={({ isActive }) =>
                                         isActive ? "activeLink sidebarItem" : "sidebarItem"
-                                    } > <span><FaHome/>  </span>Dashboard </NavLink>
+                                    } > <span>  </span>Dashboard </NavLink>
 
                                 </li>
 
@@ -39,7 +41,7 @@ const Sidebar = () => {
                         </div>
 
                         <div className="itemContainer">
-                            <h6 className="itemCat">Finanace</h6>
+                            <h3 className="itemCat">Finanace</h3>
                             <ul>
 
                                 <li>
@@ -65,7 +67,7 @@ const Sidebar = () => {
                         </div>
 
                         <div className="itemContainer">
-                            <h6 className="itemCat">Tools</h6>
+                            <h3 className="itemCat">Tools</h3>
                             <ul>
 
                                 <li>
@@ -89,7 +91,7 @@ const Sidebar = () => {
                         </div>
 
                         <div className="itemContainer">
-                            <h6 className="itemCat">Accout</h6>
+                            <h3 className="itemCat">Accout</h3>
                             <ul>
 
                                 <li>
@@ -115,10 +117,8 @@ const Sidebar = () => {
                     </div>
                 </div>
             </div>
-
-        </>
-
-    )
+    </>
+  )
 }
 
 export default Sidebar

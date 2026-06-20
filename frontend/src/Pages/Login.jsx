@@ -1,87 +1,80 @@
-import { useState } from "react"
-import axios from 'axios'
-import "../Pages/Login.css"
-import { useNavigate , NavLink } from "react-router-dom"
+import React from 'react'
+import '../Styles/Login.css'
+import { useState  } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 
+const Login = () => {
+  const naviagte = useNavigate()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, seterror] = useState({})
+  const [servererror, setServererror] = useState("")
+  const [loading, setloading] = useState(false)
 
+  const validate = async (e) => {
 
-function Login() {
+    let newErrors = {}
 
-    const naviagte = useNavigate()
+    console.log(email);
+    console.log(password);
+    console.log(email.trim().length);
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [error, seterror] = useState({})
-    const [servererror, setServererror] = useState("")
-    const [loading, setloading] = useState(false)
-
-    const validate = async (e) => {
-
-        let newErrors = {}
-
-        console.log(email);
-        console.log(password);
-        console.log(email.trim().length);
-
-
-        if (!email.trim().length) {
-            newErrors.email = "Email is required"
-
-        }
-
-        if (!password.trim().length) {
-            newErrors.password = "Password is required"
-
-        }
-        seterror(newErrors)
-        if (Object.keys(newErrors).length > 0) {
-            return
-        }
-
-
-        try {
-
-
-             const result = await axios.post(
-                 `http://localhost:5000/auth/api/v1/login`,
-                 { email, password },
-                 {
-                    withCredentials: true
-                }
-             )
-
-            alert("Login ")
-            console.log(result.data.token);
-
-            naviagte('/dash')
-
-            
-
-
-        } catch (err) {
-            
-            setServererror("User not found")
-            
-            console.log("Failed to fetch info" , err.message);
-
-
-        }
-
+    if (!email.trim().length) {
+      newErrors.email = "Email is required"
 
     }
 
-    const handleLogin = async (e) => {
+    if (!password.trim().length) {
+      newErrors.password = "Password is required"
 
-        e.preventDefault();
+    }
+    seterror(newErrors)
+    if (Object.keys(newErrors).length > 0) {
+      return
+    }
 
-        await validate()
+
+    try {
+
+
+      const result = await axios.post(
+        `http://localhost:5000/auth/api/v1/login`,
+        { email, password },
+        {
+          withCredentials: true
+        }
+      )
+
+      alert("Login ")
+      console.log(result.data.token);
+
+      naviagte('/dash')
+
+
+
+
+    } catch (err) {
+
+      setServererror("User not found")
+
+      console.log("Failed to fetch info", err.message);
 
 
     }
 
 
+  }
 
-    return (
+  const handleLogin = async (e) => {
+
+    e.preventDefault();
+
+    await validate()
+
+
+  }
+
+   return (
         <>
             <div className="auth_wrapper">
 
@@ -144,6 +137,7 @@ function Login() {
         </>
     )
 
+  
 }
 
 export default Login

@@ -20,31 +20,36 @@
   height: 300px;
   color: #F9FAFB;
 }
-
-.sidebar_itemWrappe {
-  margin-top: 3rem;
-  padding: 1rem;
-  margin-left: 1rem;
-
+.sidebar_itemWrapper{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin-top: .5rem;
 }
-
-
 .logo {
-  background-color: wheat;
-  height: 7rem;
-  margin: .5rem;
+          height: 7rem;
+    margin: .5rem;
+    
 }
 
-.itemContainer {
-  margin-left: 1rem;
+.logo img{
+    width: 100%;
+    height: 100%;
+
+}
+
+.itemContainer{
+     margin-left: 1rem;
   padding-left: 1rem;
-  margin-top: 2rem;
+
   text-align: left;
 }
 
 .itemCat {
   color: #6B7280;
   position: relative;
+  font-size: large;
+  margin-bottom: .5rem;
 
 }
 
@@ -72,17 +77,23 @@
 
 }
 
+
 .itemContainer>ul {
   list-style: none;
   padding: 0;
+  margin-bottom: 1rem;
 
 
+}
+.itemContainer>ul>li{
+    font-size: 1.1rem;
+    margin-bottom: .2rem; 
 }
 
 .sidebarItem {
   text-decoration: none;
   color: white;
-  margin-bottom: .5rem;
+ 
 }
 
 .activeLink {
