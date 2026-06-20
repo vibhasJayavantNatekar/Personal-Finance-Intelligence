@@ -5,6 +5,7 @@ import Navbar from '../Components/Navbar'
 import ExpensesSidebar from '../Components/ExpensesSidebar'
 import { useSearchParams } from 'react-router-dom'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+import AllocationChart from '../Components/AllocationChart'
 
 const Expenses = () => {
 
@@ -72,6 +73,9 @@ const Expenses = () => {
     }
 
   ]
+
+ 
+
   const totalExpense = chartData.reduce(
     (sum, item) => sum + item.amount,
     0
@@ -547,147 +551,13 @@ const Expenses = () => {
 
                   </div>
 
-                  <div className="chart_container">
+                
 
-                    <h3>
-
-                      Category Spending
-
-                    </h3>
-
-                    <div className="chart_content">
-
-                      {/* CHART */}
-
-                      <div className="chart_left">
-
-                        <ResponsiveContainer
-                          width="100%"
-                          height={320}
-                        >
-
-                          <PieChart>
-
-                            <Pie
-                              data={chartData}
-                              dataKey="amount"
-                              nameKey="category"
-                              cx="50%"
-                              cy="50%"
-                              outerRadius={130}
-                              innerRadius={70}
-                            >
-
-                              {
-                                chartData.map((entry, index) => (
-
-                                  <Cell
-                                    key={index}
-                                    fill={COLORS[index % COLORS.length]}
-                                  />
-
-                                ))
-                              }
-
-                            </Pie>
-
-
-
-                            <text
-                              x="50%"
-                              y="48%"
-                              textAnchor="middle"
-                              fill="#F9FAFB"
-                              fontSize="28"
-                              fontWeight="700"
-                            >
-
-                              ₹{totalExpense.toLocaleString()}
-
-                            </text>
-
-
-
-                            <text
-                              x="50%"
-                              y="58%"
-                              textAnchor="middle"
-                              fill="#9CA3AF"
-                              fontSize="16"
-                            >
-
-                              Total
-
-                            </text>
-
-                          </PieChart>
-
-                        </ResponsiveContainer>
-
-                      </div>
-
-
-
-                      {/* LEGEND */}
-
-                      <div className="chart_breakdown">
-
-                        {
-
-                          chartData.map((item, index) => {
-
-                            const percentage = (
-
-                              (item.amount / totalExpense) * 100
-
-                            ).toFixed(0)
-
-                            return (
-
-                              <div
-                                className="breakdown_item"
-                                key={index}
-                              >
-
-                                <div className="breakdown_left">
-
-                                  <span
-                                    className="breakdown_dot"
-                                    style={{
-                                      backgroundColor:
-                                        COLORS[index % COLORS.length]
-                                    }}
-                                  ></span>
-
-                                  <p>
-
-                                    {item.category}
-
-                                  </p>
-
-                                </div>
-
-
-
-                                <h5>
-
-                                  {percentage}%
-
-                                </h5>
-
-                              </div>
-
-                            )
-
-                          })
-
-                        }
-
-                      </div>
-
-                    </div>
-
-                  </div>
+                  <AllocationChart
+                    title="Expense Distribution"
+                    data={chartData}
+                    total={totalExpense}
+                  />
 
                 </div>
 

@@ -5,6 +5,7 @@ import Navbar from '../Components/Navbar'
 import InvestmentSidebar from '../Components/InvestmentSidebar'
 import Live_market_strip from '../Components/Live_market_strip'
 import '../Styles/Insights.css'
+import AllocationChart from '../Components/AllocationChart'
 
 const Investment = () => {
 
@@ -14,17 +15,34 @@ const Investment = () => {
   const [selectStatus, setselectStatus] = useState("ALL")
   const [selectTPP, setselectTPP] = useState("10")
 
-   const [investmentData, setInvestmentData] = useState({
-  
-      assetType: "",
-      assetName: "",
-      investedAmt: "",
-      purcahseDate: "",
-      currentValue: "",
-      status: "",
-      notes: ""
-  
-    })
+  const [investmentData, setInvestmentData] = useState({
+
+    assetType: "",
+    assetName: "",
+    investedAmt: "",
+    purcahseDate: "",
+    currentValue: "",
+    status: "",
+    notes: ""
+
+  })
+
+  const investmentChartData = [
+    {
+        category: "Stocks",
+        amount: 45
+       
+    },
+    {
+        category: "Mutual Funds",
+        amount: 25
+      
+    }
+];
+
+const totalInvestment = investmentChartData.reduce((sum , item)=>
+sum + item.amount , 0
+)
 
   const analyticsConfig = {
 
@@ -1407,7 +1425,7 @@ const Investment = () => {
   console.log(currentConfig)
 
   const handleAddInvestment = async (e) => {
-  
+
     e.preventDefault()
 
     alert("Added")
@@ -2020,195 +2038,12 @@ const Investment = () => {
 
                 {viewmode === "Allocation" &&
                   < div className="allocation_view">
-                    <div className="allocation_chart">
+                    <AllocationChart
+                      title="Portfolio Allocation"
+                      data={investmentChartData}
+                      total={totalInvestment}
+                    />
 
-                      <h3>
-
-                        Portfolio Allocation
-
-                      </h3>
-
-
-
-                      <div className="allocation_chart_container">
-
-
-
-                        {/* DONUT */}
-
-                        <div className="fake_donut_chart">
-
-                          <div className="donut_center">
-
-                            <h4>
-
-                              ₹12L
-
-                            </h4>
-
-
-
-                            <p>
-
-                              Total
-
-                            </p>
-
-                          </div>
-
-                        </div>
-
-
-
-
-
-                        {/* LEGEND */}
-
-                        <div className="allocation_legend">
-
-
-
-                          <div className="legend_item">
-
-                            <div className="legend_left">
-
-                              <span className="legend_color stocks_color"></span>
-
-                              <p>
-
-                                Stocks
-
-                              </p>
-
-                            </div>
-
-
-
-                            <h5>
-
-                              45%
-
-                            </h5>
-
-                          </div>
-
-
-
-
-
-                          <div className="legend_item">
-
-                            <div className="legend_left">
-
-                              <span className="legend_color mutual_color"></span>
-
-                              <p>
-
-                                Mutual Funds
-
-                              </p>
-
-                            </div>
-
-
-
-                            <h5>
-
-                              25%
-
-                            </h5>
-
-                          </div>
-
-
-
-
-
-                          <div className="legend_item">
-
-                            <div className="legend_left">
-
-                              <span className="legend_color gold_color"></span>
-
-                              <p>
-
-                                Gold
-
-                              </p>
-
-                            </div>
-
-
-
-                            <h5>
-
-                              15%
-
-                            </h5>
-
-                          </div>
-
-
-
-
-
-                          <div className="legend_item">
-
-                            <div className="legend_left">
-
-                              <span className="legend_color fd_color"></span>
-
-                              <p>
-
-                                FD
-
-                              </p>
-
-                            </div>
-
-
-
-                            <h5>
-
-                              10%
-
-                            </h5>
-
-                          </div>
-
-
-
-
-
-                          <div className="legend_item">
-
-                            <div className="legend_left">
-
-                              <span className="legend_color etf_color"></span>
-
-                              <p>
-
-                                ETF
-
-                              </p>
-
-                            </div>
-
-
-
-                            <h5>
-
-                              5%
-
-                            </h5>
-
-                          </div>
-
-                        </div>
-
-                      </div>
-
-                    </div>
 
                     <div className="allocation_summary">
 

@@ -4,6 +4,7 @@ import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
 import LoanSidebar from '../Components/LoanSidebar'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
+import AllocationChart from '../Components/AllocationChart'
 
 const Loan = () => {
 
@@ -25,6 +26,29 @@ const Loan = () => {
     notes: ""
 
   })
+
+  const loanChartData = [
+    {
+      category: "Home Loan",
+      amount: 60
+
+    },
+    {
+      category: "Car Loan",
+      amount: 25
+      
+    },
+    {
+      category: "Personal Loan",
+      amount: 15
+
+    }
+  ];
+
+  const totalLoan = loanChartData.reduce(
+    (sum, item) => sum + item.amount,
+    0
+  )
 
   const emiData = [
     {
@@ -686,7 +710,7 @@ const Loan = () => {
   )
 
   const handleAddLoan = async (e) => {
-  
+
     e.preventDefault()
 
     alert("Added")
@@ -694,14 +718,14 @@ const Loan = () => {
     setShowLoanModal(false)
 
     setLoanData({
-    loanType: "",
-    principleAmt: "",
-    interestRate: "",
-    tenure: "",
-    EMI: "",
-    startDate: "",
-    loanStatus: "",
-    notes: ""
+      loanType: "",
+      principleAmt: "",
+      interestRate: "",
+      tenure: "",
+      EMI: "",
+      startDate: "",
+      loanStatus: "",
+      notes: ""
     })
 
   }
@@ -904,32 +928,34 @@ const Loan = () => {
                           </label>
 
 
-                           <input 
-                           type="number" 
-                           value={loanData.principleAmt}
-                           onChange={(e)=>{setLoanData({
-                            ...loanData,
-                            principleAmt:e.target.value
-                           })}}
-                           />
+                          <input
+                            type="number"
+                            value={loanData.principleAmt}
+                            onChange={(e) => {
+                              setLoanData({
+                                ...loanData,
+                                principleAmt: e.target.value
+                              })
+                            }}
+                          />
 
                         </div>
-                        
+
                         <div className="form_group">
                           <label>
                             Interest Rate
                           </label>
-                           
-                           <input 
-                           type="number"
-                           value={loanData.interestRate}
-                           onChange={(e)=>{
-                            setLoanData({
-                              ...loanData,
-                              interestRate: e.target.value
-                            })
-                           }}
-                           />
+
+                          <input
+                            type="number"
+                            value={loanData.interestRate}
+                            onChange={(e) => {
+                              setLoanData({
+                                ...loanData,
+                                interestRate: e.target.value
+                              })
+                            }}
+                          />
 
                         </div>
 
@@ -938,13 +964,15 @@ const Loan = () => {
                             Tenure (Months)
                           </label>
 
-                          <input 
-                          type="number"
-                          value={loanData.tenure}
-                          onChange={(e)=>{setLoanData({
-                            ...loanData,
-                            tenure: e.target.value
-                          })}}
+                          <input
+                            type="number"
+                            value={loanData.tenure}
+                            onChange={(e) => {
+                              setLoanData({
+                                ...loanData,
+                                tenure: e.target.value
+                              })
+                            }}
                           />
                         </div>
 
@@ -956,57 +984,59 @@ const Loan = () => {
 
                           </label>
 
-                          <input 
-                          type="number"
-                          value={loanData.EMI}
-                          onChange={(e)=>{setLoanData({
-                            ...loanData,
-                            EMI: e.target.value
-                          })}}
+                          <input
+                            type="number"
+                            value={loanData.EMI}
+                            onChange={(e) => {
+                              setLoanData({
+                                ...loanData,
+                                EMI: e.target.value
+                              })
+                            }}
                           />
 
                         </div>
 
                         <div className="form_group">
                           <label>
-                              
-                              Start Date
-                             
+
+                            Start Date
+
                           </label>
 
-                          <input 
-                           type="date"
-                           value={loanData.startDate}
-                           onChange={(e)=>{
-                            setLoanData({
-                              ...loanData,
-                              startDate: e.target.value
-                            })
-                           }}
+                          <input
+                            type="date"
+                            value={loanData.startDate}
+                            onChange={(e) => {
+                              setLoanData({
+                                ...loanData,
+                                startDate: e.target.value
+                              })
+                            }}
                           />
 
                         </div>
 
 
                         <div className="form_group">
-                            
-                            <select 
+
+                          <select
                             value={loanData.loanStatus}
-                            onChange={(e)=>{
+                            onChange={(e) => {
                               setLoanData({
                                 ...loanData,
                                 loanStatus: e.target.value
                               })
                             }}
-                            >
-                                   <option value="Active">Active</option>
-                                   <option value="Completed">Completed</option>
+                          >
+                            <option value="Active">Active</option>
+                            <option value="Completed">Completed</option>
 
-                            </select>
+                          </select>
 
                         </div>
 
-{/* 
+                        {/* 
                         <div className="form_group">
 
                           <label>
@@ -1260,9 +1290,21 @@ const Loan = () => {
                         ))
                       }
                     </div>
+
+                    <AllocationChart
+                      title="Loan Distribution"
+                      data={loanChartData}
+                      total={totalLoan}
+                    />
+
+
                   </div>
 
+
+
                 }
+
+
 
               </div>
 
