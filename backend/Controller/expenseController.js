@@ -1,26 +1,37 @@
 const Expenses = require('../Models/expense')
 const express = require("express")
 const mongoose = require('mongoose')
+const apiResponse = require('../Utils/apiResponse')
 const { getTotalExpenseByUser, spendByCategory, monthTomonthTrend } = require('../Services/expenses.service')
 
 //Create Expenses
 
-const createExpense = async (req, res , next) => {
+const createExpense = async (req, res, next) => {
 
     const userID = req.user.id
-    const {  amt, category, date } = req.body
+    const { amt, category, date } = req.body
 
     try {
-        const expense = await Expenses.create({ userID , amt, category, date })
-        res.status(200).json(expense)
+        const expense = await Expenses.create({ userID, amt, category, date })
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Expenses Create Successfully",
+                expense
+            )
+
+        )
+
+
     } catch (error) {
 
-       // res.status(500).json(error.message)
+        // res.status(500).json(error.message)
 
         const err = {
-            status : 500,
-            message : error.message,
-            extraDetails : "Please Fill the all details.."
+            status: 500,
+            message: error.message,
+            extraDetails: "Please Fill the all details.."
         }
 
         next(err)
@@ -31,20 +42,22 @@ const createExpense = async (req, res , next) => {
 
 const getExpenses = async (req, res, next) => {
 
-   
-    
 
     try {
         const expenses = await Expenses.find().populate('userID')
-        res.status(200).json({ expenses })
+        res.status(200).json(apiResponse(
+            true,
+            "Expenses Fetch Successfully",
+            expense
+        )
+        )
+
     } catch (error) {
 
-        //res.status(200).json(error)
-
-         const err = {
-            status : 500,
-            message : error.message,
-            extraDetails : "Error while fetching info.."
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while fetching info.."
         }
 
         next(err)
@@ -57,16 +70,21 @@ const getExpensesByID = async (req, res, next) => {
     const { _id } = req.user.id
 
     try {
-        const user = await Expenses.find({ _id }).populate('userID')
-        res.status(200).json({ user })
+        const expense = await Expenses.find({ _id }).populate('userID')
+        res.status(200).json(apiResponse(
+            true,
+            "Expenses Fetch Successfully",
+            expense
+        )
+        )
 
     } catch (error) {
 
         //res.status(500).json(error)
-         const err = {
-            status : 500,
-            message : error.message,
-            extraDetails : "Error while fetching info.."
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while fetching info.."
         }
 
         next(err)
@@ -75,19 +93,26 @@ const getExpensesByID = async (req, res, next) => {
 
 // Get Expenses by userID
 
-const getExpensesByUserID =  async (req , res, next)=>{
+const getExpensesByUserID = async (req, res, next) => {
     // const{userID} = req.params
-    const userID =  req.user.id;
+    const userID = req.user.id;
 
     try {
-        const expenses = await Expenses.find({userID})
-        res.status(200).json({expenses})
+        const expenses = await Expenses.find({ userID })
+        res.status(200).json(
+            apiResponse(
+                true,
+                "Expenses Fetch Successfully",
+                expenses
+            )
+
+        )
     } catch (error) {
-       // res.status(500).json(error)
+        // res.status(500).json(error)
         const err = {
-            status : 500,
-            message : error.message,
-            extraDetails : "Error while fetching info.."
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while fetching info.."
         }
 
         next(err)
@@ -103,13 +128,22 @@ const updateExpense = async (req, res, next) => {
 
     try {
         const expense = await Expenses.findByIdAndUpdate(id, { amt, category, date })
-        res.status(200).json({ expense })
+
+        res.status(200).json(
+            
+            apiResponse(
+                true,
+                "Expenses Update Successfully",
+                expense
+            )
+
+        )
     } catch (error) {
-        //res.status(500).json(error)
-         const err = {
-            status : 500,
-            message : error.message,
-            extraDetails : "Please fill all details that need to be update"
+
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Please fill all details that need to be update"
         }
 
         next(err)
@@ -124,16 +158,24 @@ const deleteExpense = async (req, res, next) => {
     const { id } = req.params
 
     try {
-        await Expenses.findByIdAndDelete(id)
-        res.status(200).json({ message: "Delete Successfull !" })
+        const expense = await Expenses.findByIdAndDelete(id)
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Expenses Delete Successfully",
+                expense
+            )
+
+        )
     } catch (error) {
 
-        //res.status(500).json(error)
 
-         const err = {
-            status : 500,
-            message : error.message,
-            extraDetails : "Error while deleting info"
+
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while deleting info"
         }
 
         next(err)
@@ -144,17 +186,25 @@ const deleteExpense = async (req, res, next) => {
 //getTotalExpenses
 
 const getTotalExpenses = async (req, res, next) => {
-    const  userID  = req.user.id
-  
+    const userID = req.user.id
+
     try {
         const totalExpenses = await getTotalExpenseByUser(userID)
-        res.status(200).json({ totalExpenses })
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Fetch Successfully",
+                totalExpenses
+            )
+
+        )
     } catch (error) {
-        //res.status(500).json(error.message)
-         const err = {
-            status : 500,
-            message : error.message,
-            extraDetails : "Error while fetching info.."
+       
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while fetching info.."
         }
 
         next(err)
@@ -165,19 +215,26 @@ const getTotalExpenses = async (req, res, next) => {
 //Monthly Spending
 
 const monthTomonthSpending = async (req, res, next) => {
-    const  userID  = req.user.id
+    const userID = req.user.id
 
     try {
         const monthlySpending = await monthTomonthTrend(userID)
-        res.status(200).json({ monthlySpending})
+
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Fetch Monthly Spending Successfully",
+                monthlySpending
+            )
+        )
 
     } catch (error) {
-        //res.status(500).json(error.message)
 
-         const err = {
-            status : 500,
-            message : error.message,
-            extraDetails : "Error while fetching info.."
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while fetching info.."
         }
 
         next(err)
@@ -188,18 +245,24 @@ const monthTomonthSpending = async (req, res, next) => {
 //getSpendByCategory 
 
 const spendingByCategory = async (req, res, next) => {
-    const  userID  = req.user.id
+    const userID = req.user.id
 
     try {
         const spendByCat = await spendByCategory(userID)
-        res.status(200).json({ spendByCat })
+        res.status(200).json(
+            apiResponse(
+                true,
+                "Fetch Speding by Category Successfully",
+                spendByCat
+            )
+        )
     } catch (error) {
-       // res.status(500).json(error.message)
+
 
         const err = {
-            status : 500,
-            message : error.message,
-            extraDetails : "Error while fetching info.."
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while fetching info.."
         }
 
         next(err)
@@ -207,6 +270,6 @@ const spendingByCategory = async (req, res, next) => {
 }
 
 
-module.exports = { createExpense, getExpenses, updateExpense, deleteExpense, getExpensesByID, getExpensesByUserID , getTotalExpenses, spendingByCategory, monthTomonthSpending }
+module.exports = { createExpense, getExpenses, updateExpense, deleteExpense, getExpensesByID, getExpensesByUserID, getTotalExpenses, spendingByCategory, monthTomonthSpending }
 
 

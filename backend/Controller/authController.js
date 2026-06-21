@@ -40,6 +40,7 @@ const logIn = async (req, res) => {
         const token = createToken(user._id)
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxage * 1000 })
         res.status(200).json({ user: user._id, token: token })
+        
     } catch (error) {
         res.status(400).json(error.message)
 

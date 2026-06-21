@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('../Models/userModel')
+const apiResponse = require('../Utils/apiResponse')
 const UserProfile = require('../Models/userprofileModel')
 
 //Create new User
@@ -8,7 +9,15 @@ const createUser = async (req, res) => {
     const { name, email, password } = req.body
     try {
         const user = await User.createUser(name, email, password)
-        res.status(200).json({ message: "Create User", user: user })
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Create User Successfully",
+                user
+            )
+
+        )
 
     } catch (error) {
 
@@ -20,21 +29,28 @@ const createUser = async (req, res) => {
 
 const createProfile = async (req, res) => {
     const { monthly_income, risk_preference, employment_type } = req.body
-    const  userId =  req.user.id
+    const userId = req.user.id
 
     try {
 
-        const existingUser = await User.find({userId})
+        const existingUser = await User.find({ userId })
 
         if (!existingUser) {
             return res.status(404).json({ message: "User not found with this id", userId })
         }
 
-        // const existProfile = await UserProfile.find({ user })
 
         const profile = await UserProfile.create({ userID: userId, monthly_income, risk_preference, employment_type })
 
-        res.status(200).json({ profile })
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Create Profile Successfully",
+                profile
+            )
+
+        )
     } catch (error) {
 
         res.status(500).json(error.message)
@@ -49,7 +65,15 @@ const getUser = async (req, res) => {
     try {
 
         const users = await User.find()
-        res.status(200).json({ users })
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Fetch All Users Successfully",
+                users
+            )
+
+        )
 
     } catch (error) {
 
@@ -69,7 +93,15 @@ const getUserById = async (req, res) => {
 
 
         const user = await User.findById(id)
-        res.status(200).json({ user: user })
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Fetch Users Successfully",
+                user
+            )
+
+        )
     } catch (error) {
 
         res.status(500).json(error.message)
@@ -82,11 +114,19 @@ const getUserById = async (req, res) => {
 
 const getProfile = async (req, res) => {
 
-    const  userId = req.user.id
+    const userId = req.user.id
 
     try {
-        const profile = await UserProfile.find({ userID  : userId })
-        res.status(200).json({ profile })
+        const profile = await UserProfile.find({ userID: userId })
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Fetch Profile Successfully",
+                profile
+            )
+
+        )
     } catch (error) {
 
         res.status(500).json(error)
@@ -110,7 +150,17 @@ const updateUser = async (req, res) => {
         }
 
         const user = await User.findByIdAndUpdate(id, { name, email, password })
-        res.status(200).json({ user: user })
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Update User Successfully",
+                user
+            )
+
+        )
+
+
     } catch (error) {
 
         res.status(500).json(error.message)
@@ -132,9 +182,17 @@ const deleteUser = async (req, res) => {
         }
 
         await UserProfile.findByIdAndDelete({ userID: id })
-        await User.findByIdAndDelete(id)
+        const delUser = await User.findByIdAndDelete(id)
 
-        res.status(200).json("Delete successfully.")
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Delete User Successfully",
+                delUser
+            )
+        )
+
     } catch (error) {
 
         res.status(500).json(error.message)
