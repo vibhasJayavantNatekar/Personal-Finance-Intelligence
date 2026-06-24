@@ -26,7 +26,7 @@ const createExpense = async (req, res, next) => {
 
     } catch (error) {
 
-        // res.status(500).json(error.message)
+       
 
         const err = {
             status: 500,
@@ -130,7 +130,7 @@ const updateExpense = async (req, res, next) => {
         const expense = await Expenses.findByIdAndUpdate(id, { amt, category, date })
 
         res.status(200).json(
-            
+
             apiResponse(
                 true,
                 "Expenses Update Successfully",

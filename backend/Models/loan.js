@@ -9,13 +9,13 @@ const loanSchema = mongoose.Schema(
         },
         loanType: {
             type: String,
-            enum: ["Home",
-                "Personal",
-                "Education",
-                "Car",
-                "Business",
-                "Gold",
-                "Agriculture"],
+            enum: ["HOME",
+                "PERSONAL",
+                "EDUCATION",
+                "CAR",
+                "BUSINESS",
+                "GOLD",
+                "AGRICULTURE"],
             required: true
         },
         principleAmount: {

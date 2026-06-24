@@ -1,6 +1,408 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const Income = require('../Models/')
+const Expense = require('../Models/expense')
+const Investment = require('../Models/investment')
+const Loan = require('../Models/loan')
+
+const currentDate = new Date();
+
+const startOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+);
+
+const endOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    1
+);
+
+
+
+
+const startOfYear = new Date(
+    new Date().getFullYear(),
+    0,
+    1
+)
+
+const endOfYear = new Date(
+    new Date().getFullYear() + 1,
+    0,
+    1
+)
+
+const today = new Date()
+
+const firstDayOfWeek = new Date(today)
+
+firstDayOfWeek.setDate(
+    today.getDate() - today.getDay()
+)
+
+firstDayOfWeek.setHours(0, 0, 0, 0)
+
+const lastDayOfWeek = new Date(firstDayOfWeek)
+
+lastDayOfWeek.setDate(
+    firstDayOfWeek.getDate() + 7
+)
+
+const startOfDay = new Date()
+
+startOfDay.setHours(0, 0, 0, 0)
+
+const endOfDay = new Date()
+
+endOfDay.setHours(23, 59, 59, 999)
+
+const totalExpenses = async (userID) => {
+    const totalExp = await Expense.aggregate([
+        {
+            $match: {
+                userID: new mongoose.Types.ObjectId(userID)
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                totalExpenses: {
+                    $sum: "$amt"
+                }
+            }
+        }
+    ])
+
+    const result = totalExp[0].totalExpenses
+    return result
+
+}
+
+const totalInvestment = async (userID) => {
+    const totalInv = await Investment.aggregate([
+        {
+            $match: {
+                userID: new mongoose.Types.ObjectId(userID)
+            }
+
+        },
+        {
+            $group: {
+                _id: null,
+                totalInvestment: {
+                    $sum: "$investedAmt"
+                }
+            }
+        }
+    ])
+
+
+    const result = totalInv[0].totalInvestment
+
+    return result
+
+
+}
+
+const totalLoans = async (userID) => {
+
+    const totalLoan = await Loan.aggregate([
+        {
+
+            $match: {
+                userID: new mongoose.Types.ObjectId(userID)
+            }
+
+        },
+        {
+            $group: {
+                _id: null,
+                totalLoans: {
+                    $sum: "$principleAmount"
+                }
+
+            }
+        }
+    ])
+
+    const result = totalLoan[0].totalLoans
+
+    return result
+
+}
+
+
+const expensesAnalytics = async (userID, category = "ALL", month = "ALL") => {
+
+    const match = {
+        userID: new mongoose.Types.ObjectId(userID)
+    }
+
+    if (category !== "ALL") {
+        match.category = category
+    }
+
+    if (month !== "ALL") {
+
+        const year =
+            new Date().getFullYear();
+
+        const startDate =
+            new Date(
+                year,
+                Number(month) - 1,
+                1
+            );
+
+        const endDate =
+            new Date(
+                year,
+                Number(month),
+                1
+            );
+
+        match.date = {
+            $gte: startDate,
+            $lt: endDate
+        };
+
+    }
+
+    const analytics = await Expense.aggregate([
+        {
+            $match: match
+        },
+        {
+            $facet: {
+
+                summery: [
+                    {
+
+                        $group: {
+                            _id: null,
+                            toatlSpending: {
+                                $sum: "$amt"
+                            },
+
+                            averageExpenses: {
+                                $avg: "$amt"
+                            },
+
+                            transactionCount: {
+                                $sum: 1
+                            }
+
+                        }
+
+                    }
+
+                ],
+
+                highestExpens: [
+                    {
+                        $sort: {
+                            amt: -1
+                        }
+                    },
+                    {
+                        $limit: 1
+                    }
+                ],
+                lowestExpens: [
+                    {
+                        $sort: {
+                            amt: 1
+                        }
+                    },
+                    {
+                        $limit: 1
+                    }
+                ],
+
+                thisMonthSpending: [
+
+                    {
+                        $match: {
+
+                            date: {
+                                $gte: startOfMonth,
+                                $lt: endOfMonth
+                            }
+
+                        }
+                    },
+
+                    {
+                        $group: {
+                            _id: null,
+
+                            total: {
+                                $sum: "$amt"
+                            }
+                        }
+                    }
+
+                ]
+
+
+            }
+
+        }
+    ])
+
+
+
+    console.log(analytics[0]);
+
+    return analytics[0]
+
+
+}
+
+const expensesAllocation = async (userID, category = "ALL", month = "ALL", year = "2026") => {
+
+    const match = {
+        userID: new mongoose.Types.ObjectId(userID)
+    };
+
+    if (category !== "ALL") {
+        match.category = category;
+    }
+
+    if (
+        month !== "ALL" &&
+        year !== "ALL"
+    ) {
+
+        const startDate = new Date(
+            Number(year),
+            Number(month) - 1,
+            1
+        );
+
+        const endDate = new Date(
+            Number(year),
+            Number(month),
+            1
+        );
+
+        match.date = {
+            $gte: startDate,
+            $lt: endDate
+        };
+    }
+
+    const allocation = await Expense.aggregate([
+        {
+            $match: match
+        },
+        {
+            $group: {
+                _id: "$category",
+                amount: {
+                    $sum: "$amt"
+                }
+            }
+        },
+        {
+            $sort: {
+                amount: -1
+            }
+        }
+    ]);
+
+    console.log(allocation[0]);
+    return allocation[0]
+
+}
+
+const loanOverview = async (userID) => {
+
+    const overview = await Loan.aggregate([
+        {
+            $match: {
+                userID: new mongoose.Types.ObjectId(userID),
+                loanStatus: "ACTIVE"
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                activeLoans: {
+                    $sum: 1
+                },
+                totalPrinciple: {
+                    $sum: "$principleAmount"
+                },
+                monthlyEMI: {
+                    $sum: "$emi"
+                }
+
+            }
+        }
+
+    ])
+    overview[0].lr = 4.5
+    return overview[0]
+
+}
+
+const loanAnalytics = async (userID, type = "ALL", status = "ALL", month = "ALL", year = "ALL") => {
+
+    const match = {
+        userID: new mongoose.Types.ObjectId(userID)
+    }
+
+    if (type !== "ALL") {
+        match.loanType = type
+    }
+
+    if (status !== "ALL") {
+        match.loanStatus
+    }
+
+    if (
+        month !== "ALL" &&
+        year !== "ALL"
+    ) {
+
+        const startDate = new Date(
+            Number(year),
+            Number(month) - 1,
+            1
+        );
+
+        const endDate = new Date(
+            Number(year),
+            Number(month),
+            1
+        );
+
+        match.startDate = {
+            $gte: startDate,
+            $lt: endDate
+        };
+    }
+
+    const analytics = await Loan.aggregate([
+        {
+            $match: match
+        },
+        {
+            $group: {
+                _id:null,
+                
+            }
+        }
+    ])
+
+
+
+}
+
+
+
 
 const monthTomonthExp = async (userID) => {
 
@@ -370,53 +772,6 @@ const yearToyearIncome = async (userID) => {
 
 
 
-const startOfMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    1
-)
-
-const endOfMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() + 1,
-    1
-)
-
-const startOfYear = new Date(
-    new Date().getFullYear(),
-    0,
-    1
-)
-
-const endOfYear = new Date(
-    new Date().getFullYear() + 1,
-    0,
-    1
-)
-
-const today = new Date()
-
-const firstDayOfWeek = new Date(today)
-
-firstDayOfWeek.setDate(
-    today.getDate() - today.getDay()
-)
-
-firstDayOfWeek.setHours(0, 0, 0, 0)
-
-const lastDayOfWeek = new Date(firstDayOfWeek)
-
-lastDayOfWeek.setDate(
-    firstDayOfWeek.getDate() + 7
-)
-
-const startOfDay = new Date()
-
-startOfDay.setHours(0, 0, 0, 0)
-
-const endOfDay = new Date()
-
-endOfDay.setHours(23, 59, 59, 999)
 
 const yearlyExp = async (userID) => {
 
@@ -802,4 +1157,4 @@ const dayIncome = async (userID) => {
 }
 
 
-module.exports = { yearlyExp, yearlyIncome, monthlyExp, monthlyIncome, dayExp, dayIncome, yearToyearExp, yearToyearIncome, monthTomonthExp, monthTomonthIncome, weekToweekExp, weekToweekIncome, dayTodayExp, dayTodayIncome }
+module.exports = { totalExpenses, totalInvestment, totalLoans, expensesAnalytics, expensesAllocation, loanOverview, yearlyExp, yearlyIncome, monthlyExp, monthlyIncome, dayExp, dayIncome, yearToyearExp, yearToyearIncome, monthTomonthExp, monthTomonthIncome, weekToweekExp, weekToweekIncome, dayTodayExp, dayTodayIncome }

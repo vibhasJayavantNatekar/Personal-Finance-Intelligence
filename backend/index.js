@@ -7,6 +7,7 @@ const investmentRoutes = require("./Routes/investmentRoute")
 const loanRoutes = require('./Routes/loanRoutes')
 const healthRoutes = require('./Routes/healthRoute')
 const authRoutes = require('./Routes/authRoutes')
+const summaryRoutes = require('./Routes/summaryRoute')
 const errorMiddleware = require('./Middleware/errorMiddleware')
 const cors = require('cors');
 const app = express()
@@ -36,6 +37,7 @@ app.use('/expenses/api/v1',expenseRoutes)
 app.use('/investment/api/v1',investmentRoutes)
 app.use('/loan/api/v1',loanRoutes)
 app.use('/health/api/v1',healthRoutes)
+app.use('/api/v1/',summaryRoutes)
 
 app.use(errorMiddleware)
 
