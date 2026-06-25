@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const {requireAuth} = require('../Middleware/authMiddleware')
-const {createInvestment , getInvestment , getInvestmentById , updateInvestment  , getInvestmentByUserId , deleteInvestment , Closed , Sold,Active } = require('../Controller/investmentController')
+const {createInvestment , getInvestment , getInvestmentById , updateInvestment  , getInvestmentByUserId , deleteInvestment , Closed , Sold,Active, investmentInsights } = require('../Controller/investmentController')
 
 //Base url - http://localhost:5000/investment/api/v1
 
@@ -19,7 +19,7 @@ router.put('/:id',requireAuth, updateInvestment)  // Update investment
 router.delete("/:id",requireAuth, deleteInvestment) //Delete investment
 
 
-
+router.get("/insights",requireAuth,investmentInsights )
 
 // /investments/pnl → Profit / Loss per investment
 

@@ -1412,7 +1412,7 @@ const getAgricultureCompletedAnalytics = async (userID) => {
 }
 
 const getBusinessAllAnalytics = async (userID) => {
-  
+
   const match = buildLoanMatch(userID, "BUSSINESS", "ALL")
 
 
@@ -1485,7 +1485,7 @@ const getBusinessAllAnalytics = async (userID) => {
 
 const getBusinessActiveAnalytics = async (userID) => {
 
-  
+
   const match = buildLoanMatch(userID, "BUSSINESS", "ACTIVE")
   const profile = await Profile.findOne({ userID })
   const monthlyIncome = profile.monthly_income
@@ -1624,60 +1624,587 @@ const getBusinessCompletedAnalytics = async (userID) => {
 
 }
 
-const loanAnalytics = async (userID, type = "ALL", status = "ALL", month = "ALL", year = "ALL") => {
 
-  const match = {
-    userID: new mongoose.Types.ObjectId(userID)
-  }
 
-  if (type !== "ALL") {
-    match.loanType = type
-  }
 
-  if (status !== "ALL") {
-    match.loanStatus
-  }
+const getAllAllAllocation = async (userID) => {
 
-  if (
-    month !== "ALL" &&
-    year !== "ALL"
-  ) {
+  const match = buildLoanMatch(userID, "ALL", "ALL");
 
-    const startDate = new Date(
-      Number(year),
-      Number(month) - 1,
-      1
-    );
+  const result = await Loan.aggregate([
 
-    const endDate = new Date(
-      Number(year),
-      Number(month),
-      1
-    );
-
-    match.startDate = {
-      $gte: startDate,
-      $lt: endDate
-    };
-  }
-
-  const analytics = await Loan.aggregate([
     {
       $match: match
     },
+
     {
       $group: {
-        _id: null,
+
+        _id: "$loanType",
+
+        totalAmount: {
+          $sum: "$principleAmount"
+        }
 
       }
+    },
+
+    {
+      $facet: {
+
+        largestLoanType: [
+
+          {
+            $sort: {
+              totalAmount: -1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        smallestLoanType: [
+
+          {
+            $sort: {
+              totalAmount: 1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        summary: [
+
+          {
+
+            $group: {
+
+              _id: null,
+
+              loanTypes: {
+                $sum: 1
+              },
+
+              totalBorrowed: {
+                $sum: "$totalAmount"
+              }
+
+            }
+
+          }
+
+        ],
+
+        chart: [
+
+          {
+            $sort: {
+              totalAmount: -1
+            }
+          }
+
+        ]
+
+      }
+
     }
+
   ])
 
+  const summary = result[0]?.summary?.[0] || {
+    loanTypes: 0,
+    totalBorrowed: 0
+  }
 
+  const totalBorrowed = summary.totalBorrowed;
+
+  const chart = (result[0]?.chart || []).map(item => ({
+
+    category: item._id,
+
+    amount: item.totalAmount,
+
+    percentage: totalBorrowed > 0
+      ? Number(((item.totalAmount / totalBorrowed) * 100).toFixed(2))
+      : 0
+
+  }))
+
+  const largest = result[0]?.largestLoanType?.[0] || null
+
+  const smallest = result[0]?.smallestLoanType?.[0] || null
+
+  const data = {
+
+    largestLoanType: largest
+      ? {
+          category: largest._id,
+          amount: largest.totalAmount,
+          percentage: totalBorrowed > 0
+            ? Number(((largest.totalAmount / totalBorrowed) * 100).toFixed(2))
+            : 0
+        }
+      : null,
+
+    smallestLoanType: smallest
+      ? {
+          category: smallest._id,
+          amount: smallest.totalAmount,
+          percentage: totalBorrowed > 0
+            ? Number(((smallest.totalAmount / totalBorrowed) * 100).toFixed(2))
+            : 0
+        }
+      : null,
+
+    loanTypes: summary.loanTypes,
+
+    totalBorrowed: summary.totalBorrowed,
+
+    chart
+
+  }
+
+  return data;
+
+}
+
+const getAllActiveAllocation = async (userID) => {
+
+  const match = buildLoanMatch(userID, "ALL", "ACTIVE")
+
+  const result = await Loan.aggregate([
+
+    {
+      $match: match
+    },
+
+    {
+      $group: {
+
+        _id: "$loanType",
+
+        totalAmount: {
+          $sum: "$principleAmount"
+        }
+
+      }
+    },
+
+    {
+      $facet: {
+
+        largestActiveLoanType: [
+
+          {
+            $sort: {
+              totalAmount: -1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        smallestActiveLoanType: [
+
+          {
+            $sort: {
+              totalAmount: 1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        summary: [
+
+          {
+            $group: {
+
+              _id: null,
+
+              activeLoanTypes: {
+                $sum: 1
+              },
+
+              outstandingAmount: {
+                $sum: "$totalAmount"
+              }
+
+            }
+          }
+
+        ],
+
+        chart: [
+
+          {
+            $sort: {
+              totalAmount: -1
+            }
+          }
+
+        ]
+
+      }
+
+    }
+
+  ])
+
+  const summary = result[0]?.summary?.[0] || {
+    activeLoanTypes: 0,
+    outstandingAmount: 0
+  }
+
+  const totalAmount = summary.outstandingAmount
+
+  const chart = (result[0]?.chart || []).map(item => ({
+
+    category: item._id,
+
+    amount: item.totalAmount,
+
+    percentage: totalAmount > 0
+      ? Number(((item.totalAmount / totalAmount) * 100).toFixed(2))
+      : 0
+
+  }))
+
+  const largest = result[0]?.largestActiveLoanType?.[0] || null
+
+  const smallest = result[0]?.smallestActiveLoanType?.[0] || null
+
+  const data = {
+
+    largestActiveLoanType: largest
+      ? {
+          category: largest._id,
+          amount: largest.totalAmount,
+          percentage: totalAmount > 0
+            ? Number(((largest.totalAmount / totalAmount) * 100).toFixed(2))
+            : 0
+        }
+      : null,
+
+    smallestActiveLoanType: smallest
+      ? {
+          category: smallest._id,
+          amount: smallest.totalAmount,
+          percentage: totalAmount > 0
+            ? Number(((smallest.totalAmount / totalAmount) * 100).toFixed(2))
+            : 0
+        }
+      : null,
+
+    activeLoanTypes: summary.activeLoanTypes,
+
+    outstandingAmount: summary.outstandingAmount,
+
+    chart
+
+  }
+
+  return data
+
+}
+
+const getAllCompletedAllocation = async (userID) => {
+
+  const match = buildLoanMatch(userID, "ALL", "COMPLETED")
+
+  const result = await Loan.aggregate([
+
+    {
+      $match: match
+    },
+
+    {
+      $group: {
+
+        _id: "$loanType",
+
+        totalAmount: {
+          $sum: "$principleAmount"
+        }
+
+      }
+    },
+
+    {
+      $facet: {
+
+        largestCompletedLoanType: [
+
+          {
+            $sort: {
+              totalAmount: -1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        smallestCompletedLoanType: [
+
+          {
+            $sort: {
+              totalAmount: 1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        summary: [
+
+          {
+
+            $group: {
+
+              _id: null,
+
+              completedLoanTypes: {
+                $sum: 1
+              },
+
+              amountRepaid: {
+                $sum: "$totalAmount"
+              }
+
+            }
+
+          }
+
+        ],
+
+        chart: [
+
+          {
+            $sort: {
+              totalAmount: -1
+            }
+          }
+
+        ]
+
+      }
+
+    }
+
+  ])
+
+  const summary = result[0]?.summary?.[0] || {
+    completedLoanTypes: 0,
+    amountRepaid: 0
+  }
+
+  const totalAmount = summary.amountRepaid;
+
+  const chart = (result[0]?.chart || []).map(item => ({
+
+    category: item._id,
+
+    amount: item.totalAmount,
+
+    percentage: totalAmount > 0
+      ? Number(((item.totalAmount / totalAmount) * 100).toFixed(2))
+      : 0
+
+  }))
+
+  const largest = result[0]?.largestCompletedLoanType?.[0] || null
+
+  const smallest = result[0]?.smallestCompletedLoanType?.[0] || null
+
+  const data = {
+
+    largestCompletedLoanType: largest
+      ? {
+          category: largest._id,
+          amount: largest.totalAmount,
+          percentage: totalAmount > 0
+            ? Number(((largest.totalAmount / totalAmount) * 100).toFixed(2))
+            : 0
+        }
+      : null,
+
+    smallestCompletedLoanType: smallest
+      ? {
+          category: smallest._id,
+          amount: smallest.totalAmount,
+          percentage: totalAmount > 0
+            ? Number(((smallest.totalAmount / totalAmount) * 100).toFixed(2))
+            : 0
+        }
+      : null,
+
+    completedLoanTypes: summary.completedLoanTypes,
+
+    amountRepaid: summary.amountRepaid,
+
+    chart
+
+  }
+
+  return data
 
 }
 
 
+
+// const loanAnalytics = async (userID, type = "ALL", status = "ALL", month = "ALL", year = "ALL") => {
+
+//   const match = {
+//     userID: new mongoose.Types.ObjectId(userID)
+//   }
+
+//   if (type !== "ALL") {
+//     match.loanType = type
+//   }
+
+//   if (status !== "ALL") {
+//     match.loanStatus
+//   }
+
+//   if (
+//     month !== "ALL" &&
+//     year !== "ALL"
+//   ) {
+
+//     const startDate = new Date(
+//       Number(year),
+//       Number(month) - 1,
+//       1
+//     );
+
+//     const endDate = new Date(
+//       Number(year),
+//       Number(month),
+//       1
+//     );
+
+//     match.startDate = {
+//       $gte: startDate,
+//       $lt: endDate
+//     };
+//   }
+
+//   const analytics = await Loan.aggregate([
+//     {
+//       $match: match
+//     },
+//     {
+//       $group: {
+//         _id: null,
+
+//       }
+//     }
+//   ])
+
+
+
+// }
+
+
+const getLoanTypeAllocation = async (userID, loanType, status) => {
+
+  const match = buildLoanMatch(userID, loanType, status);
+
+  const result = await Loan.aggregate([
+    {
+      $match: match
+    },
+    {
+      $facet: {
+
+        largestLoan: [
+          {
+            $sort: {
+              principleAmount: -1
+            }
+          },
+          {
+            $limit: 1
+          }
+        ],
+
+        smallestLoan: [
+          {
+            $sort: {
+              principleAmount: 1
+            }
+          },
+          {
+            $limit: 1
+          }
+        ],
+
+        summary: [
+          {
+            $group: {
+              _id: null,
+
+              totalLoans: {
+                $sum: 1
+              },
+
+              totalAmount: {
+                $sum: "$principleAmount"
+              }
+            }
+          }
+        ]
+
+      }
+    }
+  ]);
+
+  const summary = result[0]?.summary?.[0] || {};
+
+  if (status === "ALL") {
+    return {
+      largestLoan: result[0]?.largestLoan?.[0] || null,
+      smallestLoan: result[0]?.smallestLoan?.[0] || null,
+      totalLoans: summary.totalLoans || 0,
+      totalBorrowed: summary.totalAmount || 0
+    };
+  }
+
+  if (status === "ACTIVE") {
+    return {
+      largestActiveLoan: result[0]?.largestLoan?.[0] || null,
+      smallestActiveLoan: result[0]?.smallestLoan?.[0] || null,
+      activeLoans: summary.totalLoans || 0,
+      outstandingAmount: summary.totalAmount || 0
+    };
+  }
+
+  return {
+    largestCompletedLoan: result[0]?.largestLoan?.[0] || null,
+    smallestCompletedLoan: result[0]?.smallestLoan?.[0] || null,
+    completedLoans: summary.totalLoans || 0,
+    amountRepaid: summary.totalAmount || 0
+  };
+};
 
 
 
@@ -1831,4 +2358,8 @@ const getLoanFullSummary = async (userId) => {
   }
 };
 
-module.exports = { getLoanFullSummary, buildLoanMatch, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics };
+module.exports = {  
+  getLoanTypeAllocation,
+  getLoanFullSummary, buildLoanMatch, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics,
+  getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation
+};

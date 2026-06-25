@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const Investment = require('../Models/investment')
 const investment = require('../Models/investment')
+const { getInvestmentInsights } = require("../Services/investment.insight.service");
 
 //Create Investment
 
@@ -285,6 +286,39 @@ const Active = async (req, res, next) => {
 
 }
 
+const investmentInsights = async (req, res, next) => {
+
+    try {
+
+        const userID = req.user.id;
+
+        const data = await getInvestmentInsights(userID)
+
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Investment Insights fetched successfully",
+                data
+            )
+
+        )
+
+    } catch (error) {
+
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while fetching info.."
+        }
+
+        next(err)
+
+    }
+
+}
+
+
 // KTSA79F4XQTYE2PP api key
 
-module.exports = { createInvestment, getInvestment, getInvestmentById, updateInvestment, deleteInvestment, getInvestmentByUserId, Closed, Sold, Active }
+module.exports = { createInvestment, getInvestment, getInvestmentById, updateInvestment, deleteInvestment, getInvestmentByUserId, Closed, Sold, Active, investmentInsights }
