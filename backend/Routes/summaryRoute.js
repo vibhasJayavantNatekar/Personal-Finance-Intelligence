@@ -5,7 +5,7 @@ const {getDashboardSummary, expenseSummary, loanSummary, loanAllocation, investm
 
 //Base url - http://localhost:5000/expenses/api/v1
 
-router.get('/summary',requireAuth,expenseSummary)
+router.get("/summary",requireAuth,expenseSummary)
 router.get("/loanSummary",requireAuth, loanSummary)
 router.get("/loanSummaryAllocation",requireAuth, loanAllocation)
 router.get("/investmentAnalytics",requireAuth, investmentAnalytics)

@@ -1,4 +1,4 @@
-const {getAllInvestmentAnalytics} = require("../investment.service")
+const { getAllInvestmentAnalytics } = require("../investment.service")
 
 const profitRule = (analytics) => {
 

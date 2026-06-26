@@ -14,12 +14,14 @@ router.put('/closed/:userID' , Closed) //Closed Investments
 router.post('/', requireAuth , createInvestment) //Create investment
 router.get('/',requireAuth , getInvestment)  //Retrive investment
 router.get('/user',requireAuth,getInvestmentByUserId) //Get Investment by userID
+
+router.get("/insights",requireAuth,investmentInsights )
 router.get('/:id',requireAuth , getInvestmentById) // Retrive investment by its ID
 router.put('/:id',requireAuth, updateInvestment)  // Update investment
 router.delete("/:id",requireAuth, deleteInvestment) //Delete investment
 
 
-router.get("/insights",requireAuth,investmentInsights )
+
 
 // /investments/pnl → Profit / Loss per investment
 

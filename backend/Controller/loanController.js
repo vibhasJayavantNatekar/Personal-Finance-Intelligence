@@ -5,6 +5,7 @@ const User = require('../Models/userModel')
 const apiResponse = require('../Utils/apiResponse')
 const {getLoanFullSummary} = require('../Services/loan.serice')
 const loan = require('../Models/loan')
+const {getLoanInsights} = require('../Services/lon.insights.service')
 
 //create loan
 
@@ -222,6 +223,35 @@ const getloanSummary = async (req,res , next)=>{
 
 }
 
+const loanInsights = async (req, res, next) => {
+
+    try {
+
+        const data = await getLoanInsights(req.user.id)
+
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Loan insights fetched successfully",
+                data
+            )
+
+        )
+
+    } catch (error) {
+
+          const err = {
+            status : 500,
+            message : error.message,
+            extraDetails : "Error while fetching info.."
+        }
+
+        next(err)
+
+    }
+
+}
 
 
-module.exports = {create , getLoans , getLoanbyId , getLoansByuserID , updateLoan , deleteLoan  , getloanSummary   }
+module.exports = {create , getLoans , getLoanbyId , getLoansByuserID , updateLoan , deleteLoan  , getloanSummary, loanInsights   }

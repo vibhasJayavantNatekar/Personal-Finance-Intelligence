@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const Investment = require('../Models/investment')
 const investment = require('../Models/investment')
 const { getInvestmentInsights } = require("../Services/investment.insight.service");
+const apiResponse = require('../Utils/apiResponse')
 
 //Create Investment
 
@@ -317,6 +318,8 @@ const investmentInsights = async (req, res, next) => {
     }
 
 }
+
+
 
 
 // KTSA79F4XQTYE2PP api key

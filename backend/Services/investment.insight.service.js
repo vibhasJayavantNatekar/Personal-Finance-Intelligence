@@ -34,3 +34,5 @@ const getInvestmentInsights = async (userID) => {
     return insights.filter(Boolean);
 
 }
+
+module.exports = {getInvestmentInsights}

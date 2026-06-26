@@ -2,6 +2,45 @@ const Expenses = require('../Models/expense')
 const express = require('express')
 const mongoose = require('mongoose')
 
+
+
+const mongoose = require("mongoose");
+
+const buildExpenseMatch = ( userID, category = "ALL", month = "ALL", year = "ALL") => {
+
+    const match = {
+        userID: new mongoose.Types.ObjectId(userID)
+    };
+
+    if (category !== "ALL") {
+        match.category = category;
+    }
+
+    if (month !== "ALL" && year !== "ALL") {
+
+        const startDate = new Date(
+            Number(year),
+            Number(month) - 1,
+            1
+        )
+
+        const endDate = new Date(
+            Number(year),
+            Number(month),
+            1
+        )
+
+        match.date = {
+            $gte: startDate,
+            $lt: endDate
+        }
+    }
+
+    return match
+}
+
+module.exports = buildExpenseMatch;
+
 //Calculates Total  Expenses by Particular User 
 
 const getTotalExpenseByUser = async (userID) => {
