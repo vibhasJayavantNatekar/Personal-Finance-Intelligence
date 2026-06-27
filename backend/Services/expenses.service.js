@@ -2,44 +2,476 @@ const Expenses = require('../Models/expense')
 const express = require('express')
 const mongoose = require('mongoose')
 
+const buildExpenseMatch = (userID, category = "ALL", month = "ALL", year = "ALL") => {
 
+  const match = {
+    userID: new mongoose.Types.ObjectId(userID)
+  };
 
-const mongoose = require("mongoose");
+  if (category !== "ALL") {
+    match.category = category;
+  }
 
-const buildExpenseMatch = ( userID, category = "ALL", month = "ALL", year = "ALL") => {
+  if (month !== "ALL" && year !== "ALL") {
 
-    const match = {
-        userID: new mongoose.Types.ObjectId(userID)
-    };
+    const startDate = new Date(
+      Number(year),
+      Number(month) - 1,
+      1
+    )
 
-    if (category !== "ALL") {
-        match.category = category;
+    const endDate = new Date(
+      Number(year),
+      Number(month),
+      1
+    )
+
+    match.date = {
+      $gte: startDate,
+      $lt: endDate
     }
+  }
 
-    if (month !== "ALL" && year !== "ALL") {
-
-        const startDate = new Date(
-            Number(year),
-            Number(month) - 1,
-            1
-        )
-
-        const endDate = new Date(
-            Number(year),
-            Number(month),
-            1
-        )
-
-        match.date = {
-            $gte: startDate,
-            $lt: endDate
-        }
-    }
-
-    return match
+  return match
 }
 
-module.exports = buildExpenseMatch;
+const getAllExpenseAnalytics = async (userID, month = "ALL", year = "ALL") => {
+
+  const match = buildExpenseMatch(userID, "ALL", month, year)
+
+  const result = await Expenses.aggregate([
+
+    {
+      $match: match
+    },
+
+    {
+      $facet: {
+
+        summary: [
+
+          {
+            $group: {
+
+              _id: null,
+
+              totalExpense: {
+                $sum: "$amt"
+              },
+
+              averageExpense: {
+                $avg: "$amt"
+              },
+
+              transactionCount: {
+                $sum: 1
+              }
+
+            }
+
+          }
+
+        ],
+
+        highestExpense: [
+
+          {
+            $sort: {
+              amt: -1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        lowestExpense: [
+
+          {
+            $sort: {
+              amt: 1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ]
+
+      }
+
+    }
+
+  ])
+
+  const summary = result[0]?.summary?.[0] || {};
+
+  return {
+
+    totalExpense:
+      summary.totalExpense || 0,
+
+    averageExpense:
+      summary.averageExpense || 0,
+
+    transactionCount:
+      summary.transactionCount || 0,
+
+    highestExpense:
+      result[0]?.highestExpense?.[0] || null,
+
+    lowestExpense:
+      result[0]?.lowestExpense?.[0] || null
+
+  }
+
+}
+
+const getCategoryExpenseAnalytics = async (userID, category, month = "ALL", year = "ALL") => {
+
+  const match = buildExpenseMatch(userID, category, month, year)
+
+  const result = await Expenses.aggregate([
+
+    {
+      $match: match
+    },
+
+    {
+      $facet: {
+
+        summary: [
+
+          {
+            $group: {
+
+              _id: null,
+
+              totalExpense: {
+                $sum: "$amt"
+              },
+
+              averageExpense: {
+                $avg: "$amt"
+              },
+
+              transactionCount: {
+                $sum: 1
+              }
+
+            }
+
+          }
+
+        ],
+
+        highestExpense: [
+
+          {
+            $sort: {
+              amt: -1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        lowestExpense: [
+
+          {
+            $sort: {
+              amt: 1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ]
+
+      }
+
+    }
+
+  ])
+
+  const summary = result[0]?.summary?.[0] || {};
+
+  return {
+
+    totalExpense:
+      summary.totalExpense || 0,
+
+    averageExpense:
+      summary.averageExpense || 0,
+
+    transactionCount:
+      summary.transactionCount || 0,
+
+    highestExpense:
+      result[0]?.highestExpense?.[0] || null,
+
+    lowestExpense:
+      result[0]?.lowestExpense?.[0] || null
+
+  }
+
+}
+
+const getAllExpenseAllocation = async (userID, month = "ALL", year = "ALL") => {
+
+  const match = buildExpenseMatch( userID, "ALL", month, year)
+
+  const result = await Expenses.aggregate([
+
+    {
+      $match: match
+    },
+
+    {
+      $group: {
+
+        _id: "$category",
+
+        totalAmount: {
+          $sum: "$amt"
+        }
+
+      }
+
+    },
+
+    {
+      $facet: {
+
+        largestCategory: [
+
+          {
+            $sort: {
+              totalAmount: -1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        smallestCategory: [
+
+          {
+            $sort: {
+              totalAmount: 1
+            }
+          },
+
+          {
+            $limit: 1
+          }
+
+        ],
+
+        summary: [
+
+          {
+
+            $group: {
+
+              _id: null,
+
+              totalCategories: {
+                $sum: 1
+              },
+
+              totalExpense: {
+                $sum: "$totalAmount"
+              }
+
+            }
+
+          }
+
+        ],
+
+        chart: [
+
+          {
+            $sort: {
+              totalAmount: -1
+            }
+          }
+
+        ]
+
+      }
+
+    }
+
+  ])
+
+  const summary =
+    result[0]?.summary?.[0] || {};
+
+  const totalExpense =
+    summary.totalExpense || 0;
+
+  const chart =
+    (result[0]?.chart || []).map(item => ({
+
+      category: item._id,
+
+      amount: item.totalAmount,
+
+      percentage:
+        totalExpense > 0
+
+          ?
+
+          Number(
+
+            (
+              item.totalAmount /
+              totalExpense
+            )
+              .toFixed(4)
+
+          ) * 100
+
+          :
+
+          0
+
+    }))
+
+  return {
+
+    largestCategory:
+      result[0]?.largestCategory?.[0] || null,
+
+    smallestCategory:
+      result[0]?.smallestCategory?.[0] || null,
+
+    totalCategories:
+      summary.totalCategories || 0,
+
+    totalExpense,
+
+    chart
+
+  }
+
+}
+
+const getCategoryExpenseAllocation = async (
+    userID,
+    category,
+    month = "ALL",
+    year = "ALL"
+) => {
+
+    const match = buildExpenseMatch(
+        userID,
+        category,
+        month,
+        year
+    )
+
+    const result = await Expenses.aggregate([
+
+        {
+            $match: match
+        },
+
+        {
+            $facet: {
+
+                largestExpense: [
+
+                    {
+                        $sort: {
+                            amt: -1
+                        }
+                    },
+
+                    {
+                        $limit: 1
+                    }
+
+                ],
+
+                smallestExpense: [
+
+                    {
+                        $sort: {
+                            amt: 1
+                        }
+                    },
+
+                    {
+                        $limit: 1
+                    }
+
+                ],
+
+                summary: [
+
+                    {
+
+                        $group: {
+
+                            _id: null,
+
+                            totalTransactions: {
+                                $sum: 1
+                            },
+
+                            totalExpense: {
+                                $sum: "$amt"
+                            }
+
+                        }
+
+                    }
+
+                ]
+
+            }
+
+        }
+
+    ])
+
+    const summary =
+        result[0]?.summary?.[0] || {};
+
+    return {
+
+        largestExpense:
+            result[0]?.largestExpense?.[0] || null,
+
+        smallestExpense:
+            result[0]?.smallestExpense?.[0] || null,
+
+        totalTransactions:
+            summary.totalTransactions || 0,
+
+        totalExpense:
+            summary.totalExpense || 0
+
+    }
+
+}
+
+// _______________________
+// 
 
 //Calculates Total  Expenses by Particular User 
 
@@ -131,7 +563,7 @@ const spendByCategory = async (userID) => {
     }
   ])
 
-  
+
   console.log(expenses.length);
 
   return expenses
@@ -140,5 +572,5 @@ const spendByCategory = async (userID) => {
 
 
 
-module.exports = { getTotalExpenseByUser, spendByCategory, monthTomonthTrend };
+module.exports = { getTotalExpenseByUser, spendByCategory, monthTomonthTrend, getAllExpenseAnalytics, getCategoryExpenseAnalytics, getAllExpenseAllocation, getCategoryExpenseAllocation };
 

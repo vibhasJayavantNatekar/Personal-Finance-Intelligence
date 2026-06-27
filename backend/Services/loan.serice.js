@@ -26,6 +26,37 @@ const buildLoanMatch = (userID, loanType = "ALL", loanStatus = "ALL") => {
   return match;
 }
 
+const getloanOverview = async (userID) => {
+
+    const overview = await Loan.aggregate([
+        {
+            $match: {
+                userID: new mongoose.Types.ObjectId(userID),
+                loanStatus: "ACTIVE"
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                activeLoans: {
+                    $sum: 1
+                },
+                totalPrinciple: {
+                    $sum: "$principleAmount"
+                },
+                monthlyEMI: {
+                    $sum: "$emi"
+                }
+
+            }
+        }
+
+    ])
+    overview[0].lr = 4.5
+    return overview[0]
+
+}
+
 
 const getAllActiveAnalytics = async (userID) => {
 
@@ -2359,7 +2390,7 @@ const getLoanFullSummary = async (userId) => {
 };
 
 module.exports = {  
-  getLoanTypeAllocation,
+  getLoanTypeAllocation,getloanOverview,
   getLoanFullSummary, buildLoanMatch, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics,
   getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation
 };

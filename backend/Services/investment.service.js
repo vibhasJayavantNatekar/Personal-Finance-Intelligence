@@ -1,25 +1,25 @@
 const express = require('express')
 const Investment = require('../Models/investment')
-const mongoose  = require('mongoose')
+const mongoose = require('mongoose')
 
 const buildInvestmentMatch = (userID, type = "ALL", status = "ALL") => {
 
-  const match = {
-    userID:
-      new mongoose.Types.ObjectId(
-        userID
-      )
-  };
+    const match = {
+        userID:
+            new mongoose.Types.ObjectId(
+                userID
+            )
+    };
 
-  if (type !== "ALL") {
-    match.assetType = type
-  }
+    if (type !== "ALL") {
+        match.assetType = type
+    }
 
-  if (status !== "ALL") {
-    match.investmentStatus = status
-  }
+    if (status !== "ALL") {
+        match.investmentStatus = status
+    }
 
-  return match;
+    return match;
 }
 
 const getAllInvestmentAnalytics = async (userID, status) => {
@@ -249,11 +249,7 @@ const getAllSoldInvestmentAnalytics = async (userID) => {
 
 }
 
-const getInvestmentTypeAnalytics = async (
-    userID,
-    assetType,
-    status
-) => {
+const getInvestmentTypeAnalytics = async (userID, assetType, status) => {
 
     const match = buildInvestmentMatch(
         userID,
@@ -381,7 +377,7 @@ const getInvestmentTypeAnalytics = async (
 
 }
 
-const getInvestmentTypeSoldAnalytics = async ( userID, assetType ) => {
+const getInvestmentTypeSoldAnalytics = async (userID, assetType) => {
 
     const match = buildInvestmentMatch(
         userID,
@@ -925,7 +921,7 @@ const getAllAllocation = async (userID, status) => {
             $match: match
         },
 
-       
+
         {
             $group: {
                 _id: "$assetType",
@@ -936,7 +932,7 @@ const getAllAllocation = async (userID, status) => {
             }
         },
 
-    
+
         {
             $group: {
                 _id: null,
@@ -1086,7 +1082,7 @@ const getAllAllocation = async (userID, status) => {
     }
 
     console.log(result[0]?.chart);
-    
+
 
 }
 
@@ -1303,4 +1299,4 @@ const getTypeAllocation = async (userID, assetType, status) => {
 
 }
 
-module.exports = {getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance, getAllAllocation, getTypeAllocation  }
+module.exports = { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance, getAllAllocation, getTypeAllocation }

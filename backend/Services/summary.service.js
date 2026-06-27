@@ -317,36 +317,7 @@ const expensesAllocation = async (userID, category = "ALL", month = "ALL", year 
 
 }
 
-const loanOverview = async (userID) => {
 
-    const overview = await Loan.aggregate([
-        {
-            $match: {
-                userID: new mongoose.Types.ObjectId(userID),
-                loanStatus: "ACTIVE"
-            }
-        },
-        {
-            $group: {
-                _id: null,
-                activeLoans: {
-                    $sum: 1
-                },
-                totalPrinciple: {
-                    $sum: "$principleAmount"
-                },
-                monthlyEMI: {
-                    $sum: "$emi"
-                }
-
-            }
-        }
-
-    ])
-    overview[0].lr = 4.5
-    return overview[0]
-
-}
 
 const loanAnalytics = async (userID, type = "ALL", status = "ALL", month = "ALL", year = "ALL") => {
 
@@ -1157,4 +1128,4 @@ const dayIncome = async (userID) => {
 }
 
 
-module.exports = { totalExpenses, totalInvestment, totalLoans, expensesAnalytics, expensesAllocation, loanOverview, yearlyExp, yearlyIncome, monthlyExp, monthlyIncome, dayExp, dayIncome, yearToyearExp, yearToyearIncome, monthTomonthExp, monthTomonthIncome, weekToweekExp, weekToweekIncome, dayTodayExp, dayTodayIncome }
+module.exports = { totalExpenses, totalInvestment, totalLoans, expensesAnalytics, expensesAllocation, yearlyExp, yearlyIncome, monthlyExp, monthlyIncome, dayExp, dayIncome, yearToyearExp, yearToyearIncome, monthTomonthExp, monthTomonthIncome, weekToweekExp, weekToweekIncome, dayTodayExp, dayTodayIncome }
