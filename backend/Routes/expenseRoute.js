@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { requireAuth } = require('../Middleware/authMiddleware')
-const { createExpense, getExpenses, updateExpense, deleteExpense, getExpensesByID, getExpensesByUserID, getTotalExpenses, monthTomonthSpending, spendingByCategory } = require('../Controller/expenseController')
+const { createExpense, getExpenses, updateExpense, deleteExpense, getExpensesByID, getExpensesByUserID, getTotalExpenses, monthTomonthSpending, spendingByCategory, expenseInsights } = require('../Controller/expenseController')
 const {expenseAnalytics, expenseAllocation} = require('../Controller/summaryController')
 //Base url - http://localhost:5000/expenses/api/v1
 
@@ -12,6 +12,7 @@ router.get('/monthTomonth', requireAuth, monthTomonthSpending)
 
 router.get("/spendByCat", requireAuth, spendingByCategory)
 
+router.get( "/insights", requireAuth,expenseInsights  )
 
 router.get('/user', requireAuth, getExpensesByUserID)
 

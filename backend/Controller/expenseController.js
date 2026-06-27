@@ -3,6 +3,7 @@ const express = require("express")
 const mongoose = require('mongoose')
 const apiResponse = require('../Utils/apiResponse')
 const { getTotalExpenseByUser, spendByCategory, monthTomonthTrend } = require('../Services/expenses.service')
+const {getExpenseInsights} = require('../Services/expenseInsight.service')
 
 //Create Expenses
 
@@ -269,7 +270,33 @@ const spendingByCategory = async (req, res, next) => {
     }
 }
 
+const expenseInsights = async (req, res, next) => {
 
-module.exports = { createExpense, getExpenses, updateExpense, deleteExpense, getExpensesByID, getExpensesByUserID, getTotalExpenses, spendingByCategory, monthTomonthSpending }
+    try {
+
+        const data =
+            await getExpenseInsights(req.user.id)
+
+        res.status(200).json(
+
+            apiResponse(
+                true,
+                "Expense Insights fetched successfully",
+                data
+            )
+
+        )
+
+    } catch (error) {
+
+        next(error)
+
+    }
+
+}
+
+module.exports = {expenseInsights}
+
+module.exports = { createExpense, getExpenses, updateExpense, deleteExpense, getExpensesByID, getExpensesByUserID, getTotalExpenses, spendingByCategory, monthTomonthSpending, expenseInsights }
 
 

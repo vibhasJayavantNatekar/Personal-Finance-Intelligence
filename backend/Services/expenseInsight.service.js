@@ -1,12 +1,11 @@
-const { highExpenseRule, healthyExpenseRule, savingsRule, essentialExpenseRule, discretionaryExpenseRule, noExpenseRule} = require("./rules/expense.rules");
+const { highExpenseRule, healthyExpenseRule, savingsRule, essentialExpenseRule, discretionaryExpenseRule, noExpenseRule } = require('../Services/Insights/expenses.rule')
 
-const {
-    getExpenseAnalytics
-} = require("../expenseAnalytics.service");
+const { getAllExpenseAnalytics } = require("./expenses.service")
 
 const getExpenseInsights = async (userID) => {
 
-    const analytics = await getExpenseAnalytics(userID)
+    const analytics =
+        await getAllExpenseAnalytics(userID);
 
     const insights = [
 
@@ -24,8 +23,8 @@ const getExpenseInsights = async (userID) => {
 
     ]
 
-    return insights.filter(Boolean);
+    return insights.filter(Boolean)
 
 }
 
-module.exports = { getExpenseInsights}
+module.exports = {  getExpenseInsights }
