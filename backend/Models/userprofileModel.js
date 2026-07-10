@@ -9,13 +9,13 @@
 // Last updated date
 
 const mongoose  = require('mongoose')
-const moongoose = require('mongoose')
+
 
 const currentDate = new Date();
  
 
 
-const userProfileSchema = moongoose.Schema(
+const userProfileSchema = mongoose.Schema(
     {
         userID : {
             type:mongoose.Schema.Types.ObjectId,

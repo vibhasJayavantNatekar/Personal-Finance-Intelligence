@@ -6,7 +6,7 @@ const { requireAuth } = require('../Middleware/authMiddleware')
 
 
 //user Profile
-router.post('/createProfile', requireAuth, createProfile)
+router.post('/createProfile', createProfile)
 router.get('/profile', requireAuth, getProfile)
 
 router.get('/',getUser)

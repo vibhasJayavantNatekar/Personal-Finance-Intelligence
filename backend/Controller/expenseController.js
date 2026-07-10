@@ -49,7 +49,7 @@ const getExpenses = async (req, res, next) => {
         res.status(200).json(apiResponse(
             true,
             "Expenses Fetch Successfully",
-            expense
+            expenses
         )
         )
 

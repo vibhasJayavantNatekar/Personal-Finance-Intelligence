@@ -29,15 +29,9 @@ const createUser = async (req, res) => {
 
 const createProfile = async (req, res) => {
     const { monthly_income, risk_preference, employment_type } = req.body
-    const userId = req.user.id
+   
 
     try {
-
-        const existingUser = await User.find({ userId })
-
-        if (!existingUser) {
-            return res.status(404).json({ message: "User not found with this id", userId })
-        }
 
 
         const profile = await UserProfile.create({ userID: userId, monthly_income, risk_preference, employment_type })
