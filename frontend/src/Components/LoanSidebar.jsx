@@ -1,6 +1,6 @@
 import React from 'react'
 
-const LoanSidebar = ( { view , setview , selectType , setselectType , selectStatus , setselectStatus  , selectTPP , setselectTPP } ) => {
+const LoanSidebar = ({ view, setview, selectType, setselectType, selectStatus, setselectStatus, selectTPP, setselectTPP }) => {
     return (
 
         <>
@@ -19,19 +19,19 @@ const LoanSidebar = ( { view , setview , selectType , setselectType , selectStat
 
                             <div className="view_mode_items">
                                 {/* <h4 className="view_mode_item active_view_mode_item" > List  </h4> */}
-                                <h4 className={`view_mode_item ${view === "List" ? "active_view_mode_item" : ""}` } 
-                                onClick={()=>{ setview("List") }}
+                                <h4 className={`view_mode_item ${view === "List" ? "active_view_mode_item" : ""}`}
+                                    onClick={() => { setview("List") }}
                                 > List
                                 </h4>
 
-                                <h4 className={` view_mode_item ${view === "Analytical" ? "active_view_mode_item":""}` }
-                                onClick={()=>{setview("Analytical")}}
+                                <h4 className={` view_mode_item ${view === "Analytical" ? "active_view_mode_item" : ""}`}
+                                    onClick={() => { setview("Analytical") }}
                                 >
                                     Analytical
                                 </h4>
 
-                                <h4 className={` view_mode_item ${view === "Allocation" ? "active_view_mode_item":""}` }
-                                onClick={()=>{setview("Allocation")}}
+                                <h4 className={` view_mode_item ${view === "Allocation" ? "active_view_mode_item" : ""}`}
+                                    onClick={() => { setview("Allocation") }}
                                 >
                                     Allocation
                                 </h4>
@@ -47,13 +47,13 @@ const LoanSidebar = ( { view , setview , selectType , setselectType , selectStat
                             <h3 className="section_sidebar_dropdown_heading">
                                 Loan Type
                             </h3>
-                         
+
 
                             <select className="section_sidebar_dropdown_options"
-                              value={selectType}
-                              onChange={
-                                (e)=> setselectType(e.target.value)
-                              }
+                                value={selectType}
+                                onChange={
+                                    (e) => setselectType(e.target.value)
+                                }
 
                             >
 
@@ -61,6 +61,10 @@ const LoanSidebar = ( { view , setview , selectType , setselectType , selectStat
                                 <option value={"PERSONAL"}>Personal Loan</option>
                                 <option value={"HOME"}>Home Loan</option>
                                 <option value={"EDUCATION"}>Education Loan</option>
+                                <option value={"CAR"}>Car Loan</option>
+                                <option value={"GOLD"}>Gold Loan</option>
+                                <option value={"AGRICULTURE"}>Agriculture Loan</option>
+                                <option value={"BUSINESS"}>Bussiness Loan</option>
 
                             </select>
 
@@ -72,13 +76,13 @@ const LoanSidebar = ( { view , setview , selectType , setselectType , selectStat
                                 Status
                             </h3>
 
-            
+
                             <select className="section_sidebar_dropdown_options"
-                             value={selectStatus}
-                             onChange={
-                                (e)=> setselectStatus(e.target.value)
-                             }
-        
+                                value={selectStatus}
+                                onChange={
+                                    (e) => setselectStatus(e.target.value)
+                                }
+
 
                             >
 
@@ -98,10 +102,10 @@ const LoanSidebar = ( { view , setview , selectType , setselectType , selectStat
                             </h4>
 
                             <select className="section_sidebar_dropdown_options"
-                              value={selectTPP}
-                              onChange={
-                                (e)=> setselectTPP(e.target.value)
-                              }
+                                value={selectTPP}
+                                onChange={
+                                    (e) => setselectTPP(e.target.value)
+                                }
 
                             >
 
@@ -116,7 +120,7 @@ const LoanSidebar = ( { view , setview , selectType , setselectType , selectStat
                         </div>
 
 
-                        
+
 
                         {/* <div className="section_sidebar_month_filter">
                             <div className="month_list">

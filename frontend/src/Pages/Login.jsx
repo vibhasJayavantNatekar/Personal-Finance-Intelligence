@@ -3,10 +3,12 @@ import '../Styles/Login.css'
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
+import { loginUser } from "../Api/authApi"
+// import {loginUser} from '../Api/authApi'
 
 
 const Login = () => {
-    const naviagte = useNavigate()
+    const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, seterror] = useState({})
@@ -16,70 +18,66 @@ const Login = () => {
 
     
 
-    const validate = async (e) => {
-
-        let newErrors = {}
-
-        console.log(email);
-        console.log(password);
-        console.log(email.trim().length);
-
-        if (!email.trim().length) {
-            newErrors.email = "Email is required"
-
-        }
-
-        if (!password.trim().length) {
-            newErrors.password = "Password is required"
-
-        }
-        seterror(newErrors)
-        if (Object.keys(newErrors).length > 0) {
-            return
-        }
-
-
-        try {
-
-
-            const result = await axios.post(
-                `http://localhost:5000/auth/api/v1/login`,
-                { email, password },
-                {
-                    withCredentials: true
-                }
-            )
-
-            alert("Login ")
-            console.log(result.data.token);
-
-            naviagte('/dash')
-
-
-
-
-        } catch (err) {
-
-            setServererror("User not found")
-
-            console.log("Failed to fetch info", err.message);
-
-
-        }
-
-
-    }
-
     const handleLogin = async (e) => {
 
         e.preventDefault();
 
-        await validate()
+        const newErrors = {};
 
+        if (!email.trim()) {
+            newErrors.email = "Email is required";
+        }
+
+        if (!password.trim()) {
+            newErrors.password = "Password is required";
+        }
+
+        seterror(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            return;
+        }
+
+        try {
+
+            setloading(true);
+
+            const response = await loginUser({
+
+                email,
+                password
+
+            })
+
+            console.log(response.data);
+
+            localStorage.setItem(
+                "token",
+                response.data.data.token
+
+            )
+
+            navigate("/dash");
+
+        } catch (error) {
+
+            setServererror(
+
+                error.response?.data?.message ||
+
+                "Invalid Email or Password"
+
+            )
+
+        } finally {
+
+            setloading(false);
+
+        }
 
     }
 
-    const navigate = useNavigate();
+
 
     return (
         <>
@@ -147,7 +145,7 @@ const Login = () => {
 
 
 
-                        <form>
+                        <form onSubmit={handleLogin}>
 
                             <div className="login_field">
 
@@ -158,6 +156,8 @@ const Login = () => {
                                 <input
                                     type="email"
                                     placeholder="Enter your email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
 
                             </div>
@@ -173,6 +173,8 @@ const Login = () => {
                                 <input
                                     type="password"
                                     placeholder="Enter your password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
 
                             </div>

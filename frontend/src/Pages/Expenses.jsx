@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../Styles/Expenses.css'
 import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
 import ExpensesSidebar from '../Components/ExpensesSidebar'
 import { useSearchParams } from 'react-router-dom'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+import { createExpense, getExpenses, deleteExpenses, updateExpenses } from '../Api/expensesApi'
 import AllocationChart from '../Components/AllocationChart'
 
 const Expenses = () => {
@@ -12,21 +13,55 @@ const Expenses = () => {
   const [ShowExpensesModal, setShowExpensesModal] = useState(false)
   const [setviewmode, setSetviewmode] = useState('List')
   const [expensesType, setExpensesType] = useState('All')
-  const [month, setMonth] = useState('Jan 2026')
+  const [month, setMonth] = useState('All')
   const [selectedType, setSelectedType] = useState('All')
   const [selectTPP, setselectTPP] = useState("10")
 
+  const [expenses, setExpenses] = useState([])
+  const [error, setError] = useState("")
   const [expenseData, setExpenseData] = useState({
 
     amt: "",
-    category: "",
+    category: "food",
     date: ""
 
 
   })
 
+  const fetchExpenses = async () => {
+
+    try {
+
+
+      const token = localStorage.getItem("token")
+
+      const response = await getExpenses(token)
+
+
+      setExpenses(response.data.data)
+
+
+
+    } catch (error) {
+
+      setError(error.response?.data?.message)
+
+    }
+  }
+
+
+
+
   const handleAddExpense = async (e) => {
     e.preventDefault()
+
+    console.log(expenseData)
+
+    const token = localStorage.getItem("token")
+
+    const response = await createExpense(expenseData, token)
+    console.log(response);
+
 
     alert("Entry Added")
 
@@ -34,12 +69,33 @@ const Expenses = () => {
 
     setExpenseData({
       amt: "",
-      category: "",
+      category: "food",
       date: ""
+    })
+
+
+
+  }
+
+  const formatMonthYear = (date) => {
+
+    return new Date(date).toLocaleDateString("en-GB", {
+      month: "short",
+      year: "numeric"
     })
 
   }
 
+
+  const formatDate = (date) => {
+
+    return new Date(date).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    })
+
+  }
   const COLORS = [
     "#10B981",
     "#3B82F6",
@@ -74,7 +130,7 @@ const Expenses = () => {
 
   ]
 
- 
+
 
   const totalExpense = chartData.reduce(
     (sum, item) => sum + item.amount,
@@ -90,6 +146,15 @@ const Expenses = () => {
 
   const totalDays =
     new Date(year, monthno + 1, 0).getDate()
+
+
+
+  useEffect(() => {
+
+    fetchExpenses();
+
+  }, [])
+
 
   return (
     <div className="section_wrapper">
@@ -215,10 +280,6 @@ const Expenses = () => {
                       </button>
 
                     </div>
-
-
-
-
 
 
 
@@ -392,60 +453,43 @@ const Expenses = () => {
                     </div>
 
 
-                    <div className="exp_transaction_row transaction_row">
 
-                      <p>24 May 2026</p>
-                      <span className="category_tag">
-                        Food
-                      </span>
+                    {
+                      expenses
+                        .filter((exp) => {
 
-                      <p className="amount_text">
-                        ₹450
-                      </p>
+                          const categoryMatch =
+                            selectedType === "All" ||
+                            exp.category === selectedType;
 
-                      <p>Purchse</p>
+                          const monthMatch =
+                            month === "All" ||
+                            formatMonthYear(exp.date) === month;
 
-                    </div>
+                          return categoryMatch && monthMatch;
 
+                        })
+                        .map((exp) => (
+                          <div
+                            key={exp._id}
+                            className="exp_transaction_row transaction_row">
 
-                    <div className="exp_transaction_row transaction_row">
+                            <p>{formatDate(exp.date)} </p>
+                            <span className="category_tag">
+                              {exp.category}
+                            </span>
 
-                      <p>23 May 2026</p>
+                            <p className="amount_text">
+                              {exp.amt}
+                            </p>
 
-                      <span className="category_tag">
-                        Travel
-                      </span>
+                            <p>Purchse</p>
 
-                      <p className="amount_text">
-                        ₹780
-                      </p>
+                          </div>
+                        ))
+                    }
 
-                      <p>Purchse</p>
-
-
-
-                    </div>
-
-
-                    <div className="exp_transaction_row transaction_row">
-
-                      <p>22 May 2026</p>
-
-                      <span className="category_tag">
-                        Entertainment
-                      </span>
-
-                      <p className="amount_text">
-                        ₹499
-                      </p>
-
-                      <p>Purchse</p>
-
-
-
-
-                    </div>
-
+        
                   </div>
 
                 </div>
@@ -551,7 +595,7 @@ const Expenses = () => {
 
                   </div>
 
-                
+
 
                   <AllocationChart
                     title="Expense Distribution"

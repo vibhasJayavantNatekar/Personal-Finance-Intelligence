@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import '../Styles/Register.css'
 import { useNavigate } from 'react-router-dom'
+import { registerUser } from '../Api/authApi'
+
+
 const Register = () => {
 
- 
+
   const [step, setStep] = useState(1)
   const [errors, setErrors] = useState({})
   const [step1Data, setStep1Data] = useState({
@@ -16,8 +19,8 @@ const Register = () => {
 
   const [step2Data, setStep2Data] = useState({
     income: "",
-    employmentType: "",
-    riskPer: "",
+    employmentType: "salaried",
+    riskPer: "low",
     savingGoal: ""
 
   })
@@ -39,24 +42,72 @@ const Register = () => {
     if (!step1Data.comPassword) {
       newErrors.comPassword = "Confirm Password Required"
     }
-    if (!step1Data.password, length < 6) {
+    if (step1Data.password.length < 6) {
       newErrors.password = "Password must be minimum 6 characters"
     }
     if (step1Data.password !== step1Data.comPassword) {
-      newErrors.confpassword = "Password must be match"
+      newErrors.comPassword = "Password must be match"
     }
     console.log(newErrors);
 
     setErrors(newErrors)
-    console.log(setErrors);
+    console.log(errors);
+    console.log(errors, newErrors);
 
 
-    if (setErrors.length === 0) {
-      setStep(2)
+    // if (!errors) {
+    //   setStep(2)
+    // }
+
+    if (Object.keys(newErrors).length === 0) {
+      setStep(2);
     }
 
-
   }
+
+  const handleRegister = async () => {
+
+    try {
+
+      const userData = {
+
+        name: step1Data.name,
+
+        email: step1Data.email,
+
+        password: step1Data.password,
+
+        monthly_income: Number(step2Data.income),
+
+        employment_type: step2Data.employmentType,
+
+        risk_preference: step2Data.riskPer
+
+      }
+        
+      console.log(userData)
+
+      const response = await registerUser(userData)
+
+      alert(response.data.message)
+
+      navigate("/")
+
+    } catch (error) {
+
+      console.log(error)
+      console.log(error.response)
+      console.log(error.response?.data)
+
+      alert(
+        error.response?.data?.message ||
+        error.message ||
+        "Registration Failed"
+      )
+
+    }
+
+  };
 
   const navigate = useNavigate();
 
@@ -206,7 +257,7 @@ const Register = () => {
 
 
                   <p className="error_text">
-                    {errors.confpassword || ""}
+                    {errors.comPassword || ""}
                   </p>
 
 
@@ -280,19 +331,19 @@ const Register = () => {
                     }}
                   >
 
-                    <option value={"Salaried"}>
+                    <option value={"salaried"}>
                       Salaried
                     </option>
 
-                    <option value={"Self_Employed"}>
+                    <option value={"self_employed"}>
                       Self Employed
                     </option>
 
-                    <option value={"Student"}>
+                    <option value={"student"}>
                       Student
                     </option>
 
-                    <option value={"Business"}>
+                    <option value={"business"}>
                       Business
                     </option>
 
@@ -340,7 +391,7 @@ const Register = () => {
                   </label>
 
                   <input
-                    className={errors.savingGoal ? "input_error" : "input_error"}
+                    className={errors.savingGoal ? "input_error" : ""}
                     type="text"
                     placeholder="Enter Saving Goal"
                     value={step2Data.savingGoal}
@@ -368,6 +419,7 @@ const Register = () => {
 
                   <button
                     className="login_btn"
+                    onClick={handleRegister}
                   >
 
                     Create Account

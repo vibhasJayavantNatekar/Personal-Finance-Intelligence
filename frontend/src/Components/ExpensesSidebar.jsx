@@ -54,12 +54,12 @@ const ExpensesSidebar = ({ view, setview, month, setmonth, selectedType, setSele
                                 }
                             >
                              
-                                <option>All Expenses</option>
-                                <option>Food</option>
-                                <option>Travel</option>
-                                <option>Shopping</option>
-                                <option>Bills</option>
-                                <option>Health</option>
+                                <option value={"All"}>All Expenses</option>
+                                <option value={"food"}>Food</option>
+                                <option value={"travel"}>Travel</option>
+                                <option value={"shopping"}>Shopping</option>
+                                <option value={"bils"}>Bills</option>
+                                <option value={"health"}>Health</option>
 
                             </select>
 

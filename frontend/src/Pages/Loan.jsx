@@ -36,7 +36,7 @@ const Loan = () => {
     {
       category: "Car Loan",
       amount: 25
-      
+
     },
     {
       category: "Personal Loan",
@@ -379,218 +379,23 @@ const Loan = () => {
         }
       ]
     },
-
-
-  }
-
-  const allocationCardConfig = {
-
-    ALL_ALL: {
-      cards: [
-        {
-          label: "Largest Loan Type",
-          value: "Home Loan (60%)"
-        },
-        {
-          label: "Smallest Loan Type",
-          value: "Personal Loan (10%)"
-        },
-        {
-          label: "Loan Types",
-          value: "4"
-        },
-        {
-          label: "Total Borrowed",
-          value: "₹25,00,000"
-        }
-      ]
-    },
-
-    ALL_ACTIVE: {
-      cards: [
-        {
-          label: "Largest Active Loan Type",
-          value: "Home Loan (70%)"
-        },
-        {
-          label: "Smallest Active Loan Type",
-          value: "Education Loan (5%)"
-        },
-        {
-          label: "Active Loan Types",
-          value: "3"
-        },
-        {
-          label: "Outstanding Amount",
-          value: "₹18,00,000"
-        }
-      ]
-    },
-
-    ALL_CLOSED: {
-      cards: [
-        {
-          label: "Largest Closed Loan Type",
-          value: "Education Loan (50%)"
-        },
-        {
-          label: "Smallest Closed Loan Type",
-          value: "Personal Loan (10%)"
-        },
-        {
-          label: "Closed Loan Types",
-          value: "2"
-        },
-        {
-          label: "Total Repaid",
-          value: "₹7,00,000"
-        }
-      ]
-    },
-
-    HOME_ALL: {
-      cards: [
-        {
-          label: "Largest Home Loan",
-          value: "₹25,00,000"
-        },
-        {
-          label: "Smallest Home Loan",
-          value: "₹15,00,000"
-        },
-        {
-          label: "Home Loans",
-          value: "2"
-        },
-        {
-          label: "Total Home Borrowed",
-          value: "₹40,00,000"
-        }
-      ]
-    },
-
-    HOME_ACTIVE: {
-      cards: [
-        {
-          label: "Largest Active Home Loan",
-          value: "₹25,00,000"
-        },
-        {
-          label: "Smallest Active Home Loan",
-          value: "₹25,00,000"
-        },
-        {
-          label: "Active Home Loans",
-          value: "1"
-        },
-        {
-          label: "Outstanding Amount",
-          value: "₹20,00,000"
-        }
-      ]
-    },
-
-    HOME_CLOSED: {
-      cards: [
-        {
-          label: "Largest Closed Home Loan",
-          value: "₹15,00,000"
-        },
-        {
-          label: "Smallest Closed Home Loan",
-          value: "₹15,00,000"
-        },
-        {
-          label: "Closed Home Loans",
-          value: "1"
-        },
-        {
-          label: "Amount Repaid",
-          value: "₹15,00,000"
-        }
-      ]
-    },
-
-    EDUCATION_ALL: {
-      cards: [
-        {
-          label: "Largest Education Loan",
-          value: "₹4,00,000"
-        },
-        {
-          label: "Smallest Education Loan",
-          value: "₹2,00,000"
-        },
-        {
-          label: "Education Loans",
-          value: "2"
-        },
-        {
-          label: "Total Borrowed",
-          value: "₹6,00,000"
-        }
-      ]
-    },
-
-    EDUCATION_ACTIVE: {
-      cards: [
-        {
-          label: "Largest Active Education Loan",
-          value: "₹4,00,000"
-        },
-        {
-          label: "Smallest Active Education Loan",
-          value: "₹4,00,000"
-        },
-        {
-          label: "Active Education Loans",
-          value: "1"
-        },
-        {
-          label: "Outstanding Amount",
-          value: "₹1,20,000"
-        }
-      ]
-    },
-
-    EDUCATION_CLOSED: {
-      cards: [
-        {
-          label: "Largest Closed Education Loan",
-          value: "₹2,00,000"
-        },
-        {
-          label: "Smallest Closed Education Loan",
-          value: "₹2,00,000"
-        },
-        {
-          label: "Closed Education Loans",
-          value: "1"
-        },
-        {
-          label: "Amount Repaid",
-          value: "₹2,00,000"
-        }
-      ]
-    },
-
     CAR_ALL: {
       cards: [
         {
+          label: "Total Car Loans",
+          value: "3"
+        },
+        {
+          label: "Average EMI",
+          value: "8,500"
+        },
+        {
+          label: "Average Interest Rate",
+          value: "9.2%"
+        },
+        {
           label: "Largest Car Loan",
-          value: "₹8,00,000"
-        },
-        {
-          label: "Smallest Car Loan",
-          value: "₹5,00,000"
-        },
-        {
-          label: "Car Loans",
-          value: "2"
-        },
-        {
-          label: "Total Borrowed",
-          value: "₹13,00,000"
+          value: "12,00,000"
         }
       ]
     },
@@ -598,107 +403,742 @@ const Loan = () => {
     CAR_ACTIVE: {
       cards: [
         {
-          label: "Largest Active Car Loan",
-          value: "₹8,00,000"
+          label: "Monthly EMI",
+          value: "8,500"
         },
         {
-          label: "Smallest Active Car Loan",
-          value: "₹8,00,000"
+          label: "Interest Rate",
+          value: "9.2%"
         },
         {
-          label: "Active Car Loans",
-          value: "1"
+          label: "Remaining Tenure",
+          value: "24 Months"
         },
         {
-          label: "Outstanding Amount",
-          value: "₹5,00,000"
+          label: "Risk Level",
+          value: "Medium"
         }
       ]
     },
 
-    CAR_CLOSED: {
+    CAR_COMPLETED: {
       cards: [
-        {
-          label: "Largest Closed Car Loan",
-          value: "₹5,00,000"
-        },
-        {
-          label: "Smallest Closed Car Loan",
-          value: "₹5,00,000"
-        },
-        {
-          label: "Closed Car Loans",
-          value: "1"
-        },
         {
           label: "Amount Repaid",
-          value: "₹5,00,000"
+          value: "15,00,000"
+        },
+        {
+          label: "Interest Paid",
+          value: "2,50,000"
+        },
+        {
+          label: "Loan Duration",
+          value: "5 Years"
+        },
+        {
+          label: "Closure Status",
+          value: "Completed"
         }
       ]
     },
 
-    PERSONAL_ALL: {
+    BUSINESS_ALL: {
       cards: [
         {
-          label: "Largest Personal Loan",
-          value: "₹3,00,000"
-        },
-        {
-          label: "Smallest Personal Loan",
-          value: "₹1,00,000"
-        },
-        {
-          label: "Personal Loans",
-          value: "3"
-        },
-        {
-          label: "Total Borrowed",
-          value: "₹5,00,000"
-        }
-      ]
-    },
-
-    PERSONAL_ACTIVE: {
-      cards: [
-        {
-          label: "Largest Active Personal Loan",
-          value: "₹3,00,000"
-        },
-        {
-          label: "Smallest Active Personal Loan",
-          value: "₹1,50,000"
-        },
-        {
-          label: "Active Personal Loans",
+          label: "Total Business Loans",
           value: "2"
         },
         {
-          label: "Outstanding Amount",
-          value: "₹3,50,000"
+          label: "Average EMI",
+          value: "25,000"
+        },
+        {
+          label: "Average Interest Rate",
+          value: "11.5%"
+        },
+        {
+          label: "Largest Business Loan",
+          value: "15,00,000"
         }
       ]
     },
 
-    PERSONAL_CLOSED: {
+    BUSINESS_ACTIVE: {
       cards: [
         {
-          label: "Largest Closed Personal Loan",
-          value: "₹1,00,000"
+          label: "Monthly EMI",
+          value: "25,000"
         },
         {
-          label: "Smallest Closed Personal Loan",
-          value: "₹1,00,000"
+          label: "Interest Rate",
+          value: "11.5%"
         },
         {
-          label: "Closed Personal Loans",
-          value: "1"
+          label: "Remaining Tenure",
+          value: "36 Months"
         },
+        {
+          label: "Risk Level",
+          value: "Medium"
+        }
+      ]
+    },
+
+    BUSINESS_COMPLETED: {
+      cards: [
         {
           label: "Amount Repaid",
-          value: "₹1,00,000"
+          value: "10,00,000"
+        },
+        {
+          label: "Interest Paid",
+          value: "2,00,000"
+        },
+        {
+          label: "Loan Duration",
+          value: "4 Years"
+        },
+        {
+          label: "Closure Status",
+          value: "Completed"
+        }
+      ]
+    },
+
+    GOLD_ALL: {
+      cards: [
+        {
+          label: "Total Gold Loans",
+          value: "4"
+        },
+        {
+          label: "Average EMI",
+          value: "4,500"
+        },
+        {
+          label: "Average Interest Rate",
+          value: "10.5%"
+        },
+        {
+          label: "Largest Gold Loan",
+          value: "1,50,000"
+        }
+      ]
+    },
+
+    GOLD_ACTIVE: {
+      cards: [
+        {
+          label: "Monthly EMI",
+          value: "4,500"
+        },
+        {
+          label: "Interest Rate",
+          value: "10.5%"
+        },
+        {
+          label: "Remaining Tenure",
+          value: "10 Months"
+        },
+        {
+          label: "Risk Level",
+          value: "Low"
+        }
+      ]
+    },
+
+    GOLD_COMPLETED: {
+      cards: [
+        {
+          label: "Amount Repaid",
+          value: "2,50,000"
+        },
+        {
+          label: "Interest Paid",
+          value: "40,000"
+        },
+        {
+          label: "Loan Duration",
+          value: "1 Year"
+        },
+        {
+          label: "Closure Status",
+          value: "Completed"
+        }
+      ]
+    },
+
+    AGRICULTURE_ALL: {
+      cards: [
+        {
+          label: "Total Agriculture Loans",
+          value: "2"
+        },
+        {
+          label: "Average EMI",
+          value: "6,500"
+        },
+        {
+          label: "Average Interest Rate",
+          value: "7.8%"
+        },
+        {
+          label: "Largest Agriculture Loan",
+          value: "5,00,000"
+        }
+      ]
+    },
+
+    AGRICULTURE_ACTIVE: {
+      cards: [
+        {
+          label: "Monthly EMI",
+          value: "6,500"
+        },
+        {
+          label: "Interest Rate",
+          value: "7.8%"
+        },
+        {
+          label: "Remaining Tenure",
+          value: "18 Months"
+        },
+        {
+          label: "Risk Level",
+          value: "Low"
+        }
+      ]
+    },
+
+    AGRICULTURE_COMPLETED: {
+      cards: [
+        {
+          label: "Amount Repaid",
+          value: "5,00,000"
+        },
+        {
+          label: "Interest Paid",
+          value: "75,000"
+        },
+        {
+          label: "Loan Duration",
+          value: "3 Years"
+        },
+        {
+          label: "Closure Status",
+          value: "Completed"
         }
       ]
     }
+
+
+  }
+
+  const allocationCardConfig = {
+
+     ALL_ALL: {
+    cards: [
+      {
+        label: "Largest Loan Type",
+        value: "Home Loan (60%)"
+      },
+      {
+        label: "Smallest Loan Type",
+        value: "Personal Loan (10%)"
+      },
+      {
+        label: "Loan Types",
+        value: "4"
+      },
+      {
+        label: "Total Borrowed",
+        value: "₹25,00,000"
+      }
+    ]
+  },
+
+  ALL_ACTIVE: {
+    cards: [
+      {
+        label: "Largest Active Loan Type",
+        value: "Home Loan (70%)"
+      },
+      {
+        label: "Smallest Active Loan Type",
+        value: "Education Loan (5%)"
+      },
+      {
+        label: "Active Loan Types",
+        value: "3"
+      },
+      {
+        label: "Outstanding Amount",
+        value: "₹18,00,000"
+      }
+    ]
+  },
+
+  ALL_COMPLETED: {
+    cards: [
+      {
+        label: "Largest Completed Loan Type",
+        value: "Education Loan (50%)"
+      },
+      {
+        label: "Smallest Completed Loan Type",
+        value: "Personal Loan (10%)"
+      },
+      {
+        label: "Completed Loan Types",
+        value: "2"
+      },
+      {
+        label: "Total Repaid",
+        value: "₹7,00,000"
+      }
+    ]
+  },
+
+  HOME_ALL: {
+    cards: [
+      {
+        label: "Largest Home Loan",
+        value: "₹25,00,000"
+      },
+      {
+        label: "Smallest Home Loan",
+        value: "₹15,00,000"
+      },
+      {
+        label: "Home Loans",
+        value: "2"
+      },
+      {
+        label: "Total Home Borrowed",
+        value: "₹40,00,000"
+      }
+    ]
+  },
+
+  HOME_ACTIVE: {
+    cards: [
+      {
+        label: "Largest Active Home Loan",
+        value: "₹25,00,000"
+      },
+      {
+        label: "Smallest Active Home Loan",
+        value: "₹25,00,000"
+      },
+      {
+        label: "Active Home Loans",
+        value: "1"
+      },
+      {
+        label: "Outstanding Amount",
+        value: "₹20,00,000"
+      }
+    ]
+  },
+
+  HOME_COMPLETED: {
+    cards: [
+      {
+        label: "Largest Completed Home Loan",
+        value: "₹15,00,000"
+      },
+      {
+        label: "Smallest Completed Home Loan",
+        value: "₹15,00,000"
+      },
+      {
+        label: "Completed Home Loans",
+        value: "1"
+      },
+      {
+        label: "Amount Repaid",
+        value: "₹15,00,000"
+      }
+    ]
+  },
+
+  EDUCATION_ALL: {
+    cards: [
+      {
+        label: "Largest Education Loan",
+        value: "₹4,00,000"
+      },
+      {
+        label: "Smallest Education Loan",
+        value: "₹2,00,000"
+      },
+      {
+        label: "Education Loans",
+        value: "2"
+      },
+      {
+        label: "Total Borrowed",
+        value: "₹6,00,000"
+      }
+    ]
+  },
+
+  EDUCATION_ACTIVE: {
+    cards: [
+      {
+        label: "Largest Active Education Loan",
+        value: "₹4,00,000"
+      },
+      {
+        label: "Smallest Active Education Loan",
+        value: "₹4,00,000"
+      },
+      {
+        label: "Active Education Loans",
+        value: "1"
+      },
+      {
+        label: "Outstanding Amount",
+        value: "₹1,20,000"
+      }
+    ]
+  },
+
+  EDUCATION_COMPLETED: {
+    cards: [
+      {
+        label: "Largest Completed Education Loan",
+        value: "₹2,00,000"
+      },
+      {
+        label: "Smallest Completed Education Loan",
+        value: "₹2,00,000"
+      },
+      {
+        label: "Completed Education Loans",
+        value: "1"
+      },
+      {
+        label: "Amount Repaid",
+        value: "₹2,00,000"
+      }
+    ]
+  },
+
+  CAR_ALL: {
+    cards: [
+      {
+        label: "Largest Car Loan",
+        value: "₹8,00,000"
+      },
+      {
+        label: "Smallest Car Loan",
+        value: "₹5,00,000"
+      },
+      {
+        label: "Car Loans",
+        value: "2"
+      },
+      {
+        label: "Total Borrowed",
+        value: "₹13,00,000"
+      }
+    ]
+  },
+
+  CAR_ACTIVE: {
+    cards: [
+      {
+        label: "Largest Active Car Loan",
+        value: "₹8,00,000"
+      },
+      {
+        label: "Smallest Active Car Loan",
+        value: "₹8,00,000"
+      },
+      {
+        label: "Active Car Loans",
+        value: "1"
+      },
+      {
+        label: "Outstanding Amount",
+        value: "₹5,00,000"
+      }
+    ]
+  },
+
+  CAR_COMPLETED: {
+    cards: [
+      {
+        label: "Largest Completed Car Loan",
+        value: "₹5,00,000"
+      },
+      {
+        label: "Smallest Completed Car Loan",
+        value: "₹5,00,000"
+      },
+      {
+        label: "Completed Car Loans",
+        value: "1"
+      },
+      {
+        label: "Amount Repaid",
+        value: "₹5,00,000"
+      }
+    ]
+  },
+
+  PERSONAL_ALL: {
+    cards: [
+      {
+        label: "Largest Personal Loan",
+        value: "₹3,00,000"
+      },
+      {
+        label: "Smallest Personal Loan",
+        value: "₹1,00,000"
+      },
+      {
+        label: "Personal Loans",
+        value: "3"
+      },
+      {
+        label: "Total Borrowed",
+        value: "₹5,00,000"
+      }
+    ]
+  },
+
+  PERSONAL_ACTIVE: {
+    cards: [
+      {
+        label: "Largest Active Personal Loan",
+        value: "₹3,00,000"
+      },
+      {
+        label: "Smallest Active Personal Loan",
+        value: "₹1,50,000"
+      },
+      {
+        label: "Active Personal Loans",
+        value: "2"
+      },
+      {
+        label: "Outstanding Amount",
+        value: "₹3,50,000"
+      }
+    ]
+  },
+
+  PERSONAL_COMPLETED: {
+    cards: [
+      {
+        label: "Largest Completed Personal Loan",
+        value: "₹1,00,000"
+      },
+      {
+        label: "Smallest Completed Personal Loan",
+        value: "₹1,00,000"
+      },
+      {
+        label: "Completed Personal Loans",
+        value: "1"
+      },
+      {
+        label: "Amount Repaid",
+        value: "₹1,00,000"
+      }
+    ]
+  },
+
+  BUSINESS_ALL: {
+    cards: [
+      {
+        label: "Largest Business Loan",
+        value: "₹15,00,000"
+      },
+      {
+        label: "Smallest Business Loan",
+        value: "₹5,00,000"
+      },
+      {
+        label: "Business Loans",
+        value: "2"
+      },
+      {
+        label: "Total Borrowed",
+        value: "₹20,00,000"
+      }
+    ]
+  },
+
+  BUSINESS_ACTIVE: {
+    cards: [
+      {
+        label: "Largest Active Business Loan",
+        value: "₹15,00,000"
+      },
+      {
+        label: "Smallest Active Business Loan",
+        value: "₹15,00,000"
+      },
+      {
+        label: "Active Business Loans",
+        value: "1"
+      },
+      {
+        label: "Outstanding Amount",
+        value: "₹12,00,000"
+      }
+    ]
+  },
+
+  BUSINESS_COMPLETED: {
+    cards: [
+      {
+        label: "Largest Completed Business Loan",
+        value: "₹5,00,000"
+      },
+      {
+        label: "Smallest Completed Business Loan",
+        value: "₹5,00,000"
+      },
+      {
+        label: "Completed Business Loans",
+        value: "1"
+      },
+      {
+        label: "Amount Repaid",
+        value: "₹5,00,000"
+      }
+    ]
+  },
+
+  GOLD_ALL: {
+    cards: [
+      {
+        label: "Largest Gold Loan",
+        value: "₹1,50,000"
+      },
+      {
+        label: "Smallest Gold Loan",
+        value: "₹50,000"
+      },
+      {
+        label: "Gold Loans",
+        value: "3"
+      },
+      {
+        label: "Total Borrowed",
+        value: "₹3,00,000"
+      }
+    ]
+  },
+
+  GOLD_ACTIVE: {
+    cards: [
+      {
+        label: "Largest Active Gold Loan",
+        value: "₹1,50,000"
+      },
+      {
+        label: "Smallest Active Gold Loan",
+        value: "₹1,50,000"
+      },
+      {
+        label: "Active Gold Loans",
+        value: "1"
+      },
+      {
+        label: "Outstanding Amount",
+        value: "₹90,000"
+      }
+    ]
+  },
+
+  GOLD_COMPLETED: {
+    cards: [
+      {
+        label: "Largest Completed Gold Loan",
+        value: "₹1,00,000"
+      },
+      {
+        label: "Smallest Completed Gold Loan",
+        value: "₹50,000"
+      },
+      {
+        label: "Completed Gold Loans",
+        value: "2"
+      },
+      {
+        label: "Amount Repaid",
+        value: "₹1,50,000"
+      }
+    ]
+  },
+
+  AGRICULTURE_ALL: {
+    cards: [
+      {
+        label: "Largest Agriculture Loan",
+        value: "₹5,00,000"
+      },
+      {
+        label: "Smallest Agriculture Loan",
+        value: "₹3,00,000"
+      },
+      {
+        label: "Agriculture Loans",
+        value: "2"
+      },
+      {
+        label: "Total Borrowed",
+        value: "₹8,00,000"
+      }
+    ]
+  },
+
+  AGRICULTURE_ACTIVE: {
+    cards: [
+      {
+        label: "Largest Active Agriculture Loan",
+        value: "₹5,00,000"
+      },
+      {
+        label: "Smallest Active Agriculture Loan",
+        value: "₹5,00,000"
+      },
+      {
+        label: "Active Agriculture Loans",
+        value: "1"
+      },
+      {
+        label: "Outstanding Amount",
+        value: "₹3,00,000"
+      }
+    ]
+  },
+
+  AGRICULTURE_COMPLETED: {
+    cards: [
+      {
+        label: "Largest Completed Agriculture Loan",
+        value: "₹3,00,000"
+      },
+      {
+        label: "Smallest Completed Agriculture Loan",
+        value: "₹3,00,000"
+      },
+      {
+        label: "Completed Agriculture Loans",
+        value: "1"
+      },
+      {
+        label: "Amount Repaid",
+        value: "₹3,00,000"
+      }
+    ]
+  }
 
   }
 
