@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../Styles/Investment.css'
 import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
@@ -6,6 +6,7 @@ import InvestmentSidebar from '../Components/InvestmentSidebar'
 import Live_market_strip from '../Components/Live_market_strip'
 import '../Styles/Insights.css'
 import AllocationChart from '../Components/AllocationChart'
+import { createInvestment, getInvestment, updateInvestment, deleteInvestment } from '../Api/investmentApi'
 
 const Investment = () => {
 
@@ -14,35 +15,37 @@ const Investment = () => {
   const [selectType, setselectType] = useState("ALL")
   const [selectStatus, setselectStatus] = useState("ALL")
   const [selectTPP, setselectTPP] = useState("10")
-
+  const [Investments, setInvestments] = useState([])
   const [investmentData, setInvestmentData] = useState({
 
-    assetType: "",
+    assetType: "STOCK",
     assetName: "",
+    assetSymbol: "",
     investedAmt: "",
-    purcahseDate: "",
-    currentValue: "",
-    status: "",
-    notes: ""
+    quantity: "",
+    purchaseDate: "",
+    // currentValue: "",
+    investmentStatus: "ACTIVE",
+    // notes: ""
 
   })
 
   const investmentChartData = [
     {
-        category: "Stocks",
-        amount: 45
-       
+      category: "Stocks",
+      amount: 45
+
     },
     {
-        category: "Mutual Funds",
-        amount: 25
-      
-    }
-];
+      category: "Mutual Funds",
+      amount: 25
 
-const totalInvestment = investmentChartData.reduce((sum , item)=>
-sum + item.amount , 0
-)
+    }
+  ];
+
+  const totalInvestment = investmentChartData.reduce((sum, item) =>
+    sum + item.amount, 0
+  )
 
   const analyticsConfig = {
 
@@ -1429,20 +1432,54 @@ sum + item.amount , 0
     e.preventDefault()
 
     alert("Added")
+
+    const token = localStorage.getItem("token")
+
+    const response = await createInvestment(investmentData, token)
+    console.log(response)
+
+
     console.log(investmentData)
     setShowInvestmentModal(false)
 
     setInvestmentData({
-      assetType: "",
+      assetType: "STOCK",
       assetName: "",
+      assetSymbol: "",
       investedAmt: "",
-      purcahseDate: "",
-      currentValue: "",
-      status: "",
-      notes: ""
+      quantity: "",
+      purchaseDate: "",
+      // currentValue: "",
+      investmentStatus: "ACTIVE",
+      // notes: ""
     })
 
   }
+
+  const fetchInvestments = async () => {
+
+    try {
+
+      const token = localStorage.getItem("token")
+
+      const response = await getInvestment(token)
+
+      setInvestments(response.data.data)
+
+    } catch (error) {
+      console.log(error.message)
+
+    }
+
+  }
+
+  useEffect(() => {
+
+    fetchInvestments()
+
+  }, [])
+
+
 
 
   return (
@@ -1653,6 +1690,30 @@ sum + item.amount , 0
 
                         </div>
 
+                        {investmentData.assetType === "STOCK" &&
+                          <div className="form_group">
+
+                            <label>
+
+                              Asset Symbol
+
+                            </label>
+
+
+                            <input
+                              type="text"
+                              value={investmentData.assetSymbol}
+                              onChange={(e) => {
+                                setInvestmentData({
+                                  ...investmentData,
+                                  assetSymbol: e.target.value
+                                })
+                              }}
+                            />
+
+                          </div>
+
+                        }
                         <div className="form_group">
                           <label>
                             Amount
@@ -1671,6 +1732,26 @@ sum + item.amount , 0
 
                         </div>
 
+                        {(investmentData.assetType === "STOCK" || investmentData.assetType === "ETF") &&
+                          <div className="form_group">
+                            <label>
+                              Quantity
+                            </label>
+
+                            <input
+                              type="number"
+                              value={investmentData.quantity}
+                              onChange={(e) => {
+                                setInvestmentData({
+                                  ...investmentData,
+                                  quantity: e.target.value
+                                })
+                              }}
+                            />
+
+                          </div>
+                        }
+
                         <div className="form_group">
                           <label>
                             Purcahe Date
@@ -1678,18 +1759,18 @@ sum + item.amount , 0
 
                           <input
                             type="date"
-                            value={investmentData.purcahseDate}
+                            value={investmentData.purchaseDate}
                             onChange={(e) => {
                               setInvestmentData({
                                 ...investmentData,
-                                purcahseDate: e.target.value
+                                purchaseDate: e.target.value
                               })
                             }}
                           />
                         </div>
 
 
-                        <div className="form_group">
+                        {/* <div className="form_group">
                           <label>
 
                             Current Value
@@ -1707,15 +1788,20 @@ sum + item.amount , 0
                             }}
                           />
 
-                        </div>
+                        </div> */}
 
                         <div className="form_group">
+                           <label>
+
+                            Status
+
+                          </label>
                           <select
-                            value={investmentData.status}
+                            value={investmentData.investmentStatusv}
                             onChange={(e) => {
                               setInvestmentData({
                                 ...investmentData,
-                                status: e.target.value
+                                investmentStatus: e.target.value
                               })
                             }}
 
@@ -1828,62 +1914,39 @@ sum + item.amount , 0
                       </div>
 
 
-                      <div className="transaction_row">
+                      {
+                        Investments.filter((investment) => {
+                          const typeMatch =
+                            selectType === "ALL" ||
+                            investment.assetType === selectType
 
-                        <p>24 May 2026</p>
-                        <span className="category_tag">
-                          Stock
-                        </span>
+                          const statusMatch =
+                            selectStatus === "ALL" ||
+                            investment.investmentStatus === selectStatus;
 
-                        <p className="amount_text">
-                          TCS
-                        </p>
+                          return typeMatch && statusMatch
+                        })
+                          .map((investment) => (
+                            <div
+                              key={investment._id}
+                              className="transaction_row">
 
-                        <p>5000</p>
-                        <p>ACTIVE</p>
+                              <p>{investment.purchaseDate}</p>
+                              <span className="category_tag">
+                                {investment.assetType}
+                              </span>
 
-                      </div>
+                              <p className="amount_text">
+                                {investment.assetName}
+                              </p>
 
+                              <p>{investment.investedAmt}</p>
+                              <p>{investment.investmentStatus}</p>
 
-                      <div className="transaction_row">
+                            </div>
+                          ))
+                      }
 
-                        <p>23 May 2026</p>
-
-                        <span className="category_tag">
-                          FD
-                        </span>
-
-                        <p className="amount_text">
-                          AXix Bank
-                        </p>
-
-                        <p>500000</p>
-                        <p>SOLD</p>
-
-
-
-                      </div>
-
-
-                      <div className="transaction_row">
-
-                        <p>22 May 2026</p>
-
-                        <span className="category_tag">
-                          MUTUAL FUND
-                        </span>
-
-                        <p className="amount_text">
-                          HDFC mid cap fund
-                        </p>
-
-                        <p>4500</p>
-                        <p>ACTIVE</p>
-
-
-
-
-                      </div>
 
                     </div>
 
