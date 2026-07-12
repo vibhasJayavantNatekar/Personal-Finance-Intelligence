@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../Styles/Loan.css'
 import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
 import LoanSidebar from '../Components/LoanSidebar'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
+import { getLoans, createLoan, updateLoan, deleteLoan } from '../Api/loanApi'
 import AllocationChart from '../Components/AllocationChart'
 
 const Loan = () => {
@@ -13,17 +14,19 @@ const Loan = () => {
   const [selectType, setselectType] = useState("ALL")
   const [selectStatus, setselectStatus] = useState("ALL")
   const [selectTPP, setselectTPP] = useState("10")
+  const [loans, setloans] = useState([])
+  const [Error, setError] = useState("")
 
   const [loanData, setLoanData] = useState({
 
-    loanType: "",
-    principleAmt: "",
+    loanType: "PERSONAL",
+    principleAmount: "",
     interestRate: "",
     tenure: "",
-    EMI: "",
+    emi: "",
     startDate: "",
-    loanStatus: "",
-    notes: ""
+    loanStatus: "ACTIVE",
+    // notes: ""
 
   })
 
@@ -43,7 +46,7 @@ const Loan = () => {
       amount: 15
 
     }
-  ];
+  ]
 
   const totalLoan = loanChartData.reduce(
     (sum, item) => sum + item.amount,
@@ -636,509 +639,509 @@ const Loan = () => {
 
   const allocationCardConfig = {
 
-     ALL_ALL: {
-    cards: [
-      {
-        label: "Largest Loan Type",
-        value: "Home Loan (60%)"
-      },
-      {
-        label: "Smallest Loan Type",
-        value: "Personal Loan (10%)"
-      },
-      {
-        label: "Loan Types",
-        value: "4"
-      },
-      {
-        label: "Total Borrowed",
-        value: "₹25,00,000"
-      }
-    ]
-  },
+    ALL_ALL: {
+      cards: [
+        {
+          label: "Largest Loan Type",
+          value: "Home Loan (60%)"
+        },
+        {
+          label: "Smallest Loan Type",
+          value: "Personal Loan (10%)"
+        },
+        {
+          label: "Loan Types",
+          value: "4"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹25,00,000"
+        }
+      ]
+    },
 
-  ALL_ACTIVE: {
-    cards: [
-      {
-        label: "Largest Active Loan Type",
-        value: "Home Loan (70%)"
-      },
-      {
-        label: "Smallest Active Loan Type",
-        value: "Education Loan (5%)"
-      },
-      {
-        label: "Active Loan Types",
-        value: "3"
-      },
-      {
-        label: "Outstanding Amount",
-        value: "₹18,00,000"
-      }
-    ]
-  },
+    ALL_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Loan Type",
+          value: "Home Loan (70%)"
+        },
+        {
+          label: "Smallest Active Loan Type",
+          value: "Education Loan (5%)"
+        },
+        {
+          label: "Active Loan Types",
+          value: "3"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹18,00,000"
+        }
+      ]
+    },
 
-  ALL_COMPLETED: {
-    cards: [
-      {
-        label: "Largest Completed Loan Type",
-        value: "Education Loan (50%)"
-      },
-      {
-        label: "Smallest Completed Loan Type",
-        value: "Personal Loan (10%)"
-      },
-      {
-        label: "Completed Loan Types",
-        value: "2"
-      },
-      {
-        label: "Total Repaid",
-        value: "₹7,00,000"
-      }
-    ]
-  },
+    ALL_COMPLETED: {
+      cards: [
+        {
+          label: "Largest Completed Loan Type",
+          value: "Education Loan (50%)"
+        },
+        {
+          label: "Smallest Completed Loan Type",
+          value: "Personal Loan (10%)"
+        },
+        {
+          label: "Completed Loan Types",
+          value: "2"
+        },
+        {
+          label: "Total Repaid",
+          value: "₹7,00,000"
+        }
+      ]
+    },
 
-  HOME_ALL: {
-    cards: [
-      {
-        label: "Largest Home Loan",
-        value: "₹25,00,000"
-      },
-      {
-        label: "Smallest Home Loan",
-        value: "₹15,00,000"
-      },
-      {
-        label: "Home Loans",
-        value: "2"
-      },
-      {
-        label: "Total Home Borrowed",
-        value: "₹40,00,000"
-      }
-    ]
-  },
+    HOME_ALL: {
+      cards: [
+        {
+          label: "Largest Home Loan",
+          value: "₹25,00,000"
+        },
+        {
+          label: "Smallest Home Loan",
+          value: "₹15,00,000"
+        },
+        {
+          label: "Home Loans",
+          value: "2"
+        },
+        {
+          label: "Total Home Borrowed",
+          value: "₹40,00,000"
+        }
+      ]
+    },
 
-  HOME_ACTIVE: {
-    cards: [
-      {
-        label: "Largest Active Home Loan",
-        value: "₹25,00,000"
-      },
-      {
-        label: "Smallest Active Home Loan",
-        value: "₹25,00,000"
-      },
-      {
-        label: "Active Home Loans",
-        value: "1"
-      },
-      {
-        label: "Outstanding Amount",
-        value: "₹20,00,000"
-      }
-    ]
-  },
+    HOME_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Home Loan",
+          value: "₹25,00,000"
+        },
+        {
+          label: "Smallest Active Home Loan",
+          value: "₹25,00,000"
+        },
+        {
+          label: "Active Home Loans",
+          value: "1"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹20,00,000"
+        }
+      ]
+    },
 
-  HOME_COMPLETED: {
-    cards: [
-      {
-        label: "Largest Completed Home Loan",
-        value: "₹15,00,000"
-      },
-      {
-        label: "Smallest Completed Home Loan",
-        value: "₹15,00,000"
-      },
-      {
-        label: "Completed Home Loans",
-        value: "1"
-      },
-      {
-        label: "Amount Repaid",
-        value: "₹15,00,000"
-      }
-    ]
-  },
+    HOME_COMPLETED: {
+      cards: [
+        {
+          label: "Largest Completed Home Loan",
+          value: "₹15,00,000"
+        },
+        {
+          label: "Smallest Completed Home Loan",
+          value: "₹15,00,000"
+        },
+        {
+          label: "Completed Home Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹15,00,000"
+        }
+      ]
+    },
 
-  EDUCATION_ALL: {
-    cards: [
-      {
-        label: "Largest Education Loan",
-        value: "₹4,00,000"
-      },
-      {
-        label: "Smallest Education Loan",
-        value: "₹2,00,000"
-      },
-      {
-        label: "Education Loans",
-        value: "2"
-      },
-      {
-        label: "Total Borrowed",
-        value: "₹6,00,000"
-      }
-    ]
-  },
+    EDUCATION_ALL: {
+      cards: [
+        {
+          label: "Largest Education Loan",
+          value: "₹4,00,000"
+        },
+        {
+          label: "Smallest Education Loan",
+          value: "₹2,00,000"
+        },
+        {
+          label: "Education Loans",
+          value: "2"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹6,00,000"
+        }
+      ]
+    },
 
-  EDUCATION_ACTIVE: {
-    cards: [
-      {
-        label: "Largest Active Education Loan",
-        value: "₹4,00,000"
-      },
-      {
-        label: "Smallest Active Education Loan",
-        value: "₹4,00,000"
-      },
-      {
-        label: "Active Education Loans",
-        value: "1"
-      },
-      {
-        label: "Outstanding Amount",
-        value: "₹1,20,000"
-      }
-    ]
-  },
+    EDUCATION_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Education Loan",
+          value: "₹4,00,000"
+        },
+        {
+          label: "Smallest Active Education Loan",
+          value: "₹4,00,000"
+        },
+        {
+          label: "Active Education Loans",
+          value: "1"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹1,20,000"
+        }
+      ]
+    },
 
-  EDUCATION_COMPLETED: {
-    cards: [
-      {
-        label: "Largest Completed Education Loan",
-        value: "₹2,00,000"
-      },
-      {
-        label: "Smallest Completed Education Loan",
-        value: "₹2,00,000"
-      },
-      {
-        label: "Completed Education Loans",
-        value: "1"
-      },
-      {
-        label: "Amount Repaid",
-        value: "₹2,00,000"
-      }
-    ]
-  },
+    EDUCATION_COMPLETED: {
+      cards: [
+        {
+          label: "Largest Completed Education Loan",
+          value: "₹2,00,000"
+        },
+        {
+          label: "Smallest Completed Education Loan",
+          value: "₹2,00,000"
+        },
+        {
+          label: "Completed Education Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹2,00,000"
+        }
+      ]
+    },
 
-  CAR_ALL: {
-    cards: [
-      {
-        label: "Largest Car Loan",
-        value: "₹8,00,000"
-      },
-      {
-        label: "Smallest Car Loan",
-        value: "₹5,00,000"
-      },
-      {
-        label: "Car Loans",
-        value: "2"
-      },
-      {
-        label: "Total Borrowed",
-        value: "₹13,00,000"
-      }
-    ]
-  },
+    CAR_ALL: {
+      cards: [
+        {
+          label: "Largest Car Loan",
+          value: "₹8,00,000"
+        },
+        {
+          label: "Smallest Car Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Car Loans",
+          value: "2"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹13,00,000"
+        }
+      ]
+    },
 
-  CAR_ACTIVE: {
-    cards: [
-      {
-        label: "Largest Active Car Loan",
-        value: "₹8,00,000"
-      },
-      {
-        label: "Smallest Active Car Loan",
-        value: "₹8,00,000"
-      },
-      {
-        label: "Active Car Loans",
-        value: "1"
-      },
-      {
-        label: "Outstanding Amount",
-        value: "₹5,00,000"
-      }
-    ]
-  },
+    CAR_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Car Loan",
+          value: "₹8,00,000"
+        },
+        {
+          label: "Smallest Active Car Loan",
+          value: "₹8,00,000"
+        },
+        {
+          label: "Active Car Loans",
+          value: "1"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹5,00,000"
+        }
+      ]
+    },
 
-  CAR_COMPLETED: {
-    cards: [
-      {
-        label: "Largest Completed Car Loan",
-        value: "₹5,00,000"
-      },
-      {
-        label: "Smallest Completed Car Loan",
-        value: "₹5,00,000"
-      },
-      {
-        label: "Completed Car Loans",
-        value: "1"
-      },
-      {
-        label: "Amount Repaid",
-        value: "₹5,00,000"
-      }
-    ]
-  },
+    CAR_COMPLETED: {
+      cards: [
+        {
+          label: "Largest Completed Car Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Smallest Completed Car Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Completed Car Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹5,00,000"
+        }
+      ]
+    },
 
-  PERSONAL_ALL: {
-    cards: [
-      {
-        label: "Largest Personal Loan",
-        value: "₹3,00,000"
-      },
-      {
-        label: "Smallest Personal Loan",
-        value: "₹1,00,000"
-      },
-      {
-        label: "Personal Loans",
-        value: "3"
-      },
-      {
-        label: "Total Borrowed",
-        value: "₹5,00,000"
-      }
-    ]
-  },
+    PERSONAL_ALL: {
+      cards: [
+        {
+          label: "Largest Personal Loan",
+          value: "₹3,00,000"
+        },
+        {
+          label: "Smallest Personal Loan",
+          value: "₹1,00,000"
+        },
+        {
+          label: "Personal Loans",
+          value: "3"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹5,00,000"
+        }
+      ]
+    },
 
-  PERSONAL_ACTIVE: {
-    cards: [
-      {
-        label: "Largest Active Personal Loan",
-        value: "₹3,00,000"
-      },
-      {
-        label: "Smallest Active Personal Loan",
-        value: "₹1,50,000"
-      },
-      {
-        label: "Active Personal Loans",
-        value: "2"
-      },
-      {
-        label: "Outstanding Amount",
-        value: "₹3,50,000"
-      }
-    ]
-  },
+    PERSONAL_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Personal Loan",
+          value: "₹3,00,000"
+        },
+        {
+          label: "Smallest Active Personal Loan",
+          value: "₹1,50,000"
+        },
+        {
+          label: "Active Personal Loans",
+          value: "2"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹3,50,000"
+        }
+      ]
+    },
 
-  PERSONAL_COMPLETED: {
-    cards: [
-      {
-        label: "Largest Completed Personal Loan",
-        value: "₹1,00,000"
-      },
-      {
-        label: "Smallest Completed Personal Loan",
-        value: "₹1,00,000"
-      },
-      {
-        label: "Completed Personal Loans",
-        value: "1"
-      },
-      {
-        label: "Amount Repaid",
-        value: "₹1,00,000"
-      }
-    ]
-  },
+    PERSONAL_COMPLETED: {
+      cards: [
+        {
+          label: "Largest Completed Personal Loan",
+          value: "₹1,00,000"
+        },
+        {
+          label: "Smallest Completed Personal Loan",
+          value: "₹1,00,000"
+        },
+        {
+          label: "Completed Personal Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹1,00,000"
+        }
+      ]
+    },
 
-  BUSINESS_ALL: {
-    cards: [
-      {
-        label: "Largest Business Loan",
-        value: "₹15,00,000"
-      },
-      {
-        label: "Smallest Business Loan",
-        value: "₹5,00,000"
-      },
-      {
-        label: "Business Loans",
-        value: "2"
-      },
-      {
-        label: "Total Borrowed",
-        value: "₹20,00,000"
-      }
-    ]
-  },
+    BUSINESS_ALL: {
+      cards: [
+        {
+          label: "Largest Business Loan",
+          value: "₹15,00,000"
+        },
+        {
+          label: "Smallest Business Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Business Loans",
+          value: "2"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹20,00,000"
+        }
+      ]
+    },
 
-  BUSINESS_ACTIVE: {
-    cards: [
-      {
-        label: "Largest Active Business Loan",
-        value: "₹15,00,000"
-      },
-      {
-        label: "Smallest Active Business Loan",
-        value: "₹15,00,000"
-      },
-      {
-        label: "Active Business Loans",
-        value: "1"
-      },
-      {
-        label: "Outstanding Amount",
-        value: "₹12,00,000"
-      }
-    ]
-  },
+    BUSINESS_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Business Loan",
+          value: "₹15,00,000"
+        },
+        {
+          label: "Smallest Active Business Loan",
+          value: "₹15,00,000"
+        },
+        {
+          label: "Active Business Loans",
+          value: "1"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹12,00,000"
+        }
+      ]
+    },
 
-  BUSINESS_COMPLETED: {
-    cards: [
-      {
-        label: "Largest Completed Business Loan",
-        value: "₹5,00,000"
-      },
-      {
-        label: "Smallest Completed Business Loan",
-        value: "₹5,00,000"
-      },
-      {
-        label: "Completed Business Loans",
-        value: "1"
-      },
-      {
-        label: "Amount Repaid",
-        value: "₹5,00,000"
-      }
-    ]
-  },
+    BUSINESS_COMPLETED: {
+      cards: [
+        {
+          label: "Largest Completed Business Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Smallest Completed Business Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Completed Business Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹5,00,000"
+        }
+      ]
+    },
 
-  GOLD_ALL: {
-    cards: [
-      {
-        label: "Largest Gold Loan",
-        value: "₹1,50,000"
-      },
-      {
-        label: "Smallest Gold Loan",
-        value: "₹50,000"
-      },
-      {
-        label: "Gold Loans",
-        value: "3"
-      },
-      {
-        label: "Total Borrowed",
-        value: "₹3,00,000"
-      }
-    ]
-  },
+    GOLD_ALL: {
+      cards: [
+        {
+          label: "Largest Gold Loan",
+          value: "₹1,50,000"
+        },
+        {
+          label: "Smallest Gold Loan",
+          value: "₹50,000"
+        },
+        {
+          label: "Gold Loans",
+          value: "3"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹3,00,000"
+        }
+      ]
+    },
 
-  GOLD_ACTIVE: {
-    cards: [
-      {
-        label: "Largest Active Gold Loan",
-        value: "₹1,50,000"
-      },
-      {
-        label: "Smallest Active Gold Loan",
-        value: "₹1,50,000"
-      },
-      {
-        label: "Active Gold Loans",
-        value: "1"
-      },
-      {
-        label: "Outstanding Amount",
-        value: "₹90,000"
-      }
-    ]
-  },
+    GOLD_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Gold Loan",
+          value: "₹1,50,000"
+        },
+        {
+          label: "Smallest Active Gold Loan",
+          value: "₹1,50,000"
+        },
+        {
+          label: "Active Gold Loans",
+          value: "1"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹90,000"
+        }
+      ]
+    },
 
-  GOLD_COMPLETED: {
-    cards: [
-      {
-        label: "Largest Completed Gold Loan",
-        value: "₹1,00,000"
-      },
-      {
-        label: "Smallest Completed Gold Loan",
-        value: "₹50,000"
-      },
-      {
-        label: "Completed Gold Loans",
-        value: "2"
-      },
-      {
-        label: "Amount Repaid",
-        value: "₹1,50,000"
-      }
-    ]
-  },
+    GOLD_COMPLETED: {
+      cards: [
+        {
+          label: "Largest Completed Gold Loan",
+          value: "₹1,00,000"
+        },
+        {
+          label: "Smallest Completed Gold Loan",
+          value: "₹50,000"
+        },
+        {
+          label: "Completed Gold Loans",
+          value: "2"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹1,50,000"
+        }
+      ]
+    },
 
-  AGRICULTURE_ALL: {
-    cards: [
-      {
-        label: "Largest Agriculture Loan",
-        value: "₹5,00,000"
-      },
-      {
-        label: "Smallest Agriculture Loan",
-        value: "₹3,00,000"
-      },
-      {
-        label: "Agriculture Loans",
-        value: "2"
-      },
-      {
-        label: "Total Borrowed",
-        value: "₹8,00,000"
-      }
-    ]
-  },
+    AGRICULTURE_ALL: {
+      cards: [
+        {
+          label: "Largest Agriculture Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Smallest Agriculture Loan",
+          value: "₹3,00,000"
+        },
+        {
+          label: "Agriculture Loans",
+          value: "2"
+        },
+        {
+          label: "Total Borrowed",
+          value: "₹8,00,000"
+        }
+      ]
+    },
 
-  AGRICULTURE_ACTIVE: {
-    cards: [
-      {
-        label: "Largest Active Agriculture Loan",
-        value: "₹5,00,000"
-      },
-      {
-        label: "Smallest Active Agriculture Loan",
-        value: "₹5,00,000"
-      },
-      {
-        label: "Active Agriculture Loans",
-        value: "1"
-      },
-      {
-        label: "Outstanding Amount",
-        value: "₹3,00,000"
-      }
-    ]
-  },
+    AGRICULTURE_ACTIVE: {
+      cards: [
+        {
+          label: "Largest Active Agriculture Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Smallest Active Agriculture Loan",
+          value: "₹5,00,000"
+        },
+        {
+          label: "Active Agriculture Loans",
+          value: "1"
+        },
+        {
+          label: "Outstanding Amount",
+          value: "₹3,00,000"
+        }
+      ]
+    },
 
-  AGRICULTURE_COMPLETED: {
-    cards: [
-      {
-        label: "Largest Completed Agriculture Loan",
-        value: "₹3,00,000"
-      },
-      {
-        label: "Smallest Completed Agriculture Loan",
-        value: "₹3,00,000"
-      },
-      {
-        label: "Completed Agriculture Loans",
-        value: "1"
-      },
-      {
-        label: "Amount Repaid",
-        value: "₹3,00,000"
-      }
-    ]
-  }
+    AGRICULTURE_COMPLETED: {
+      cards: [
+        {
+          label: "Largest Completed Agriculture Loan",
+          value: "₹3,00,000"
+        },
+        {
+          label: "Smallest Completed Agriculture Loan",
+          value: "₹3,00,000"
+        },
+        {
+          label: "Completed Agriculture Loans",
+          value: "1"
+        },
+        {
+          label: "Amount Repaid",
+          value: "₹3,00,000"
+        }
+      ]
+    }
 
   }
 
@@ -1152,23 +1155,57 @@ const Loan = () => {
   const handleAddLoan = async (e) => {
 
     e.preventDefault()
+    console.log(loanData)
+
+    const token = localStorage.getItem("token")
+    const response = await createLoan(loanData, token)
+    console.log(response)
+
 
     alert("Added")
     console.log(loanData)
-    setShowLoanModal(false)
 
+    setShowLoanModal(false)
     setLoanData({
-      loanType: "",
-      principleAmt: "",
+      loanType: "PERSONAL",
+      principleAmount: "",
       interestRate: "",
       tenure: "",
-      EMI: "",
+      emi: "",
       startDate: "",
-      loanStatus: "",
-      notes: ""
+      loanStatus: "ACTIVE",
+      // notes: ""
     })
 
   }
+
+  const fetchLoans = async () => {
+
+    try {
+
+      const token = localStorage.getItem("token")
+      const response = await getLoans(token)
+
+      setloans(response.data.data)
+      console.log(response.data.data)
+
+
+
+
+
+    } catch (error) {
+      selectErrorBarsSettings(error.response?.data?.message)
+    }
+
+  }
+
+  useEffect(() => {
+
+    fetchLoans()
+
+  }, [])
+
+  console.log(loans)
 
   return (
     <>
@@ -1340,18 +1377,24 @@ const Loan = () => {
                           </label>
 
                           <select
-                            value={loanData.assetType}
+                            value={loanData.loanType}
                             onChange={(e) => {
+                              console.log("Loan Type:", e.target.value);
                               setLoanData({
                                 ...loanData,
-                                assetType: e.target.value
+                                loanType: e.target.value
                               })
                             }}
                           >
-                            <option value="Personal">Persoanl</option>
-                            <option value="Home">Home</option>
-                            <option value="Education">Education</option>
-                            <option value="Car">Car</option>
+                            <option value="PERSONAL">Persoanl</option>
+                            <option value="HOME">Home</option>
+                            <option value="EDUCATION">Education</option>
+                            <option value="BUSINESS">Car</option>
+                            <option value="CAR">Car</option>
+                            <option value="GOLD">Car</option>
+                            <option value="AGRICULTURE">Car</option>
+
+
 
                           </select>
 
@@ -1370,11 +1413,11 @@ const Loan = () => {
 
                           <input
                             type="number"
-                            value={loanData.principleAmt}
+                            value={loanData.principleAmount}
                             onChange={(e) => {
                               setLoanData({
                                 ...loanData,
-                                principleAmt: e.target.value
+                                principleAmount: e.target.value
                               })
                             }}
                           />
@@ -1426,11 +1469,11 @@ const Loan = () => {
 
                           <input
                             type="number"
-                            value={loanData.EMI}
+                            value={loanData.emi}
                             onChange={(e) => {
                               setLoanData({
                                 ...loanData,
-                                EMI: e.target.value
+                                emi: e.target.value
                               })
                             }}
                           />
@@ -1469,8 +1512,8 @@ const Loan = () => {
                               })
                             }}
                           >
-                            <option value="Active">Active</option>
-                            <option value="Completed">Completed</option>
+                            <option value="ACTIVE">Active</option>
+                            <option value="CLOSED">Completed</option>
 
                           </select>
 
@@ -1525,7 +1568,7 @@ const Loan = () => {
                             className="save_btn"
                           >
 
-                            Save Expense
+                            Save Loan
 
                           </button>
 
@@ -1563,62 +1606,49 @@ const Loan = () => {
                       </div>
 
 
-                      <div className="transaction_row">
+                      {
+                        loans.filter((loan) => {
 
-                        <p>24 May 2026</p>
-                        <span className="category_tag">
-                          HOME
-                        </span>
+                          const typeMatch =
+                            selectType === "ALL" ||
+                            loan.loanType === selectType
 
-                        <p className="amount_text">
-                          ₹450
-                        </p>
+                          const statusMatch =
+                            selectStatus === "ALL" ||
+                            loan.loanStatus === selectStatus
 
-                        <p>4.5 YEARS</p>
-                        <p>ACTIVE</p>
+                          return typeMatch && statusMatch
 
-                      </div>
-
-
-                      <div className="transaction_row">
-
-                        <p>23 May 2026</p>
-
-                        <span className="category_tag">
-                          PERSONAL
-                        </span>
-
-                        <p className="amount_text">
-                          ₹780
-                        </p>
-
-                        <p>6 YEARS</p>
-                        <p>CLOSED</p>
+                        })
+                          .map((loan) => (
 
 
+                            <div
+                              key={loan._id}
+                              className="transaction_row">
 
-                      </div>
+                              <p>{loan.startDate}</p>
+                              <span className="category_tag">
+                                {loan.loanType}
+                              </span>
+
+                              <p className="amount_text">
+                                {loan.emi}
+                              </p>
+
+                              <p>{loan.tenure}</p>
+                              <p>{loan.loanStatus}</p>
+
+                            </div>
+                          ))
 
 
-                      <div className="transaction_row">
-
-                        <p>22 May 2026</p>
-
-                        <span className="category_tag">
-                          EDUCATION
-                        </span>
-
-                        <p className="amount_text">
-                          ₹499
-                        </p>
-
-                        <p>10 YEARS</p>
-                        <p>ACTIVE</p>
+                      }
 
 
 
 
-                      </div>
+
 
                     </div>
 

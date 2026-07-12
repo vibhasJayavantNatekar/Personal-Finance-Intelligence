@@ -88,7 +88,7 @@ const LoanSidebar = ({ view, setview, selectType, setselectType, selectStatus, s
 
                                 <option value={"ALL"}>All Status</option>
                                 <option value={"ACTIVE"}>Active</option>
-                                <option value={"COMPLETED"}>Completed</option>
+                                <option value={"CLOSED"}>Completed</option>
 
 
                             </select>
