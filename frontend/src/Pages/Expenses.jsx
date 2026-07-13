@@ -5,7 +5,7 @@ import Navbar from '../Components/Navbar'
 import ExpensesSidebar from '../Components/ExpensesSidebar'
 import { useSearchParams } from 'react-router-dom'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { createExpense, getExpenses, deleteExpenses, updateExpenses } from '../Api/expensesApi'
+import { createExpense, getExpenses, deleteExpenses, updateExpenses, getExpensesAllocation, getExpensesAnalytics } from '../Api/expensesApi'
 import AllocationChart from '../Components/AllocationChart'
 
 const Expenses = () => {
@@ -27,17 +27,44 @@ const Expenses = () => {
 
 
   })
+  const [chartData, setchartData] = useState([])
+  const [totalExpense, setTotalExpense] = useState(0)
+  const [analyticsData, setanalyticsData] = useState([])
+
+  const months = {
+    Jan: 1,
+    Feb: 2,
+    Mar: 3,
+    Apr: 4,
+    May: 5,
+    Jun: 6,
+    Jul: 7,
+    Aug: 8,
+    Sep: 9,
+    Oct: 10,
+    Nov: 11,
+    Dec: 12
+  }
 
   const fetchExpenses = async () => {
 
     try {
 
 
+
       const token = localStorage.getItem("token")
+      const [getMonth, getYear] = month.split(" ")
+      console.log(getYear)
 
       const response = await getExpenses(token)
+      console.log(selectedType.toUpperCase(), months[getMonth], getYear)
 
+      const allocation = await getExpensesAllocation(token, selectedType.toUpperCase(), months[getMonth], getYear)
+      const analytics = await getExpensesAnalytics(token, selectedType, months[getMonth], getYear)
 
+      setanalyticsData(analytics.data.data)
+      setchartData(allocation.data.data?.chart)
+      setTotalExpense(allocation.data.data.totalExpense)
       setExpenses(response.data.data)
 
 
@@ -60,6 +87,7 @@ const Expenses = () => {
     const token = localStorage.getItem("token")
 
     const response = await createExpense(expenseData, token)
+
     console.log(response);
 
 
@@ -76,6 +104,8 @@ const Expenses = () => {
 
 
   }
+
+
 
   const formatMonthYear = (date) => {
 
@@ -106,36 +136,32 @@ const Expenses = () => {
     "#06B6D4"
   ]
 
-  const chartData = [
+  // const chartData = [
 
-    {
-      category: "Food",
-      amount: 5000
-    },
+  //   {
+  //     category: "Food",
+  //     amount: 5000
+  //   },
 
-    {
-      category: "Travel",
-      amount: 3000
-    },
+  //   {
+  //     category: "Travel",
+  //     amount: 3000
+  //   },
 
-    {
-      category: "Bills",
-      amount: 2000
-    },
+  //   {
+  //     category: "Bills",
+  //     amount: 2000
+  //   },
 
-    {
-      category: "Shopping",
-      amount: 1500
-    }
+  //   {
+  //     category: "Shopping",
+  //     amount: 1500
+  //   }
 
-  ]
+  // ]
 
 
 
-  const totalExpense = chartData.reduce(
-    (sum, item) => sum + item.amount,
-    0
-  )
 
 
 
@@ -149,12 +175,84 @@ const Expenses = () => {
 
 
 
+
   useEffect(() => {
 
     fetchExpenses();
 
-  }, [])
+  }, [selectedType, month])
 
+  console.log(analyticsData)
+  const analyticsConfig = {
+
+    ALL: {
+
+      cards: [
+
+        {
+          label: "Highest Expense",
+          value: analyticsData?.highestExpense
+            ? `₹${analyticsData.highestExpense.amt} (${formatDate(analyticsData.highestExpense.date)})`
+            : "-"
+        },
+
+        {
+          label: "Lowest Expense",
+          value: analyticsData?.lowestExpense
+            ? `₹${analyticsData.lowestExpense.amt} (${formatDate(analyticsData.lowestExpense.date)})`
+            : "-"
+        },
+
+        {
+          label: "Average Expense",
+          value: `₹${analyticsData?.averageExpense || 0}`
+        },
+
+        {
+          label: "Most Used Category",
+          value:  "-"
+        }
+      ]
+
+    },
+
+
+
+    CATEGORY: {
+
+      cards: [
+
+        {
+          label: "Highest Expense",
+          value: analyticsData?.highestExpense
+            ? `₹${analyticsData.highestExpense.amt} (${formatDate(analyticsData.highestExpense.date)})`
+            : "-"
+        },
+
+        {
+          label: "Lowest Expense",
+          value: analyticsData?.lowestExpense
+            ? `₹${analyticsData.lowestExpense.amt} (${formatDate(analyticsData.lowestExpense.date)})`
+            : "-"
+        },
+
+        {
+          label: "Total Spending",
+          value: `₹${analyticsData?.totalExpense || 0}`
+        },
+
+        {
+          label: `${selectedType} Transactions`,
+          value: analyticsData?.transactionCount || 0
+        }
+
+      ]
+
+    }
+
+  }
+
+  const currentAnalytics = selectedType === "All" ? analyticsConfig.ALL : analyticsConfig.CATEGORY;
 
   return (
     <div className="section_wrapper">
@@ -489,7 +587,7 @@ const Expenses = () => {
                         ))
                     }
 
-        
+
                   </div>
 
                 </div>
@@ -538,7 +636,7 @@ const Expenses = () => {
                 <div className="analytical_view">
 
                   <div className="analytical_card_container card_container">
-
+                    {/* 
                     <div className="analytical_card card">
 
                       <p className='analytical_card_label card_label'>Highest Expenses</p>
@@ -551,7 +649,7 @@ const Expenses = () => {
 
                       <p className='analytical_card_label card_label'>Lowest Expense</p>
 
-                      <h3 className="analytical_card_values card_value" >₹300(Food)</h3>
+                      <h3 className="analytical_card_values card_value" > ₹{analyticsData?.lowestExpense?.amt} {(formatDate(analyticsData?.lowestExpense?.date))}</h3>
 
                     </div>
                     {selectedType === "All" &&
@@ -577,7 +675,7 @@ const Expenses = () => {
 
                         <p className='analytical_card_label card_label'>Total Spending</p>
 
-                        <h3 className="analytical_card_values card_value" > ₹1500 </h3>
+                        <h3 className="analytical_card_values card_value" > ₹{analyticsData.totalExpense} </h3>
 
                       </div>
 
@@ -587,22 +685,50 @@ const Expenses = () => {
 
                         <p className='analytical_card_label card_label'>{selectedType} Transactions</p>
 
-                        <h3 className="analytical_card_values card_value" > 5 </h3>
+                        <h3 className="analytical_card_values card_value" > {analyticsData.transactionCount} </h3>
 
                       </div>
 
+                    } */}
+
+                    {
+
+                      currentAnalytics.cards.map((card, index) => (
+
+                        <div
+                          key={index}
+                          className="analytical_card card"
+                        >
+
+                          <p className="analytical_card_label card_label">
+
+                            {card.label}
+
+                          </p>
+
+                          <h3 className="analytical_card_values card_value">
+
+                            {card.value}
+
+                          </h3>
+
+                        </div>
+
+                      ))
+
                     }
+
 
                   </div>
 
 
-
-                  <AllocationChart
-                    title="Expense Distribution"
-                    data={chartData}
-                    total={totalExpense}
-                  />
-
+                  {selectedType === "All" &&
+                    <AllocationChart
+                      title="Expense Distribution"
+                      data={chartData}
+                      total={totalExpense}
+                    />
+                  }
                 </div>
 
 

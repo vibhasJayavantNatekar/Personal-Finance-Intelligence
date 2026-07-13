@@ -1431,15 +1431,12 @@ const Investment = () => {
 
     e.preventDefault()
 
-    alert("Added")
+
 
     const token = localStorage.getItem("token")
 
     const response = await createInvestment(investmentData, token)
-    console.log(response)
-
-
-    console.log(investmentData)
+  
     setShowInvestmentModal(false)
 
     setInvestmentData({
