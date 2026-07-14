@@ -12,9 +12,9 @@ const Expenses = () => {
 
   const [ShowExpensesModal, setShowExpensesModal] = useState(false)
   const [setviewmode, setSetviewmode] = useState('List')
-  const [expensesType, setExpensesType] = useState('All')
+  const [expensesType, setExpensesType] = useState('ALL')
   const [month, setMonth] = useState('All')
-  const [selectedType, setSelectedType] = useState('All')
+  const [selectedType, setSelectedType] = useState('ALL')
   const [selectTPP, setselectTPP] = useState("10")
 
   const [expenses, setExpenses] = useState([])
@@ -57,7 +57,7 @@ const Expenses = () => {
       console.log(getYear)
 
       const response = await getExpenses(token)
-      console.log(selectedType.toUpperCase(), months[getMonth], getYear)
+      console.log(selectedType, months[getMonth], getYear)
 
       const allocation = await getExpensesAllocation(token, selectedType.toUpperCase(), months[getMonth], getYear)
       const analytics = await getExpensesAnalytics(token, selectedType, months[getMonth], getYear)
