@@ -4,7 +4,7 @@ import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
 import LoanSidebar from '../Components/LoanSidebar'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
-import { getLoans, createLoan, updateLoan, deleteLoan } from '../Api/loanApi'
+import { getLoans, createLoan, updateLoan, deleteLoan, getLoanAnalytics } from '../Api/loanApi'
 import AllocationChart from '../Components/AllocationChart'
 
 const Loan = () => {
@@ -16,7 +16,6 @@ const Loan = () => {
   const [selectTPP, setselectTPP] = useState("10")
   const [loans, setloans] = useState([])
   const [Error, setError] = useState("")
-
   const [loanData, setLoanData] = useState({
 
     loanType: "PERSONAL",
@@ -29,7 +28,8 @@ const Loan = () => {
     // notes: ""
 
   })
-
+  const [analyticsData, setAnalyticsData] = useState([])
+  // const [totalLoan, setTotalLoan] = useState(0)
   const loanChartData = [
     {
       category: "Home Loan",
@@ -94,27 +94,33 @@ const Loan = () => {
       cards: [
         {
           label: "Total EMI Burden",
-          value: "12%"
+          value: analyticsData?.totalEMIBurden
+            ? `₹${analyticsData.totalEMIBurden}` : "-"
+
         },
         {
           label: "Risk Level",
-          value: "Low"
+          value: analyticsData?.riskLevel
+            ? `${analyticsData.riskLevel}` : "-"
         },
         {
           label: "Active Loans",
-          value: "3"
+          value: analyticsData?.activeLoans
+            ? `${analyticsData.activeLoans}` : "-"
+
         },
         {
           label: "Monthly EMI",
-          value: " 28,000"
+          value: analyticsData?.monthlyEMI
+            ? `${analyticsData.monthlyEMI}` : "-"
         }
       ]
     },
 
-    ALL_COMPLETED: {
+    ALL_CLOSED: {
       cards: [{
         label: "Closed Loans",
-        value: "2"
+        value: ""
       },
       {
         label: "Total Amount Repaid",
@@ -173,7 +179,7 @@ const Loan = () => {
       ]
     },
 
-    HOME_COMPLETED: {
+    HOME_CLOSED: {
       cards: [
         {
           label: "Amount Repaid",
@@ -236,7 +242,7 @@ const Loan = () => {
       ]
     },
 
-    CAR_COMPLETED: {
+    CAR_CLOSED: {
       cards: [
         {
           label: "Amount Repaid",
@@ -299,7 +305,7 @@ const Loan = () => {
       ]
     },
 
-    EDUCATION_COMPLETED: {
+    EDUCATION_CLOSED: {
       cards: [
         {
           label: "Amount Repaid",
@@ -324,19 +330,23 @@ const Loan = () => {
       cards: [
         {
           label: "Toatl Personal Loan",
-          value: "4"
+          value: analyticsData?.summary?.[0]?.totalPersonalLoan
+            ? `${analyticsData?.summary?.[0]?.totalPersonalLoan}` : "-"
         },
         {
           label: "Average EMI",
-          value: " 5,000"
+          value: analyticsData?.summary?.[0]?.averageEMI
+            ? `${analyticsData?.summary?.[0]?.averageEMI}` : "-"
         },
         {
           label: "Average Interest Rate",
-          value: "12%"
+          value: analyticsData?.summary?.[0]?.averageInterestRate
+            ? `${analyticsData?.summary?.[0]?.averageInterestRate}%` : "-"
         },
         {
           label: "Largest Personal Loan",
-          value: " 3,00,000"
+          value: analyticsData?.largestPersonalLoan?.[0]?.principleAmount
+            ? `${analyticsData?.largestPersonalLoan?.[0]?.principleAmount}` : "-"
         }
       ]
     },
@@ -345,40 +355,46 @@ const Loan = () => {
       cards: [
         {
           label: "Monthly EMI",
-          value: " 4,000"
+          value: analyticsData?.monthlyEMI
+            ? `${analyticsData?.monthlyEMI}` : "-"
+
         },
         {
           label: "Interest Rate",
-          value: "12%"
+          value: analyticsData?.interestRate
+            ? `${analyticsData?.interestRate}%` : "-"
         },
         {
           label: "Remaining Tenure",
-          value: "24 Months"
+          value: analyticsData?.remainingTenure
+            ? `${analyticsData?.remainingTenure} Months` : "-"
         },
         {
           label: "Risk Level",
-          value: "Medium"
+          value: analyticsData?.riskLevel
+           ? `${analyticsData?.riskLevel}` : "-"
+
         }
       ]
     },
 
-    PERSONAL_COMPLETED: {
+    PERSONAL_CLOSED: {
       cards: [
         {
           label: "Amount Repaid",
-          value: " 2,50,000"
+          value: " ON HOLD"
         },
         {
           label: "Interest Paid",
-          value: " 50,000"
+          value: "ON HOLD"
         },
         {
           label: "Loan Duration",
-          value: " 2 Years"
+          value: "ON HOLD"
         },
         {
           label: "Closure Status",
-          value: "Completed"
+          value: "ON HOLD"
         }
       ]
     },
@@ -424,7 +440,7 @@ const Loan = () => {
       ]
     },
 
-    CAR_COMPLETED: {
+    CAR_CLOSED: {
       cards: [
         {
           label: "Amount Repaid",
@@ -487,7 +503,7 @@ const Loan = () => {
       ]
     },
 
-    BUSINESS_COMPLETED: {
+    BUSINESS_CLOSED: {
       cards: [
         {
           label: "Amount Repaid",
@@ -550,7 +566,7 @@ const Loan = () => {
       ]
     },
 
-    GOLD_COMPLETED: {
+    GOLD_CLOSED: {
       cards: [
         {
           label: "Amount Repaid",
@@ -613,7 +629,7 @@ const Loan = () => {
       ]
     },
 
-    AGRICULTURE_COMPLETED: {
+    AGRICULTURE_CLOSED: {
       cards: [
         {
           label: "Amount Repaid",
@@ -1187,6 +1203,12 @@ const Loan = () => {
       const response = await getLoans(token)
 
       setloans(response.data.data)
+
+      const analytics = await getLoanAnalytics(token, selectType, selectStatus)
+      setAnalyticsData(analytics.data.data)
+
+      console.log(analytics.data.data)
+
       console.log(response.data.data)
 
 
@@ -1203,7 +1225,7 @@ const Loan = () => {
 
     fetchLoans()
 
-  }, [])
+  }, [selectType, selectStatus])
 
   console.log(loans)
 
@@ -1676,6 +1698,21 @@ const Loan = () => {
 
                       }
 
+                      {/* {
+
+                        analyticsData.map((loan) => (
+                          <div className="analytical_view_card card">
+                            <div className="analytical_view_card_label card_label">
+                              <h4></h4>
+                            </div>
+                            <div className="analytical_view_card_values card_values">
+
+                               {}
+                            </div>
+                          </div>
+                        ))
+
+                      }  */}
 
 
 
