@@ -10,6 +10,7 @@ const { getAllAllocation, getTypeAllocation } = require('../Services/investment.
 const { getAllExpenseAnalytics, getCategoryExpenseAnalytics, getCategoryExpenseAllocation, getAllExpenseAllocation } = require('../Services/expenses.service')
 const { getInvestmentInsights } = require('../Services/investment.insight.service')
 const {getLoanInsights} = require('../Services/lon.insights.service')
+const {getExpenseInsights} = require('../Services/expenseInsight.service')
 
 const getDashboardSummary = async (req, res, next) => {
 
@@ -560,7 +561,41 @@ const loanInsights = async (req, res, next) =>{
 
 }
 
-module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights }
+const expensesInsights  = async (req, res, next) => {
+
+    const userID = req.user.id
+
+    try {
+        
+        const data = await getExpenseInsights(userID)
+
+        res.status(200).json(
+            apiResponse(
+                true,
+                "Fetch Expenses Insights Successfully",
+                data
+            )
+        )
+
+    } catch (error) {
+
+         const err = {
+
+            status: 500,
+
+            message: error.message,
+
+            extraDetails: "Error while fetching investment allocation"
+
+        }
+
+        next(err)
+        
+    }
+
+}
+
+module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights, expensesInsights }
 
 // const expenseSummary = async (req, res, next) => {
 
