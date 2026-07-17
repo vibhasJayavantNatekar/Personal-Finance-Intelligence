@@ -21,7 +21,12 @@ const InvestmentSchema = mongoose.Schema(
         },
         assetSymbol: {
             type: String,
-            required: true
+            required: function () {
+
+                return this.assetType === "STOCK" ||
+                    this.assetType === "ETF"
+
+            }
 
         },
         investedAmt: {
@@ -30,7 +35,14 @@ const InvestmentSchema = mongoose.Schema(
         },
         quantity: {
             type: Number,
-            required: true
+            required: function () {
+                return (
+                    this.assetType === "STOCK" ||
+                    this.assetType === "ETF" 
+                 
+                )
+            }
+
         },
         purchaseDate: {
             type: Date,
@@ -61,20 +73,20 @@ InvestmentSchema.statics.ClosedInvestment = async function (userID, date, amt) {
 
     const sellDate = new Date(date.replace(/-/g, '/'));
     let updated
-    try{
-       await this.updateOne(
-        { userID: userID } ,
-        { $set:{sellDate:sellDate , sellAmount:amt ,investmentStatus:"SOLD"}})
+    try {
+        await this.updateOne(
+            { userID: userID },
+            { $set: { sellDate: sellDate, sellAmount: amt, investmentStatus: "SOLD" } })
 
-        updated = await  this.findOne({userID});
-    
-    }catch(error){
+        updated = await this.findOne({ userID });
+
+    } catch (error) {
         console.log(error.message);
-        
+
     }
 
     return updated
-  
+
 
 }
 

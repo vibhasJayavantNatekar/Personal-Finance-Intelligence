@@ -175,12 +175,12 @@ const getInvestmentByUserId = async (req, res, next) => {
     try {
         const investment = await Investment.find({ userID })
         res.status(200).json(
-               
-               apiResponse(
-                            true,
-                            "Fetch Investment Successfully",
-                            expense
-                        )
+
+            apiResponse(
+                true,
+                "Fetch Investment Successfully",
+                expense
+            )
 
         )
     } catch (error) {
@@ -196,6 +196,41 @@ const getInvestmentByUserId = async (req, res, next) => {
 
 }
 
+//Stocks
+
+const getStocksHolding = async (req, res, next) => {
+
+    const userID = req.user.id
+
+
+    try {
+        const stocks = await Investment.find({ assetType: "STOCK", investmentStatus: "ACTIVE"})
+
+        res.status(200).json(
+            apiResponse(
+                true,
+                "Fetch Stocks Sucessfully",
+                stocks
+
+            )
+        )
+
+    } catch (error) {
+
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while fetching details..."
+        }
+
+        next(err)
+
+    }
+
+}
+
+
+
 //Closed Investment 
 
 const Closed = async (req, res, next) => {
@@ -208,13 +243,13 @@ const Closed = async (req, res, next) => {
         const closedIn = await Investment.ClosedInvestment(userID, sellDate, sellAmount)
         res.status(200).json(
 
-               apiResponse(
-                            true,
-                            "Closed Investment Successfully",
-                            expense
-                        )
+            apiResponse(
+                true,
+                "Closed Investment Successfully",
+                expense
+            )
 
-                    )
+        )
     } catch (error) {
 
         const err = {
@@ -235,12 +270,12 @@ const Sold = async (req, res, next) => {
     try {
         const sold = await investment.find({ investmentStatus: "SOLD" })
         res.status(200).json(
-                   
-               apiResponse(
-                            true,
-                            "Fetch Sold Investment Successfully",
-                            expense
-                        )
+
+            apiResponse(
+                true,
+                "Fetch Sold Investment Successfully",
+                expense
+            )
 
         )
     } catch (error) {
@@ -264,15 +299,15 @@ const Active = async (req, res, next) => {
 
     try {
         const sold = await investment.find({ investmentStatus: "ACTIVE" })
-        res.status(200).json(   
-            
+        res.status(200).json(
+
             apiResponse(
-                        true,
-                        "Fetch Active Investment Successfully",
-                        sold
-                    )
-                
-                )
+                true,
+                "Fetch Active Investment Successfully",
+                sold
+            )
+
+        )
     } catch (error) {
 
         const err = {
@@ -324,4 +359,4 @@ const investmentInsights = async (req, res, next) => {
 
 // KTSA79F4XQTYE2PP api key
 
-module.exports = { createInvestment, getInvestment, getInvestmentById, updateInvestment, deleteInvestment, getInvestmentByUserId, Closed, Sold, Active, investmentInsights }
+module.exports = { createInvestment, getInvestment, getInvestmentById, updateInvestment, deleteInvestment, getInvestmentByUserId, Closed, Sold, Active, investmentInsights, getStocksHolding  }

@@ -39,6 +39,8 @@ const getAllExpenseAnalytics = async (userID, month = "ALL", year = "ALL") => {
 
   const match = buildExpenseMatch(userID, "ALL", month, year)
 
+  console.log(match)
+
   const result = await Expenses.aggregate([
 
     {
@@ -134,6 +136,12 @@ const getCategoryExpenseAnalytics = async (userID, category, month = "ALL", year
 
   const match = buildExpenseMatch(userID, category, month, year)
 
+  console.log("Expenses Analytics Category", match , "category" , category, month, year);
+
+  const test = await Expenses.find(match);
+
+  console.log(test);
+
   const result = await Expenses.aggregate([
 
     {
@@ -227,8 +235,9 @@ const getCategoryExpenseAnalytics = async (userID, category, month = "ALL", year
 
 const getAllExpenseAllocation = async (userID, month = "ALL", year = "ALL") => {
 
-  const match = buildExpenseMatch( userID, "ALL", month, year)
+  const match = buildExpenseMatch(userID, "ALL", month, year)
 
+  console.log(match)
   const result = await Expenses.aggregate([
 
     {
@@ -371,102 +380,102 @@ const getAllExpenseAllocation = async (userID, month = "ALL", year = "ALL") => {
 }
 
 const getCategoryExpenseAllocation = async (
-    userID,
-    category,
-    month = "ALL",
-    year = "ALL"
+  userID,
+  category,
+  month = "ALL",
+  year = "ALL"
 ) => {
 
-    const match = buildExpenseMatch(
-        userID,
-        category,
-        month,
-        year
-    )
+  const match = buildExpenseMatch(
+    userID,
+    category,
+    month,
+    year
+  )
 
-    const result = await Expenses.aggregate([
+  const result = await Expenses.aggregate([
 
-        {
-            $match: match
-        },
+    {
+      $match: match
+    },
 
-        {
-            $facet: {
+    {
+      $facet: {
 
-                largestExpense: [
+        largestExpense: [
 
-                    {
-                        $sort: {
-                            amt: -1
-                        }
-                    },
+          {
+            $sort: {
+              amt: -1
+            }
+          },
 
-                    {
-                        $limit: 1
-                    }
+          {
+            $limit: 1
+          }
 
-                ],
+        ],
 
-                smallestExpense: [
+        smallestExpense: [
 
-                    {
-                        $sort: {
-                            amt: 1
-                        }
-                    },
+          {
+            $sort: {
+              amt: 1
+            }
+          },
 
-                    {
-                        $limit: 1
-                    }
+          {
+            $limit: 1
+          }
 
-                ],
+        ],
 
-                summary: [
+        summary: [
 
-                    {
+          {
 
-                        $group: {
+            $group: {
 
-                            _id: null,
+              _id: null,
 
-                            totalTransactions: {
-                                $sum: 1
-                            },
+              totalTransactions: {
+                $sum: 1
+              },
 
-                            totalExpense: {
-                                $sum: "$amt"
-                            }
-
-                        }
-
-                    }
-
-                ]
+              totalExpense: {
+                $sum: "$amt"
+              }
 
             }
 
-        }
+          }
 
-    ])
+        ]
 
-    const summary =
-        result[0]?.summary?.[0] || {};
-
-    return {
-
-        largestExpense:
-            result[0]?.largestExpense?.[0] || null,
-
-        smallestExpense:
-            result[0]?.smallestExpense?.[0] || null,
-
-        totalTransactions:
-            summary.totalTransactions || 0,
-
-        totalExpense:
-            summary.totalExpense || 0
+      }
 
     }
+
+  ])
+
+  const summary =
+    result[0]?.summary?.[0] || {};
+
+  return {
+
+    largestExpense:
+      result[0]?.largestExpense?.[0] || null,
+
+    smallestExpense:
+      result[0]?.smallestExpense?.[0] || null,
+
+    totalTransactions:
+      summary.totalTransactions || 0,
+
+    totalExpense:
+      summary.totalExpense || 0
+
+  }
 
 }
 

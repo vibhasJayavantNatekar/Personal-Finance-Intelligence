@@ -3,6 +3,7 @@ const Loan = require('../Models/loan')
 const User = require('../Models/userModel')
 const Profile = require('../Models/userprofileModel')
 const mongoose = require('mongoose')
+const investment = require('../Models/investment')
 
 
 
@@ -57,6 +58,18 @@ const getloanOverview = async (userID) => {
 
 }
 
+const getInvestmentOverview = async (userID) => {
+
+  const overview = await investment.aggregate([
+    {
+      $match: {
+        userID: new mongoose.Types.ObjectId(userID),
+        
+      }
+    }
+  ])
+
+}
 
 const getAllActiveAnalytics = async (userID) => {
 
@@ -345,7 +358,7 @@ const getPersonalActiveAnalytics = async (userID) => {
 
 const getPersonalCompletedAnalytics = async (userID) => {
 
-  const match = buildLoanMatch(userID, "PERSONAL", "COMPLETED")
+  const match = buildLoanMatch(userID, "PERSONAL", "CLOSED")
 
   const result = await Loan.aggregate([
 
@@ -834,7 +847,7 @@ const getCarAllAnalytics = async (userID) => {
           }
         ],
 
-        largestEducationlLoan: [
+        largestLoan: [
           {
             $sort: {
               principleAmount: -1
@@ -863,8 +876,8 @@ const getCarAllAnalytics = async (userID) => {
       result[0].summary?.[0]
         ?.averageInterestRate || 0,
 
-    largestEducationlLoan:
-      result[0].largestEducationlLoan?.[0]
+    largestLoan:
+      result[0].largestLoan?.[0]
         ?.principleAmount || 0
 
   }
@@ -975,7 +988,7 @@ const getCarActiveAnalytics = async (userID) => {
 const getCarCompletedAnalytics = async (userID) => {
 
 
-  const match = buildLoanMatch(userID, "CAR", "COMPLETED")
+  const match = buildLoanMatch(userID, "CAR", "CLOSED")
 
   const result = await Loan.aggregate([
 
@@ -990,7 +1003,7 @@ const getCarCompletedAnalytics = async (userID) => {
           $sum: "$principleAmount"
         },
         averageLoanSize: {
-          $avg: "$principalAmount"
+          $avg: "$principleAmount"
         },
         averageLoanDuration: {
           $avg: "$tenure"
@@ -1474,7 +1487,7 @@ const getBusinessAllAnalytics = async (userID) => {
           }
         ],
 
-        largestEducationlLoan: [
+        largestLoan: [
           {
             $sort: {
               principleAmount: -1
@@ -1503,8 +1516,8 @@ const getBusinessAllAnalytics = async (userID) => {
       result[0].summary?.[0]
         ?.averageInterestRate || 0,
 
-    largestEducationlLoan:
-      result[0].largestEducationlLoan?.[0]
+    largestLoan:
+      result[0].largestLoan?.[0]
         ?.principleAmount || 0
 
   }
@@ -1616,7 +1629,7 @@ const getBusinessActiveAnalytics = async (userID) => {
 
 const getBusinessCompletedAnalytics = async (userID) => {
 
-  const match = buildLoanMatch(userID, "BUSSINESS", "COMPLETED")
+  const match = buildLoanMatch(userID, "BUSSINESS", "CLOSED")
 
   const result = await Loan.aggregate([
 
@@ -2387,10 +2400,10 @@ const getLoanFullSummary = async (userId) => {
   } catch (error) {
     throw new Error(error.message);
   }
-};
+}
 
 module.exports = {  
   getLoanTypeAllocation,getloanOverview,
-  getLoanFullSummary, buildLoanMatch, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics,
+  getLoanFullSummary, buildLoanMatch, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getHomeCompletedAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics,
   getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation
-};
+}

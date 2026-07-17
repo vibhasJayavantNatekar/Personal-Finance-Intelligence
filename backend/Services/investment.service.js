@@ -1299,4 +1299,36 @@ const getTypeAllocation = async (userID, assetType, status) => {
 
 }
 
-module.exports = { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance, getAllAllocation, getTypeAllocation }
+const getHoldingCounts = async (userID) => {
+
+    const result = await Investment.aggregate([
+        {
+            $match: {
+                userID: new mongoose.Types.ObjectId(userID),
+                investmentStatus: "ACTIVE" 
+            }
+        },
+        {
+            $group: {
+                _id: "$assetType",
+                holdings: {
+                    $sum: 1
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                assetType: "$_id",
+                holdings: 1
+            }
+        }
+    ])
+
+  
+    return result
+    
+
+}
+
+module.exports = { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance, getAllAllocation, getTypeAllocation, getHoldingCounts }

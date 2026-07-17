@@ -1,13 +1,15 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const apiResponse = require('../Utils/apiResponse')
-const { buildLoanMatch, getloanOverview, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics
+const { buildLoanMatch, getloanOverview, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics, getHomeCompletedAnalytics
 } = require('../Services/loan.serice')
 const { getLoanTypeAllocation, getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation } = require('../Services/loan.serice')
-const { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics } = require('../Services/investment.service')
+const { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getHoldingCounts } = require('../Services/investment.service')
 const { getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance } = require("../Services/investment.service")
 const { getAllAllocation, getTypeAllocation } = require('../Services/investment.service')
 const { getAllExpenseAnalytics, getCategoryExpenseAnalytics, getCategoryExpenseAllocation, getAllExpenseAllocation } = require('../Services/expenses.service')
+const { getInvestmentInsights } = require('../Services/investment.insight.service')
+const {getLoanInsights} = require('../Services/lon.insights.service')
 
 const getDashboardSummary = async (req, res, next) => {
 
@@ -42,11 +44,10 @@ const getDashboardSummary = async (req, res, next) => {
 }
 
 
-
 const expenseAnalytics = async (req, res, next) => {
 
     console.log("expenses analytical controller")
-    
+
     const userID = req.user.id;
 
     const {
@@ -180,7 +181,7 @@ const loanOverview = async (req, res, nexr) => {
 
 const loanAnalytics = async (req, res, next) => {
     const userID = req.user.id
-    const { type = "CAR", status = "ALL", month = "ALL", year = "ALL" } = req.query
+    const { type = "ALL", status = "ALL", month = "ALL", year = "ALL" } = req.query
 
     try {
 
@@ -194,12 +195,14 @@ const loanAnalytics = async (req, res, next) => {
             data = await getPersonalAllAnalytics(userID)
         } else if (type === "PERSONAL" && status === "ACTIVE") {
             data = await getPersonalActiveAnalytics(userID)
-        } else if (type === "PERSONAL" && status === "COMPLETED") {
+        } else if (type === "PERSONAL" && status === "CLOSED") {
             data = await getPersonalCompletedAnalytics(userID)
         } else if (type === "HOME" && status === "ALL") {
             data = await getHomeAllAnalytics(userID)
         } else if (type === "HOME" && status === "ACTIVE") {
             data = await getHomeActiveAnalytics(userID)
+        } else if (type === "HOME" && status === "CLOSED") {
+            data = await getHomeCompletedAnalytics(userID)
         } else if (type === "EDUCATION" && status === "ALL") {
             data = await getEducationAllAnalytics(userID)
         } else if (type === "EDUCATION" && status === "ACTIVE") {
@@ -210,7 +213,7 @@ const loanAnalytics = async (req, res, next) => {
             data = await getCarAllAnalytics(userID)
         } else if (type === "CAR" && status === "ACTIVE") {
             data = await getCarActiveAnalytics(userID)
-        } else if (type === "CAR" && status === "COMPLETED") {
+        } else if (type === "CAR" && status === "CLOSED") {
             data = await getCarCompletedAnalytics(userID)
         } else if (type === "GOLD" && status === "ALL") {
             data = await getGoldAllAnalytics(userID)
@@ -228,7 +231,7 @@ const loanAnalytics = async (req, res, next) => {
             data = await getBusinessAllAnalytics(userID)
         } else if (type === "BUSSINESS" && status === "ACTIVE") {
             data = await getBusinessActiveAnalytics(userID)
-        } else if (type === "BUSSINESS" && status === "COMPLETED") {
+        } else if (type === "BUSSINESS" && status === "CLOSED") {
             data = await getBusinessCompletedAnalytics(userID)
         }
 
@@ -448,16 +451,116 @@ const investmentAllocation = async (req, res, next) => {
 
             extraDetails: "Error while fetching investment allocation"
 
-        };
+        }
 
-        next(err);
+        next(err)
 
     }
 
 }
 
+//Holding Investment Holding
 
-module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation }
+const getHolding = async (req, res, next) => {
+
+    const userID = req.user.id
+
+    try {
+        const data = await getHoldingCounts(userID)
+
+        res.status(200).json(
+            apiResponse(
+                true,
+                "Fetch Holding Successfully",
+                data
+            )
+        )
+    } catch (error) {
+        const err = {
+
+            status: 500,
+
+            message: error.message,
+
+            extraDetails: "Error while fetching investment allocation"
+
+        }
+
+        next(err)
+    }
+
+}
+
+const investmentInsights = async (req, res, next) => {
+
+    const userID = req.user.id
+
+    try {
+
+        const data = await getInvestmentInsights(userID)
+
+        res.status(200).json(
+            apiResponse(
+                true,
+                "Fetch insights successsfully",
+                data
+
+            )
+        )
+
+    } catch (error) {
+
+        const err = {
+
+            status: 500,
+
+            message: error.message,
+
+            extraDetails: "Error while fetching investment allocation"
+
+        }
+
+        next(err)
+
+    }
+
+}
+
+const loanInsights = async (req, res, next) =>{
+
+    const userID = req.user.id
+
+    try {
+        const data = await getLoanInsights(userID)
+
+        res.status(200).json(
+            apiResponse(
+                true,
+                "Fetch loan Insights Successfully",
+                data
+            )
+        )
+
+    } catch (error) {
+        
+          const err = {
+
+            status: 500,
+
+            message: error.message,
+
+            extraDetails: "Error while fetching investment allocation"
+
+        }
+
+        next(err)
+
+    }
+
+
+}
+
+module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights }
 
 // const expenseSummary = async (req, res, next) => {
 

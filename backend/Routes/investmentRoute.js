@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const {requireAuth} = require('../Middleware/authMiddleware')
-const {createInvestment , getInvestment , getInvestmentById , updateInvestment  , getInvestmentByUserId , deleteInvestment , Closed , Sold,Active, investmentInsights } = require('../Controller/investmentController')
+const {createInvestment , getInvestment , getInvestmentById , updateInvestment  , getInvestmentByUserId , deleteInvestment , Closed , Sold,Active, investmentInsights, getStocksHolding } = require('../Controller/investmentController')
 
 //Base url - http://localhost:5000/investment/api/v1
 
@@ -14,6 +14,7 @@ router.put('/closed/:userID' , Closed) //Closed Investments
 router.post('/', requireAuth , createInvestment) //Create investment
 router.get('/',requireAuth , getInvestment)  //Retrive investment
 router.get('/user',requireAuth,getInvestmentByUserId) //Get Investment by userID
+router.get('/stocksholdings',requireAuth, getStocksHolding) //Get Stocks Holdings
 
 router.get("/insights",requireAuth,investmentInsights )
 router.get('/:id',requireAuth , getInvestmentById) // Retrive investment by its ID
