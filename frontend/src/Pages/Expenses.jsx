@@ -5,8 +5,9 @@ import Navbar from '../Components/Navbar'
 import ExpensesSidebar from '../Components/ExpensesSidebar'
 import { useSearchParams } from 'react-router-dom'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { createExpense, getExpenses, deleteExpenses, updateExpenses, getExpensesAllocation, getExpensesAnalytics } from '../Api/expensesApi'
+import { createExpense, getExpenses, deleteExpenses, updateExpenses, getExpensesAllocation, getExpensesAnalytics, getExpensesInsights } from '../Api/expensesApi'
 import AllocationChart from '../Components/AllocationChart'
+import Insights from '../Components/insights'
 
 const Expenses = () => {
 
@@ -30,6 +31,7 @@ const Expenses = () => {
   const [chartData, setchartData] = useState([])
   const [totalExpense, setTotalExpense] = useState(0)
   const [analyticsData, setanalyticsData] = useState([])
+  const [insightsData, setInsightsData] = useState([])
 
   const months = {
     Jan: 1,
@@ -61,12 +63,14 @@ const Expenses = () => {
 
       const allocation = await getExpensesAllocation(token, selectedType.toUpperCase(), months[getMonth], getYear)
       const analytics = await getExpensesAnalytics(token, selectedType, months[getMonth], getYear)
+      const insights = await getExpensesInsights(token)
+      console.log(insights.data.data)
 
       setanalyticsData(analytics.data.data)
       setchartData(allocation.data.data?.chart)
       setTotalExpense(allocation.data.data.totalExpense)
       setExpenses(response.data.data)
-
+      setInsightsData(insights.data.data)
 
 
     } catch (error) {
@@ -252,7 +256,7 @@ const Expenses = () => {
 
   }
 
-  const currentAnalytics = selectedType === "All" ? analyticsConfig.ALL : analyticsConfig.CATEGORY;
+  const currentAnalytics = selectedType === "ALL" ? analyticsConfig.ALL : analyticsConfig.CATEGORY;
 
   return (
     <div className="section_wrapper">
@@ -557,7 +561,7 @@ const Expenses = () => {
                         .filter((exp) => {
 
                           const categoryMatch =
-                            selectedType === "All" ||
+                            selectedType === "ALL" ||
                             exp.category === selectedType;
 
                           const monthMatch =
@@ -636,60 +640,7 @@ const Expenses = () => {
                 <div className="analytical_view">
 
                   <div className="analytical_card_container card_container">
-                    {/* 
-                    <div className="analytical_card card">
-
-                      <p className='analytical_card_label card_label'>Highest Expenses</p>
-
-                      <h3 className="analytical_card_values card_value" >Rent (2000)</h3>
-
-                    </div>
-
-                    <div className="analytical_card card">
-
-                      <p className='analytical_card_label card_label'>Lowest Expense</p>
-
-                      <h3 className="analytical_card_values card_value" > ₹{analyticsData?.lowestExpense?.amt} {(formatDate(analyticsData?.lowestExpense?.date))}</h3>
-
-                    </div>
-                    {selectedType === "All" &&
-                      <div className="analytical_card card">
-
-                        <p className='analytical_card_label card_label'>Average Expense</p>
-
-                        <h3 className="analytical_card_values card_value" >₹900</h3>
-
-                      </div>
-                    }
-                    {selectedType === "All" &&
-                      <div className="analytical_card card">
-
-                        <p className='analytical_card_label card_label'>Most Used Category</p>
-
-                        <h3 className="analytical_card_values card_value" > Food </h3>
-
-                      </div>
-                    }
-                    {selectedType !== "All" &&
-                      <div className="analytical_card card">
-
-                        <p className='analytical_card_label card_label'>Total Spending</p>
-
-                        <h3 className="analytical_card_values card_value" > ₹{analyticsData.totalExpense} </h3>
-
-                      </div>
-
-                    }
-                    {selectedType !== "All" &&
-                      <div className="analytical_card card">
-
-                        <p className='analytical_card_label card_label'>{selectedType} Transactions</p>
-
-                        <h3 className="analytical_card_values card_value" > {analyticsData.transactionCount} </h3>
-
-                      </div>
-
-                    } */}
+                    
 
                     {
 
@@ -733,8 +684,11 @@ const Expenses = () => {
 
 
               }
-
-
+                
+                <Insights
+                data={insightsData}
+                />
+                  
 
             </div>
 

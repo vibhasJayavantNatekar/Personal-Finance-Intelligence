@@ -91,3 +91,16 @@ export const getExpensesAnalytics = (token, category, month, year) => {
     )
 
 }
+
+export const getExpensesInsights = (token) => {
+
+    return API.get(
+        "/api/v1/expensesInsights",
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+}
