@@ -73,3 +73,17 @@ export const getLoanAnalytics  = (token, type, status)=> {
     )
 
 }
+
+export const getLoanInsights = (token) =>{
+
+
+    return API.get(
+    `/api/v1/loanInsights`,
+    {
+        headers: {
+            Authorization: `bearer ${token}`
+        }
+    }
+
+    )
+}

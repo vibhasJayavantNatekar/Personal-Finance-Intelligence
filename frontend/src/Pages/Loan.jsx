@@ -4,8 +4,9 @@ import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
 import LoanSidebar from '../Components/LoanSidebar'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
-import { getLoans, createLoan, updateLoan, deleteLoan, getLoanAnalytics } from '../Api/loanApi'
+import { getLoans, createLoan, updateLoan, deleteLoan, getLoanAnalytics, getLoanInsights } from '../Api/loanApi'
 import AllocationChart from '../Components/AllocationChart'
+import Insights from '../Components/insights'
 
 const Loan = () => {
 
@@ -29,6 +30,8 @@ const Loan = () => {
 
   })
   const [analyticsData, setAnalyticsData] = useState([])
+  const [insightsData, setInsightsData] = useState([])
+
   // const [totalLoan, setTotalLoan] = useState(0)
   const loanChartData = [
     {
@@ -141,19 +144,24 @@ const Loan = () => {
       cards: [
         {
           label: "Total Home Loans",
-          value: "1"
+          value: analyticsData?.totalLoan
+            ? `${analyticsData.totalLoan}` : "-"
+
         },
         {
           label: "Average EMI",
-          value: " 18,000"
+          value: analyticsData?.averageEMI
+            ? `${analyticsData.averageEMI}` : "-"
         },
         {
           label: "Average Interest Rate",
-          value: "8.5%"
+          value: analyticsData?.averageInterestRate
+            ? `${analyticsData.averageInterestRate}` : "-"
         },
         {
           label: "Largest Home Loan",
-          value: " 25,00,000"
+          value: analyticsData?.largestHomelLoan
+            ? `${analyticsData.largestHomelLoan}` : "-"
         }
       ]
     },
@@ -162,19 +170,23 @@ const Loan = () => {
       cards: [
         {
           label: "Monthly EMI",
-          value: " 18,000"
+          value: analyticsData?.monthlyEMI
+            ? `₹${analyticsData.monthlyEMI}` : "-"
         },
         {
           label: "Interest Rate",
-          value: "8.5%"
+          value: analyticsData?.interestRate
+            ? `${analyticsData.interestRate} %` : "-"
         },
         {
           label: "Remaining Tenure",
-          value: "120 Months"
+          value: analyticsData?.remainingTenure
+            ? `${analyticsData.remainingTenure}` : "-"
         },
         {
           label: "Risk Level",
-          value: "Medium"
+          value: analyticsData?.riskLevel
+            ? `${analyticsData.riskLevel}` : "-"
         }
       ]
     },
@@ -183,19 +195,21 @@ const Loan = () => {
       cards: [
         {
           label: "Amount Repaid",
-          value: " 12,00.00"
+          value: analyticsData?.totalAmountRepaid
+            ? `${analyticsData?.totalAmountRepaid}` : "-"
         },
         {
           label: "Interest Paid",
-          value: " 3,00,000"
+          value: " on hold"
         },
         {
           label: "Loan Duration",
-          value: "15 Years"
+          value: "on hold"
         },
         {
           label: "Closure Status",
-          value: "Completed"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData?.closureStatus}` : "-"
         }
       ]
     },
@@ -204,19 +218,23 @@ const Loan = () => {
       cards: [
         {
           label: "Total Car Loans",
-          value: "3"
+          value: analyticsData?.totalLoan
+            ? `${analyticsData.totalLoan}` : "-"
         },
         {
           label: "Average EMI",
-          value: " 7,000"
+          value: analyticsData?.averageEMI
+            ? `₹ ${analyticsData.averageEMI}` : "-"
         },
         {
           label: "Average Interest Rate",
-          value: "9%"
+          value: analyticsData?.averageInterestRate
+            ? `${analyticsData.averageInterestRate}%` : "-"
         },
         {
           label: "Largest Car Loan",
-          value: " 8,00,000"
+          value: analyticsData?.largestLoan
+            ? `${analyticsData.largestLoan}` : "-"
         }
       ]
     },
@@ -225,7 +243,8 @@ const Loan = () => {
       cards: [
         {
           label: "Monthly EMI",
-          value: " 7,000"
+          value: analyticsData?.monthlyEMI
+            ? `${analyticsData.monthlyEMI}` : "-"
         },
         {
           label: "Interest Rate",
@@ -336,7 +355,7 @@ const Loan = () => {
         {
           label: "Average EMI",
           value: analyticsData?.summary?.[0]?.averageEMI
-            ? `${analyticsData?.summary?.[0]?.averageEMI}` : "-"
+            ? `₹ ${analyticsData?.summary?.[0]?.averageEMI}` : "-"
         },
         {
           label: "Average Interest Rate",
@@ -372,7 +391,7 @@ const Loan = () => {
         {
           label: "Risk Level",
           value: analyticsData?.riskLevel
-           ? `${analyticsData?.riskLevel}` : "-"
+            ? `${analyticsData?.riskLevel}` : "-"
 
         }
       ]
@@ -382,19 +401,21 @@ const Loan = () => {
       cards: [
         {
           label: "Amount Repaid",
-          value: " ON HOLD"
+          value: analyticsData?.totalAmountRepaid
+            ? `${analyticsData?.totalAmountRepaid}` : "-"
         },
         {
           label: "Interest Paid",
-          value: "ON HOLD"
+          value: "On Hold"
         },
         {
           label: "Loan Duration",
-          value: "ON HOLD"
+          value: "On Hold"
         },
         {
           label: "Closure Status",
-          value: "ON HOLD"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData?.closureStatus}` : "-"
         }
       ]
     },
@@ -402,19 +423,24 @@ const Loan = () => {
       cards: [
         {
           label: "Total Car Loans",
-          value: "3"
+          value: analyticsData?.totalLoan
+            ? `${analyticsData.totalLoan}` : "-"
         },
         {
           label: "Average EMI",
-          value: "8,500"
+          value: analyticsData?.averageEMI
+            ? `${analyticsData.averageEMI}` : "-"
+
         },
         {
           label: "Average Interest Rate",
-          value: "9.2%"
+          value: analyticsData?.averageInterestRate
+            ? `${analyticsData.averageInterestRate} %` : "-"
         },
         {
           label: "Largest Car Loan",
-          value: "12,00,000"
+          value: analyticsData?.largestLoan
+            ? `${analyticsData.largestLoan}` : "-"
         }
       ]
     },
@@ -423,19 +449,23 @@ const Loan = () => {
       cards: [
         {
           label: "Monthly EMI",
-          value: "8,500"
+          value: analyticsData?.monthlyEMI
+            ? `${analyticsData.monthlyEMI}` : "-"
         },
         {
           label: "Interest Rate",
-          value: "9.2%"
+          value: analyticsData?.interestRat
+            ? `${analyticsData.interestRat}` : "-"
         },
         {
           label: "Remaining Tenure",
-          value: "24 Months"
+          value: analyticsData?.remainingTenure
+            ? `${analyticsData.remainingTenure}` : "-"
         },
         {
           label: "Risk Level",
-          value: "Medium"
+          value: analyticsData?.riskLevel
+            ? `${analyticsData.riskLevel}` : "-"
         }
       ]
     },
@@ -444,82 +474,94 @@ const Loan = () => {
       cards: [
         {
           label: "Amount Repaid",
-          value: "15,00,000"
+          value: analyticsData?.totalAmountRepaid
+            ? `${analyticsData.totalAmountRepaid}` : "-"
         },
         {
           label: "Interest Paid",
-          value: "2,50,000"
+          value: "hold"
         },
         {
           label: "Loan Duration",
-          value: "5 Years"
+          value: analyticsData?.averageLoanDuration
+            ? `${analyticsData.averageLoanDuration}` : "-"
         },
         {
           label: "Closure Status",
-          value: "Completed"
+          value:  "hold"
         }
       ]
     },
 
-    BUSINESS_ALL: {
+    BUSSINESS_ALL: {
       cards: [
         {
           label: "Total Business Loans",
-          value: "2"
+          value: analyticsData?.totalLoan
+            ? `${analyticsData.totalLoan}` : "-"
         },
         {
           label: "Average EMI",
-          value: "25,000"
+          value: analyticsData?.averageEMI
+            ? `${analyticsData.averageEMI}` : "-"
         },
         {
           label: "Average Interest Rate",
-          value: "11.5%"
+          value: analyticsData?.averageInterestRate
+            ? `${analyticsData.averageInterestRate}` : "-"
         },
         {
           label: "Largest Business Loan",
-          value: "15,00,000"
+          value: analyticsData?.largestLoan
+            ? `${analyticsData.largestLoan}` : "-"
         }
       ]
     },
 
-    BUSINESS_ACTIVE: {
+    BUSSINESS_ACTIVE: {
       cards: [
         {
           label: "Monthly EMI",
-          value: "25,000"
+          value: analyticsData?.monthlyEMI
+            ? `${analyticsData.monthlyEMI}` : "-"
         },
         {
           label: "Interest Rate",
-          value: "11.5%"
+          value: analyticsData?.interestRate
+            ? `${analyticsData.interestRate}` : "-"
         },
         {
           label: "Remaining Tenure",
-          value: "36 Months"
+          value: analyticsData?.remainingTenure
+            ? `${analyticsData.remainingTenure}` : "-"
         },
         {
           label: "Risk Level",
-          value: "Medium"
+          value: analyticsData?.riskLevel
+            ? `${analyticsData.riskLevel}` : "-"
         }
       ]
     },
 
-    BUSINESS_CLOSED: {
+    BUSSINESS_CLOSED: {
       cards: [
         {
           label: "Amount Repaid",
-          value: "10,00,000"
+          value: analyticsData?.totalAmountRepaid
+            ? `${analyticsData.totalAmountRepaid}` : "-"
         },
         {
           label: "Interest Paid",
-          value: "2,00,000"
+          value: "hold"
         },
         {
           label: "Loan Duration",
-          value: "4 Years"
+          value: "hold"
         },
         {
           label: "Closure Status",
-          value: "Completed"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData.closureStatus}` : "-"
         }
       ]
     },
@@ -528,19 +570,23 @@ const Loan = () => {
       cards: [
         {
           label: "Total Gold Loans",
-          value: "4"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData.closureStatus}` : "-"
         },
         {
           label: "Average EMI",
-          value: "4,500"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData.closureStatus}` : "-"
         },
         {
           label: "Average Interest Rate",
-          value: "10.5%"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData.closureStatus}` : "-"
         },
         {
           label: "Largest Gold Loan",
-          value: "1,50,000"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData.closureStatus}` : "-"
         }
       ]
     },
@@ -1211,6 +1257,10 @@ const Loan = () => {
 
       console.log(response.data.data)
 
+      const insights = await getLoanInsights(token)
+      console.log(insights.data.data)
+      setInsightsData(insights.data.data)
+      
 
 
 
@@ -1228,6 +1278,8 @@ const Loan = () => {
   }, [selectType, selectStatus])
 
   console.log(loans)
+  console.log(analyticsData?.totalAmountRepaid)
+
 
   return (
     <>
@@ -1810,7 +1862,10 @@ const Loan = () => {
 
 
                 }
-
+                
+                <Insights
+                data={insightsData}
+                />
 
 
               </div>
