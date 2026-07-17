@@ -134,16 +134,15 @@
 
 
  /* SAFE */
-
- .safe_card {
+ .success_card {
      border-color: rgba(16, 185, 129, .35);
  }
 
- .safe_indicator {
+ .success_indicator {
      background-color: #10B981;
  }
 
- .safe_card span {
+ .success_card span {
      background-color: rgba(16, 185, 129, .15);
 
      color: #10B981;
@@ -244,9 +243,6 @@
      width: fit-content;
 
      background-color: rgba(16, 185, 129, .15);
-
-     color: #10B981;
-
      padding: .6rem 1rem;
 
      border-radius: 2rem;
@@ -254,7 +250,56 @@
      font-weight: 600;
  }
 
+/* EXCELLENT */
 
+.healthPage_status_Excellent {
+
+    background-color: rgba(16, 185, 129, .15);
+
+    color: #10B981;
+
+    border-color: rgba(16, 185, 129, .35);
+
+}
+
+
+/* GOOD */
+
+.healthPage_status_Good {
+
+    background-color: rgba(59, 130, 246, .15);
+
+    color: #3B82F6;
+
+    border-color: rgba(59, 130, 246, .35);
+
+}
+
+
+/* NEEDS ATTENTION */
+
+.healthPage_status_Attention {
+
+    background-color: rgba(245, 158, 11, .15);
+
+    color: #F59E0B;
+
+    border-color: rgba(245, 158, 11, .35);
+
+}
+
+
+/* CRITICAL */
+
+.healthPage_status_Critical {
+
+    background-color: rgba(239, 68, 68, .15);
+
+    color: #EF4444;
+
+    border-color: rgba(239, 68, 68, .35);
+
+}
 
  /* RESPONSIVE */
  /* 
