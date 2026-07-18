@@ -16,7 +16,7 @@ router.get( "/insights", requireAuth,expenseInsights  )
 
 router.get('/user', requireAuth, getExpensesByUserID)
 
-router.get('/', requireAuth, getExpenses)
+router.get('/', requireAuth, getExpensesByUserID)
 router.get('/:_id', requireAuth, getExpensesByID)
 
 

@@ -136,7 +136,7 @@ const getCategoryExpenseAnalytics = async (userID, category, month = "ALL", year
 
   const match = buildExpenseMatch(userID, category, month, year)
 
-  console.log("Expenses Analytics Category", match , "category" , category, month, year);
+  console.log("Expenses Analytics Category", match, "category", category, month, year);
 
   const test = await Expenses.find(match);
 
@@ -479,6 +479,75 @@ const getCategoryExpenseAllocation = async (
 
 }
 
+
+const getExpensesCalender = async (userID, type, month, year) => {
+
+  const match = buildExpenseMatch(userID, type, month, year)
+  console.log(type, month, year);
+  console.log("build match", match);
+
+  console.log("in expense calender");
+
+  //  const matchedExpenses = await Expenses.find({match})
+
+  //   console.log(
+  //       "Matched expenses:",
+  //       matchedExpenses.map(exp => ({
+  //          id: exp.userID,
+  //           date: exp.date,
+  //           amount: exp.amt,
+  //           category: exp.category
+  //       }))
+  //   )
+
+  const test = await Expenses.find({
+    date: {
+      $gte: new Date(2026, 1, 1),
+      $lt: new Date(2026, 2, 1)
+    }
+  })
+
+  console.log("testr", test);
+
+
+  const result = await Expenses.aggregate([
+
+    {
+      $match: match
+    },
+
+    {
+      $group: {
+        _id: {
+          $dayOfMonth: "$date"
+        },
+        totalExpense: {
+          $sum: "$amt"
+        }
+      }
+    },
+
+    {
+      $project: {
+        _id: 0,
+        day: "$_id",
+        totalExpense: 1
+      }
+    },
+
+    {
+      $sort: {
+        day: 1
+      }
+    }
+
+  ])
+
+  return result
+
+
+}
+
 // _______________________
 // 
 
@@ -581,5 +650,5 @@ const spendByCategory = async (userID) => {
 
 
 
-module.exports = { getTotalExpenseByUser, spendByCategory, monthTomonthTrend, getAllExpenseAnalytics, getCategoryExpenseAnalytics, getAllExpenseAllocation, getCategoryExpenseAllocation };
+module.exports = { getTotalExpenseByUser, spendByCategory, monthTomonthTrend, getAllExpenseAnalytics, getCategoryExpenseAnalytics, getAllExpenseAllocation, getCategoryExpenseAllocation, getExpensesCalender };
 

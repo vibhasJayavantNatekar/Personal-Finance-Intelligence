@@ -7,10 +7,10 @@ const { getLoanTypeAllocation, getAllAllAllocation, getAllActiveAllocation, getA
 const { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getHoldingCounts } = require('../Services/investment.service')
 const { getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance } = require("../Services/investment.service")
 const { getAllAllocation, getTypeAllocation } = require('../Services/investment.service')
-const { getAllExpenseAnalytics, getCategoryExpenseAnalytics, getCategoryExpenseAllocation, getAllExpenseAllocation } = require('../Services/expenses.service')
+const { getAllExpenseAnalytics, getCategoryExpenseAnalytics, getCategoryExpenseAllocation, getAllExpenseAllocation, getExpensesCalender } = require('../Services/expenses.service')
 const { getInvestmentInsights } = require('../Services/investment.insight.service')
-const {getLoanInsights} = require('../Services/lon.insights.service')
-const {getExpenseInsights} = require('../Services/expenseInsight.service')
+const { getLoanInsights } = require('../Services/lon.insights.service')
+const { getExpenseInsights } = require('../Services/expenseInsight.service')
 
 const getDashboardSummary = async (req, res, next) => {
 
@@ -527,7 +527,7 @@ const investmentInsights = async (req, res, next) => {
 
 }
 
-const loanInsights = async (req, res, next) =>{
+const loanInsights = async (req, res, next) => {
 
     const userID = req.user.id
 
@@ -543,8 +543,8 @@ const loanInsights = async (req, res, next) =>{
         )
 
     } catch (error) {
-        
-          const err = {
+
+        const err = {
 
             status: 500,
 
@@ -561,12 +561,12 @@ const loanInsights = async (req, res, next) =>{
 
 }
 
-const expensesInsights  = async (req, res, next) => {
+const expensesInsights = async (req, res, next) => {
 
     const userID = req.user.id
 
     try {
-        
+
         const data = await getExpenseInsights(userID)
 
         res.status(200).json(
@@ -579,7 +579,7 @@ const expensesInsights  = async (req, res, next) => {
 
     } catch (error) {
 
-         const err = {
+        const err = {
 
             status: 500,
 
@@ -590,12 +590,41 @@ const expensesInsights  = async (req, res, next) => {
         }
 
         next(err)
-        
+
     }
 
 }
 
-module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights, expensesInsights }
+const expenseCalendar = async (req, res, next) => {
+
+    const userID = req.user.id
+    const {type = "All", month = 7, year= 2026 } = req.query
+
+    try {
+
+         const data = await getExpensesCalender(userID, type, month, year)
+
+        res.status(200).json(
+            apiResponse(
+                 true,
+                 "Fetch Calendar Expenses Successfully",
+                 data
+            )
+        )
+
+    } catch (error) {
+         
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Error While fetching Expenses Calender Data"
+        }
+
+    }
+
+}
+
+module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights, expensesInsights, expenseCalendar }
 
 // const expenseSummary = async (req, res, next) => {
 
