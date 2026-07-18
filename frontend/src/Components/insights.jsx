@@ -7,7 +7,7 @@ const insights = ({ data }) => {
     return (
         <>
             <div className="insights_container">
-                <h3 className="insights_heading">Investment Insights</h3>
+                <h3 className="insights_heading">Insights</h3>
 
                 {data.map((insight, index) => (
                     <div
