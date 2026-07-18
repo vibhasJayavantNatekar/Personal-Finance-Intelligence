@@ -206,41 +206,26 @@
 
 .calendar_grid {
     display: grid;
-
     grid-template-columns: repeat(7, 1fr);
-
     gap: 1rem;
 }
 
 
-
-
-
 .calendar_day {
     background-color: #1F2937;
-
     border: 1px solid #374151;
-
     border-radius: 1rem;
-
     min-height: 7rem;
-
     padding: 1rem;
-
     display: flex;
-
     flex-direction: column;
-
     justify-content: space-between;
-
     transition: .3s ease;
-
     cursor: pointer;
 }
 
 .calendar_day:hover {
     border-color: #F59E0B;
-
     transform: translateY(-2px);
 }
 
@@ -272,6 +257,18 @@
     font-size: .85rem;
 
     font-weight: 600;
+    
+}
+
+
+.current_day {
+    border: 2px solid #3B82F6;
+    background-color: rgba(59, 130, 246, 0.15);
+}
+
+.current_day .day_number {
+    color: #60A5FA;
+    font-weight: 700;
 }
 
 .chart_container {

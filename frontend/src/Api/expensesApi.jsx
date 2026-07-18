@@ -92,13 +92,37 @@ export const getExpensesAnalytics = (token, category, month, year) => {
 
 }
 
-export const getExpensesInsights = (token) => {
+export const getExpensesCalender = (token, type, month, year) => {
+
+    return API.get(
+        `/api/v1/expenseCalendar`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            params: {
+                  type,
+                  month, 
+                  year
+            }
+            
+        }
+    )
+
+}
+
+export const getExpensesInsights = (token, type, month, year) => {
 
     return API.get(
         "/api/v1/expensesInsights",
         {
             headers: {
                 Authorization: `Bearer ${token}`
+            },
+            params: {
+                type,
+                month,
+                year
             }
         }
     )

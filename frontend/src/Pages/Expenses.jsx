@@ -5,7 +5,7 @@ import Navbar from '../Components/Navbar'
 import ExpensesSidebar from '../Components/ExpensesSidebar'
 import { useSearchParams } from 'react-router-dom'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { createExpense, getExpenses, deleteExpenses, updateExpenses, getExpensesAllocation, getExpensesAnalytics, getExpensesInsights } from '../Api/expensesApi'
+import { createExpense, getExpenses, deleteExpenses, updateExpenses, getExpensesAllocation, getExpensesAnalytics, getExpensesCalender, getExpensesInsights } from '../Api/expensesApi'
 import AllocationChart from '../Components/AllocationChart'
 import Insights from '../Components/insights'
 
@@ -31,6 +31,7 @@ const Expenses = () => {
   const [chartData, setchartData] = useState([])
   const [totalExpense, setTotalExpense] = useState(0)
   const [analyticsData, setanalyticsData] = useState([])
+  const [expensesCalenderData, setExpensesCalenderData] = useState([])
   const [insightsData, setInsightsData] = useState([])
 
   const months = {
@@ -47,6 +48,14 @@ const Expenses = () => {
     Nov: 11,
     Dec: 12
   }
+  const currentDate = new Date()
+
+  const [getMonth, getYear] = month.split(" ")
+
+  const daysInMonth = new Date(getYear || currentDate.getFullYear(), months[getMonth] || currentDate.getMonth() + 1, 0).getDate()
+  console.log(daysInMonth)
+
+  console.log("VIEW MODE:", setviewmode)
 
   const fetchExpenses = async () => {
 
@@ -55,7 +64,7 @@ const Expenses = () => {
 
 
       const token = localStorage.getItem("token")
-      const [getMonth, getYear] = month.split(" ")
+
       console.log(getYear)
 
       const response = await getExpenses(token)
@@ -64,12 +73,14 @@ const Expenses = () => {
       const allocation = await getExpensesAllocation(token, selectedType.toUpperCase(), months[getMonth], getYear)
       const analytics = await getExpensesAnalytics(token, selectedType, months[getMonth], getYear)
       const insights = await getExpensesInsights(token)
-      console.log(insights.data.data)
+      const expensesCalender = await getExpensesCalender(token, selectedType, months[getMonth], getYear)
+      console.log(expensesCalender.data.data)
 
       setanalyticsData(analytics.data.data)
       setchartData(allocation.data.data?.chart)
       setTotalExpense(allocation.data.data.totalExpense)
       setExpenses(response.data.data)
+      setExpensesCalenderData(expensesCalender.data.data)
       setInsightsData(insights.data.data)
 
 
@@ -98,7 +109,7 @@ const Expenses = () => {
     alert("Entry Added")
 
     setShowExpensesModal(false)
-
+    fetchExpenses()
     setExpenseData({
       amt: "",
       category: "food",
@@ -165,26 +176,21 @@ const Expenses = () => {
   // ]
 
 
+  const isCurrentDay = (day) => {
 
-
-
-
-  const year = 2026
-
-  const monthno = 4
-  // May because January = 0
-
-  const totalDays =
-    new Date(year, monthno + 1, 0).getDate()
-
-
+    return currentDate.getDate() === day &&
+      currentDate.getMonth() + 1 ===
+      (months[getMonth] || currentDate.getMonth() + 1) &&
+      currentDate.getFullYear() ===
+      (Number(getYear) || currentDate.getFullYear())
+  }
 
 
   useEffect(() => {
 
     fetchExpenses();
 
-  }, [selectedType, month])
+  }, [selectedType, month,])
 
   console.log(analyticsData)
   const analyticsConfig = {
@@ -214,7 +220,7 @@ const Expenses = () => {
 
         {
           label: "Most Used Category",
-          value:  "-"
+          value: "-"
         }
       ]
 
@@ -603,36 +609,44 @@ const Expenses = () => {
 
                   {
 
-                    Array.from(
-                      { length: totalDays },
 
-                      (_, index) => (
+                    Array.from({ length: daysInMonth }, (_, day) => (
 
-                        <div
-                          className="calendar_day"
-                          key={index}
-                        >
+                      // console.log("its in");
 
-                          <span className="day_number">
+                      <div
+                        className={`calendar_day ${isCurrentDay(day + 1) ? "current_day" : ""}`}
+                        key={day}
+                      >
 
-                            {index + 1}
 
-                          </span>
 
-                          <div className="day_expense">
+                        <span className="day_number">
 
-                            ₹450
+                          {day + 1}
 
-                          </div>
+                        </span>
 
-                        </div>
 
-                      )
+                        {
+                          // currentDate.getDate()
+                          expensesCalenderData.map((exp, index) => (
+                            exp.day === day + 1 && (
+                              <span className="day_expense">{`₹${exp.totalExpense}`}</span>
+                            )
 
-                    )
+
+                          ))
+
+                        }
+
+
+
+                      </div>
+
+                    ))
 
                   }
-
                 </div>
               }
 
@@ -640,7 +654,7 @@ const Expenses = () => {
                 <div className="analytical_view">
 
                   <div className="analytical_card_container card_container">
-                    
+
 
                     {
 
@@ -684,11 +698,11 @@ const Expenses = () => {
 
 
               }
-                
-                <Insights
+
+              <Insights
                 data={insightsData}
-                />
-                  
+              />
+
 
             </div>
 
