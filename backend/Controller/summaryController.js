@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const apiResponse = require('../Utils/apiResponse')
 const { buildLoanMatch, getloanOverview, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics, getHomeCompletedAnalytics
 } = require('../Services/loan.serice')
-const { getLoanTypeAllocation, getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation } = require('../Services/loan.serice')
+const { getLoanTypeAllocation,getEMIAnalysis,  getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation } = require('../Services/loan.serice')
 const { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getHoldingCounts } = require('../Services/investment.service')
 const { getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance } = require("../Services/investment.service")
 const { getAllAllocation, getTypeAllocation, getStockHoldings } = require('../Services/investment.service')
@@ -302,6 +302,35 @@ const loanAllocation = async (req, res, next) => {
     }
 
 }
+
+const emiAnalysis = async (req, res, next) => {
+    
+    const userID = req.user.id
+
+    try {
+        
+        const data = await getEMIAnalysis(userID)
+
+        res.status(200).json(
+            apiResponse(
+                true,
+                "Fetch Emi analysis Successfully",
+                data
+            )
+        )
+
+    } catch (error) {
+        
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "error while fetching an emi analysis"
+        }
+
+    }
+
+}
+ 
 
 const investmentAnalytics = async (req, res, next) => {
 
@@ -657,7 +686,7 @@ const stocksHolding = async (req, res, next) => {
 
 }
 
-module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights, expensesInsights, expenseCalendar , stocksHolding }
+module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, emiAnalysis, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights, expensesInsights, expenseCalendar , stocksHolding }
 
 // const expenseSummary = async (req, res, next) => {
 

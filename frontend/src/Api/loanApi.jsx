@@ -56,8 +56,6 @@ export const deleteLoan = async (id, loanData, token) =>{
 
 export const getLoanAnalytics  = (token, type, status)=> {
 
-    
-
     return API.get(
         `/api/v1/loanAnalytics`,
         {
@@ -72,6 +70,17 @@ export const getLoanAnalytics  = (token, type, status)=> {
 
     )
 
+}
+
+export const getEmiAnalysis = (token) => {
+    return API.get(
+        "/api/v1/emianalysis",
+        {
+            headers: {
+                Authorization: `Beare ${token}`
+            }
+        }
+    )
 }
 
 export const getLoanInsights = (token) =>{

@@ -4,7 +4,7 @@ import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
 import LoanSidebar from '../Components/LoanSidebar'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
-import { getLoans, createLoan, updateLoan, deleteLoan, getLoanAnalytics, getLoanInsights } from '../Api/loanApi'
+import { getLoans, createLoan, updateLoan, deleteLoan, getLoanAnalytics, getLoanInsights, getEmiAnalysis } from '../Api/loanApi'
 import AllocationChart from '../Components/AllocationChart'
 import Insights from '../Components/insights'
 
@@ -31,6 +31,7 @@ const Loan = () => {
   })
   const [analyticsData, setAnalyticsData] = useState([])
   const [insightsData, setInsightsData] = useState([])
+  const [emianalysisData, setEmianalysisData] = useState([])
 
   // const [totalLoan, setTotalLoan] = useState(0)
   const loanChartData = [
@@ -56,21 +57,7 @@ const Loan = () => {
     0
   )
 
-  const emiData = [
-    {
-      loanType: "Home",
-      emi: 18000
-    },
-    {
-      loanType: "Car",
-      emi: 7000
-    },
-    {
-      loanType: "Personal",
-      emi: 3000
-    }
-  ]
-
+ 
   const analyticalConfig = {
     ALL_ALL: {
       cards: [
@@ -488,7 +475,7 @@ const Loan = () => {
         },
         {
           label: "Closure Status",
-          value:  "hold"
+          value: "hold"
         }
       ]
     },
@@ -1211,7 +1198,7 @@ const Loan = () => {
   const currentAllocationConfig = allocationCardConfig[`${selectType}_${selectStatus}`]
 
   const maxEmi = Math.max(
-    ...emiData.map(item => item.emi)
+    ...emianalysisData.map(item => item.totalEMI)
   )
 
   const handleAddLoan = async (e) => {
@@ -1260,7 +1247,14 @@ const Loan = () => {
       const insights = await getLoanInsights(token)
       console.log(insights.data.data)
       setInsightsData(insights.data.data)
-      
+
+      const emiAnalysis = await getEmiAnalysis(token)
+      setEmianalysisData(emiAnalysis.data.data)
+      console.log(emiAnalysis.data.data)
+
+
+
+
 
 
 
@@ -1784,7 +1778,7 @@ const Loan = () => {
 
                         {
 
-                          emiData.map((loan, index) => (
+                          emianalysisData.map((loan, index) => (
 
                             <div
                               className="emi_row"
@@ -1804,7 +1798,7 @@ const Loan = () => {
                                 <div
                                   className="emi_bar"
                                   style={{
-                                    width: `${(loan.emi / maxEmi) * 100
+                                    width: `${(loan.totalEMI / maxEmi) * 100
                                       }%`
                                   }}
                                 ></div>
@@ -1815,7 +1809,7 @@ const Loan = () => {
 
                               <div className="emi_amount">
 
-                                ₹{loan.emi.toLocaleString()}
+                                ₹{(loan.totalEMI)}
 
                               </div>
 
@@ -1864,9 +1858,9 @@ const Loan = () => {
 
 
                 }
-                
+
                 <Insights
-                data={insightsData}
+                  data={insightsData}
                 />
 
 

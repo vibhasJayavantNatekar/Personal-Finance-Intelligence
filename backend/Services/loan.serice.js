@@ -58,6 +58,44 @@ const getloanOverview = async (userID) => {
 
 }
 
+const getEMIAnalysis = async (userID) => {
+
+    const result = await Loan.aggregate([
+        {
+            $match: {
+                userID: new mongoose.Types.ObjectId(userID),
+                loanStatus: "ACTIVE"
+            }
+        },
+
+        {
+            $group: {
+                _id: "$loanType",
+
+                totalEMI: {
+                    $sum: "$emi"
+                }
+            }
+        },
+
+        {
+            $sort: {
+                totalEMI: -1
+            }
+        },
+
+        {
+            $project: {
+                _id: 0,
+                loanType: "$_id",
+                totalEMI: 1
+            }
+        }
+    ])
+
+    return result
+}
+
 const getInvestmentOverview = async (userID) => {
 
   const overview = await investment.aggregate([
@@ -2403,7 +2441,7 @@ const getLoanFullSummary = async (userId) => {
 }
 
 module.exports = {  
-  getLoanTypeAllocation,getloanOverview,
+  getLoanTypeAllocation,getloanOverview, getEMIAnalysis,
   getLoanFullSummary, buildLoanMatch, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getHomeCompletedAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics,
-  getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation
+  getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation 
 }
