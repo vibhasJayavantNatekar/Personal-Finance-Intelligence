@@ -109,11 +109,11 @@ const AllocationChart = ({ title,  data, total }) => {
 
                             data.map((item, index) => {
 
-                                const percentage = (
+                                // const percentage = (
 
-                                    (item.amount / total) * 100
+                                //     (item.amount / total) * 100
 
-                                ).toFixed(0)
+                                // ).toFixed(0)
 
                                 return (
 
@@ -144,7 +144,7 @@ const AllocationChart = ({ title,  data, total }) => {
 
                                         <h5>
 
-                                            {percentage}%
+                                            {item.percentage}%
 
                                         </h5>
 

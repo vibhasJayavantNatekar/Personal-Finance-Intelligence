@@ -57,6 +57,8 @@ const Expenses = () => {
 
   console.log("VIEW MODE:", setviewmode)
 
+  
+ 
   const fetchExpenses = async () => {
 
     try {
@@ -74,8 +76,8 @@ const Expenses = () => {
       const analytics = await getExpensesAnalytics(token, selectedType, months[getMonth], getYear)
       const insights = await getExpensesInsights(token)
       const expensesCalender = await getExpensesCalender(token, selectedType, months[getMonth], getYear)
-      console.log(expensesCalender.data.data)
-
+      console.log(allocation.data.data.totalExpense)
+      
       setanalyticsData(analytics.data.data)
       setchartData(allocation.data.data?.chart)
       setTotalExpense(allocation.data.data.totalExpense)
@@ -220,7 +222,7 @@ const Expenses = () => {
 
         {
           label: "Most Used Category",
-          value: "-"
+          value: analyticsData?.mostUsedCategory || "-"
         }
       ]
 
@@ -687,7 +689,7 @@ const Expenses = () => {
                   </div>
 
 
-                  {selectedType === "All" &&
+                  {selectedType === "ALL" &&
                     <AllocationChart
                       title="Expense Distribution"
                       data={chartData}
@@ -695,6 +697,11 @@ const Expenses = () => {
                     />
                   }
                 </div>
+
+                // <AllocationChart 
+
+          
+                // />
 
 
               }

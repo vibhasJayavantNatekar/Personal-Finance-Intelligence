@@ -4,9 +4,10 @@ import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
 import InvestmentSidebar from '../Components/InvestmentSidebar'
 import Live_market_strip from '../Components/Live_market_strip'
-import '../Styles/Insights.css'
+import Insights from '../Components/insights'
 import AllocationChart from '../Components/AllocationChart'
-import { createInvestment, getInvestment, updateInvestment, deleteInvestment } from '../Api/investmentApi'
+import { createInvestment, getInvestment, updateInvestment, deleteInvestment, getInvestmentAnalytics, getPerformanceListAnalytics, getInvestmentAllocation, getStocksHoldings, getHoldingCount, getInsights } from '../Api/investmentApi'
+import { all } from 'axios'
 
 const Investment = () => {
 
@@ -16,6 +17,13 @@ const Investment = () => {
   const [selectStatus, setselectStatus] = useState("ALL")
   const [selectTPP, setselectTPP] = useState("10")
   const [Investments, setInvestments] = useState([])
+  const [analyticsData, setAnalyticsData] = useState([])
+  const [allocationSummaryData, setAllocationSummaryData] = useState([])
+  const [performanceListData, setperformanceListData] = useState([])
+  const [stocksHoldingData, setstocksHoldingData] = useState([])
+  const [chartData, setChartData] = useState([])
+  const [holdingCounts, setHoldingCounts] = useState([])
+  const [insightsData, setInsightsData] = useState([])
   const [investmentData, setInvestmentData] = useState({
 
     assetType: "STOCK",
@@ -41,7 +49,7 @@ const Investment = () => {
       amount: 25
 
     }
-  ];
+  ]
 
   const totalInvestment = investmentChartData.reduce((sum, item) =>
     sum + item.amount, 0
@@ -53,19 +61,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Investment",
-          value: "₹5,00,000"
+          value: analyticsData?.totalInvestment
+            ? `${analyticsData.totalInvestment}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹5,80,000"
+          value: analyticsData?.currentValue
+            ? `${analyticsData.currentValue}` : "-"
         },
         {
           label: "Total Profit",
-          value: "₹80,000"
+          value: analyticsData?.totalProfit
+            ? `${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Best Performer",
-          value: "TCS"
+          value: analyticsData?.bestPerformer?.assetName
+            ? `${analyticsData.bestPerformer.assetName}` : "-"
         }
       ]
     },
@@ -76,19 +88,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Investment",
-          value: "₹4,50,000"
+          value: analyticsData?.totalInvestment
+            ? `${analyticsData.totalInvestment}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹5,20,000"
+          value: analyticsData?.currentValue
+            ? `${analyticsData.currentValue}` : "-"
         },
         {
           label: "Total Profit",
-          value: "₹70,000"
+          value: analyticsData?.totalProfit
+            ? `${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Best Performer",
-          value: "TCS"
+          value: analyticsData?.bestPerformer?.assetName
+            ? `${analyticsData.bestPerformer.assetName}` : "-"
         }
       ]
     },
@@ -99,19 +115,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Sold Investments",
-          value: "15"
+          value: analyticsData?.totalSoldInvestments
+            ? `${analyticsData.totalSoldInvestments}` : "-"
         },
         {
           label: "Sale Value",
-          value: "₹2,50,000"
+          value: analyticsData?.saleValue
+            ? `${analyticsData.saleValue}` : "-"
         },
         {
           label: "Realized Profit",
-          value: "₹45,000"
+          value: analyticsData?.realizedProfit
+            ? `${analyticsData.realizedProfit}` : "-"
         },
         {
           label: "Best Exit",
-          value: "Infosys"
+          value: analyticsData?.bestExit?.assetName
+            ? `${analyticsData.bestExit.assetName}` : "-"
         }
       ]
     },
@@ -122,19 +142,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Investment",
-          value: "₹2,50,000"
+          value: analyticsData?.totalInvestment
+            ? `${analyticsData.totalInvestment}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹3,00,000"
+          value: analyticsData?.currentValue
+            ? `${analyticsData.currentValue}` : "-"
         },
         {
           label: "Stock Profit",
-          value: "₹50,000"
+          value: analyticsData?.totalProfit
+            ? `₹ ${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Best Stock",
-          value: "TCS"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -145,19 +169,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Sold Stocks",
-          value: "8"
+          value: analyticsData?.totalSoldAssets
+            ? `${analyticsData.totalSoldAssets}` : "-"
         },
         {
           label: "Sale Value",
-          value: "₹1,20,000"
+          value: analyticsData?.saleValue
+            ? `${analyticsData.saleValue}` : "-"
         },
         {
           label: "Realized Profit",
-          value: "₹20,000"
+          value: analyticsData?.realizedProfit
+            ? `${analyticsData.realizedProfit}` : "-hold"
         },
         {
           label: "Best Trade",
-          value: "Infosys"
+          value: analyticsData?.bestExit?.assetName
+            ? `${analyticsData.bestExit.assetName}` : "-"
         }
       ]
     },
@@ -168,19 +196,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Investment",
-          value: "₹1,50,000"
+          value: analyticsData?.totalInvestment
+            ? `${analyticsData.totalInvestment}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹1,80,000"
+          value: analyticsData?.currentValue
+            ? `${analyticsData.currentValue}` : "-"
         },
         {
           label: "MF Profit",
-          value: "₹30,000"
+          value: analyticsData?.totalProfit
+            ? `${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Best Fund",
-          value: "HDFC Mid Cap"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -191,19 +223,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Sold Funds",
-          value: "5"
+          value: analyticsData?.totalSoldAssets
+            ? `${analyticsData.totalSoldAssets}` : "-"
         },
         {
           label: "Redemption Value",
-          value: "₹80,000"
+          value: analyticsData?.saleValue
+            ? `${analyticsData.saleValue}` : "-"
         },
         {
           label: "Realized Profit",
-          value: "₹15,000"
+          value: analyticsData?.realizedProfit
+            ? `${analyticsData.realizedProfit}` : "-"
         },
         {
           label: "Best Exit",
-          value: "SBI Small Cap"
+          value: analyticsData?.bestExit?.assetName
+            ? `${analyticsData.bestExit.assetName}` : "-"
         }
       ]
     },
@@ -214,19 +250,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Investment",
-          value: "₹90,000"
+          value: analyticsData?.totalInvestment
+            ? `${analyticsData.totalInvestment}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹1,05,000"
+          value: analyticsData?.currentValue
+            ? `${analyticsData.currentValue}` : "-"
         },
         {
           label: "ETF Profit",
-          value: "₹15,000"
+          value: analyticsData?.totalProfit
+            ? `${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Best ETF",
-          value: "Nifty ETF"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -237,19 +277,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Sold ETFs",
-          value: "4"
+          value: analyticsData?.totalSoldAssets
+            ? `${analyticsData.totalSoldAssets}` : "-"
         },
         {
           label: "Sale Value",
-          value: "₹60,000"
+          value: analyticsData?.saleValue
+            ? `${analyticsData.saleValue}` : "-"
         },
         {
           label: "Realized Profit",
-          value: "₹10,000"
+          value: analyticsData?.realizedProfit
+            ? `${analyticsData.realizedProfit}` : "-"
         },
         {
           label: "Best ETF Exit",
-          value: "Nifty ETF"
+          value: analyticsData?.bestExit?.assetName
+            ? `${analyticsData.bestExit.assetName}` : "-"
         }
       ]
     },
@@ -260,19 +304,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Investment",
-          value: "₹70,000"
+          value: analyticsData?.totalInvestment
+            ? `${analyticsData.totalInvestment}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹82,000"
+          value: analyticsData?.currentValue
+            ? `${analyticsData.currentValue}` : "-"
         },
         {
           label: "Gold Profit",
-          value: "₹12,000"
+          value: analyticsData?.totalProfit
+            ? `${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Best Gold Asset",
-          value: "Gold ETF"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -283,19 +331,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Gold Sold",
-          value: "3"
+          value: analyticsData?.totalSoldAssets
+            ? `${analyticsData.totalSoldAssets}` : "-"
         },
         {
           label: "Sale Value",
-          value: "₹50,000"
+          value: analyticsData?.saleValue
+            ? `${analyticsData.saleValue}` : "-"
         },
         {
           label: "Realized Profit",
-          value: "₹8,000"
+          value: analyticsData?.realizedProfit
+            ? `${analyticsData.realizedProfit}` : "-"
         },
         {
           label: "Best Gold Sale",
-          value: "Gold ETF"
+          value: analyticsData?.bestExit?.assetName
+            ? `${analyticsData.bestExit.assetName}` : "-"
         }
       ]
     },
@@ -306,19 +358,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Investment",
-          value: "₹2,00,000"
+          value: analyticsData?.totalInvestment
+            ? `${analyticsData.totalInvestment}` : "-"
         },
         {
           label: "Current FD Value",
-          value: "₹2,25,000"
+          value: analyticsData?.currentValue
+            ? `${analyticsData.currentValue}` : "-"
         },
         {
           label: "Interest Earned",
-          value: "₹25,000"
+          value: analyticsData?.totalProfit
+            ? `${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Highest FD",
-          value: "SBI FD"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -329,19 +385,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total FDs Closed",
-          value: "6"
+          value: analyticsData?.totalSoldAssets
+            ? `${analyticsData.totalSoldAssets}` : "-"
         },
         {
           label: "Maturity Value",
-          value: "₹3,00,000"
+          value: analyticsData?.saleValue
+            ? `${analyticsData.saleValue}` : "-"
         },
         {
           label: "Interest Earned",
-          value: "₹40,000"
+          value: analyticsData?.realizedProfit
+            ? `${analyticsData.realizedProfit}` : "-"
         },
         {
           label: "Best FD Return",
-          value: "HDFC FD"
+          value: analyticsData?.bestExit?.assetName
+            ? `${analyticsData.bestExit.assetName}` : "-"
         }
       ]
     },
@@ -352,19 +412,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Investment",
-          value: "₹1,00,000"
+          value: analyticsData?.totalInvestment
+            ? `${analyticsData.totalInvestment}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹1,10,000"
+          value: analyticsData?.currentValue
+            ? `${analyticsData.currentValue}` : "-"
         },
         {
           label: "Interest Earned",
-          value: "₹10,000"
+          value: analyticsData?.totalProfit
+            ? `${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Highest Yield Bond",
-          value: "Gov Bond"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -375,19 +439,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Bonds Redeemed",
-          value: "4"
+          value: analyticsData?.saleValue
+            ? `${analyticsData.saleValue}` : "-"
         },
         {
           label: "Maturity Value",
-          value: "₹1,50,000"
+          value: analyticsData?.saleValue
+            ? `${analyticsData.saleValue}` : "-"
         },
         {
           label: "Interest Earned",
-          value: "₹20,000"
+          value: analyticsData?.realizedProfit
+            ? `${analyticsData.realizedProfit}` : "-"
         },
         {
           label: "Best Bond Return",
-          value: "Gov Bond"
+          value: analyticsData?.bestExit?.assetName
+            ? `${analyticsData.bestExit.assetName}` : "-"
         }
       ]
     }
@@ -396,19 +464,24 @@ const Investment = () => {
       cards: [
         {
           label: "Total Stocks",
-          value: "12"
+          value: analyticsData?.totalAssets
+            ? `${analyticsData.totalAssets}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹3,50,000"
+          value: analyticsData?.currentValue
+            ? `₹ ${analyticsData.currentValue}` : "-"
         },
         {
           label: "Total Profit",
-          value: "₹60,000"
+          value: analyticsData?.totalProfit
+            ? `₹ ${analyticsData.totalProfit}` : "-"
+
         },
         {
           label: "Best Stock",
-          value: "TCS"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -417,19 +490,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total FDs",
-          value: "8"
+          value: analyticsData?.totalAssets
+            ? `${analyticsData.totalAssets}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹2,80,000"
+          value: analyticsData?.currentValue
+            ? `₹ ${analyticsData.currentValue}` : "-"
         },
         {
           label: "Interest Earned",
-          value: "₹35,000"
+          value: analyticsData?.totalProfit
+            ? `₹ ${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Highest FD",
-          value: "SBI FD"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -438,19 +515,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total ETFs",
-          value: "6"
+          value: analyticsData?.totalAssets
+            ? `${analyticsData.totalAssets}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹1,20,000"
+          value: analyticsData?.currentValue
+            ? `₹ ${analyticsData.currentValue}` : "-"
         },
         {
           label: "ETF Profit",
-          value: "₹18,000"
+          value: analyticsData?.totalProfit
+            ? `₹ ${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Best ETF",
-          value: "Nifty ETF"
+          value: analyticsData?.bestAsset?.assetName
+            ? ` ${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -459,19 +540,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Mutual Funds",
-          value: "10"
+          value: analyticsData?.totalAssets
+            ? `${analyticsData.totalAssets}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹2,40,000"
+          value: analyticsData?.currentValue
+            ? `₹ ${analyticsData.currentValue}` : "-"
         },
         {
           label: "MF Profit",
-          value: "₹42,000"
+          value: analyticsData?.totalProfit
+            ? `₹ ${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Best Fund",
-          value: "HDFC Mid Cap"
+          value: analyticsData?.bestAsset?.assetName
+            ? ` ${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -480,19 +565,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Gold Holdings",
-          value: "5"
+          value: analyticsData?.totalAssets
+            ? `${analyticsData.totalAssets}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹95,000"
+          value: analyticsData?.currentValue
+            ? `₹ ${analyticsData.currentValue}` : "-"
         },
         {
           label: "Gold Profit",
-          value: "₹12,000"
+          value: analyticsData?.totalProfit
+            ? `₹ ${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Best Gold Asset",
-          value: "Gold ETF"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -501,19 +590,23 @@ const Investment = () => {
       cards: [
         {
           label: "Total Bonds",
-          value: "4"
+          value: analyticsData?.totalAssets
+            ? `${analyticsData.totalAssets}` : "-"
         },
         {
           label: "Current Value",
-          value: "₹1,40,000"
+          value: analyticsData?.currentValue
+            ? `₹ ${analyticsData.currentValue}` : "-"
         },
         {
           label: "Interest Earned",
-          value: "₹15,000"
+          value: analyticsData?.totalProfit
+            ? `₹ ${analyticsData.totalProfit}` : "-"
         },
         {
           label: "Highest Yield Bond",
-          value: "Gov Bond"
+          value: analyticsData?.bestAsset?.assetName
+            ? `${analyticsData.bestAsset.assetName}` : "-"
         }
       ]
     },
@@ -524,20 +617,20 @@ const Investment = () => {
     ALL_ALL: {
       cards: [
         {
-          label: "Most Recent Investment ",
-          value: "TCS"
+          label: "Most Recent Investment",
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest Investment",
-          value: "HDFC"
+          value: performanceListData?.highestInvestment?.assetName || "-"
         },
         {
           label: "Top Gainer",
-          value: "Wipro"
+          value: performanceListData?.topGainer?.assetName || "-"
         },
         {
           label: "Top Looser",
-          value: "TCS"
+          value: performanceListData?.topLoser?.assetName || "-"
         }
       ]
     },
@@ -545,20 +638,20 @@ const Investment = () => {
     ALL_ACTIVE: {
       cards: [
         {
-          label: "Most Recent Investment ",
-          value: "TCS"
+          label: "Most Recent Investment",
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest Investment",
-          value: "HDFC"
+          value: performanceListData?.highestInvestment?.assetName || "-"
         },
         {
           label: "Top Gainer",
-          value: "Wipro"
+          value: performanceListData?.topGainer?.assetName || "-"
         },
         {
           label: "Top Looser",
-          value: "TCS"
+          value: performanceListData?.topLoser?.assetName || "-"
         }
       ]
     },
@@ -567,24 +660,20 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          value: "TCS",
-
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest Stock Investment",
-          value: "Reliance",
-
+          value: performanceListData?.highestInvestment?.assetName || "-"
         },
         {
           label: "Top Gainer",
-          value: "Reliance",
-
+          value: performanceListData?.topGainer?.assetName || "-"
         },
         {
           label: "Top Looser",
-          value: "Reliance",
-
-        },
+          value: performanceListData?.topLoser?.assetName || "-"
+        }
       ]
     },
 
@@ -592,24 +681,20 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          value: "TCS",
-
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest Stock Investment",
-          value: "Reliance",
-
+          value: performanceListData?.highestInvestment?.assetName || "-"
         },
         {
           label: "Top Gainer",
-          value: "Reliance",
-
+          value: performanceListData?.topGainer?.assetName || "-"
         },
         {
           label: "Top Looser",
-          value: "Reliance",
-
-        },
+          value: performanceListData?.topLoser?.assetName || "-"
+        }
       ]
     },
 
@@ -617,21 +702,20 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          value: "AXIS BANK"
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
-          label: "Highest Investment ",
-          value: "Motilal Owaswal"
+          label: "Highest Investment",
+          value: performanceListData?.highestInvestment?.assetName || "-"
         },
         {
           label: "Lowest Investment",
-          values: "Axix mutual fund"
+          value: "-hold"
         },
         {
           label: "Top Gainer",
-          value: "Motilas Owswal"
+          value: performanceListData?.topGainer?.assetName || "-"
         }
-
       ]
     },
 
@@ -639,62 +723,61 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          value: "AXIS BANK"
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
-          label: "Highest Investment ",
-          value: "Motilal Owaswal"
+          label: "Highest Investment",
+          value: performanceListData?.highestInvestment?.assetName || "-"
         },
         {
           label: "Lowest Investment",
-          values: "Axix mutual fund"
+          value: "-hold"
         },
         {
           label: "Top Gainer",
-          value: "Motilas Owswal"
-        }
-
-      ]
-    },
-
-    EFT_ACTIVE: {
-      cards: [
-        {
-          label: "Most Recent Investment",
-          value: "Silver ETF"
-        },
-        {
-          label: "Highest ETF Investment",
-          value: "Flexi Gold ETF"
-        },
-        {
-          label: "Lowest ETF Investment",
-          value: "Midcap"
-        },
-        {
-          label: "Top Gainer",
-          value: "Flexi Gold ETF"
+          value: performanceListData?.topGainer?.assetName || "-"
         }
       ]
     },
 
-    EFT_ALL: {
+    ETF_ACTIVE: {
       cards: [
         {
           label: "Most Recent Investment",
-          value: "Silver ETF"
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest ETF Investment",
-          value: "Flexi Gold ETF"
+          value: performanceListData?.highestInvestment?.assetName || "-"
         },
         {
           label: "Lowest ETF Investment",
-          value: "Midcap"
+          value: "-hold"
         },
         {
           label: "Top Gainer",
-          value: "Flexi Gold ETF"
+          value: performanceListData?.topGainer?.assetName || "-"
+        }
+      ]
+    },
+
+    ETF_ALL: {
+      cards: [
+        {
+          label: "Most Recent Investment",
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
+        },
+        {
+          label: "Highest ETF Investment",
+          value: performanceListData?.highestInvestment?.assetName || "-"
+        },
+        {
+          label: "Lowest ETF Investment",
+          value: "-hold"
+        },
+        {
+          label: "Top Gainer",
+          value: performanceListData?.topGainer?.assetName || "-"
         }
       ]
     },
@@ -703,19 +786,19 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          value: "BOI"
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest FD Amount",
-          value: " 120000"
+          value: performanceListData?.highestInvestment?.investedAmt || "-"
         },
         {
           label: "Lowest FD Amount",
-          value: "  5000"
+          value: "-hold"
         },
         {
           label: "Nearest Maturity",
-          value: "BOI"
+          value: "-hold"
         }
       ]
     },
@@ -724,19 +807,19 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          value: "BOI"
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest FD Amount",
-          value: " 120000"
+          value: performanceListData?.highestInvestment?.investedAmt || "-"
         },
         {
           label: "Lowest FD Amount",
-          value: "  5000"
+          value: "-hold"
         },
         {
           label: "Nearest Maturity",
-          value: "BOI"
+          value: "-hold"
         }
       ]
     },
@@ -745,21 +828,20 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          value: "Gov Bonds"
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest Bond Investment",
-          value: "Gov .Bond"
+          value: performanceListData?.highestInvestment?.assetName || "-"
         },
         {
           label: "Lowest Bond Investment",
-          value: "Gov. Bond"
+          value: "-hold"
         },
         {
           label: "Nearest Maturity",
-          value: "Gov. Bond"
+          value: "-hold"
         }
-
       ]
     },
 
@@ -767,21 +849,20 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          value: "Gov Bonds"
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest Bond Investment",
-          value: "Gov .Bond"
+          value: performanceListData?.highestInvestment?.assetName || "-"
         },
         {
           label: "Lowest Bond Investment",
-          value: "Gov. Bond"
+          value: "-hold"
         },
         {
           label: "Nearest Maturity",
-          value: "Gov. Bond"
+          value: "-hold"
         }
-
       ]
     },
 
@@ -789,19 +870,19 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          values: "Gold"
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest Gold Investment0",
-          value: "12000"
+          value: performanceListData?.highestInvestment?.investedAmt || "-"
         },
         {
           label: "Lowest Gold Investment",
-          value: "5000"
+          value: "-hold"
         },
         {
           label: "Current Gold Price",
-          value: "  54000"
+          value: "-hold"
         }
       ]
     },
@@ -810,19 +891,19 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Investment",
-          values: "Gold"
+          value: performanceListData?.mostRecentInvestment?.assetName || "-"
         },
         {
           label: "Highest Gold Investment0",
-          value: "12000"
+          value: performanceListData?.highestInvestment?.investedAmt || "-"
         },
         {
           label: "Lowest Gold Investment",
-          value: "5000"
+          value: "-hold"
         },
         {
           label: "Current Gold Price",
-          value: "  54000"
+          value: "-hold"
         }
       ]
     },
@@ -831,61 +912,63 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Sale",
-          value: "TCS"
+          value: performanceListData?.mostRecentSale?.assetName || "-"
         },
         {
           label: "Highest Sale Value",
-          value: " 1,50,000"
+          value: performanceListData?.highestSale?.sellAmount || "-"
         },
         {
           label: "Lowest Sale value",
-          value: " 8,000"
+          value: performanceListData?.lowestSale?.sellAmount || "-"
         },
         {
           label: "Most Profitable Exit",
-          value: "Infosys"
+          value: performanceListData?.bestExit?.assetName || "-"
         }
       ]
     },
 
     STOCK_SOLD: {
-      cards: [
-        {
-          label: "Most Recent Stock Sale",
-          value: "  TCS"
-        },
-        {
-          label: "Highest Sale Value",
-          value: " 5,000"
-        },
-        {
-          label: "Lowest Sale Value",
-          value: " 200"
-        },
-        {
-          label: "Best Trade",
-          value: "Info"
-        }
-      ]
+      STOCK_SOLD: {
+        cards: [
+          {
+            label: "Most Recent Stock Sale",
+            value: performanceListData?.mostRecentSale?.assetName || "-"
+          },
+          {
+            label: "Highest Sale Value",
+            value: performanceListData?.highestSale?.assetName || "-"
+          },
+          {
+            label: "Lowest Sale Value",
+            value: performanceListData?.lowestSale?.assetName || "-"
+          },
+          {
+            label: "Best Stock Exit",
+            value: performanceListData?.bestExit?.assetName || "-"
+          }
+        ]
+      },
     },
 
     MUTUAL_FUND_SOLD: {
       cards: [
         {
           label: "Most Recent Redemption",
-          value: "HDFC Mid Cap"
-        },
-        {
-          label: "Lowest Redemption",
-          value: " 6000"
+          value: performanceListData?.mostRecentSale?.assetName || "-"
         },
         {
           label: "Highest Redemption",
-          value: " 80,000"
+          value: performanceListData?.highestSale?.assetName || "-"
+        },
+        {
+          label: "Lowest Redemption",
+          value: performanceListData?.lowestSale?.assetName || "-"
         },
         {
           label: "Best Fund Exit",
-          value: "SBI Small Cap"
+          value: performanceListData?.bestExit?.assetName || "-"
         }
       ]
     },
@@ -894,19 +977,19 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent ETF Sale",
-          value: "Nifty ETF"
+          value: performanceListData?.mostRecentSale?.assetName || "-"
         },
         {
           label: "Highest Sale Value",
-          value: " 70,000"
+          value: performanceListData?.highestSale?.assetName || "-"
         },
         {
           label: "Lowest Sale Value",
-          value: " 4000"
+          value: performanceListData?.lowestSale?.assetName || "-"
         },
         {
           label: "Best ETF Exit",
-          value: "Nifty ETF"
+          value: performanceListData?.bestExit?.assetName || "-"
         }
       ]
     },
@@ -915,19 +998,19 @@ const Investment = () => {
       cards: [
         {
           label: "Most Recent Gold Sale",
-          value: "Gold ETF"
+          value: performanceListData?.mostRecentSale?.assetName || "-"
         },
         {
-          label: "Highest Sale value",
-          value: " 55,000"
+          label: "Highest Sale Value",
+          value: performanceListData?.highestSale?.assetName || "-"
         },
         {
           label: "Lowest Sale Value",
-          value: " 8000"
+          value: performanceListData?.lowestSale?.assetName || "-"
         },
         {
           label: "Best Gold Exit",
-          value: "Gold ETF"
+          value: performanceListData?.bestExit?.assetName || "-"
         }
       ]
     },
@@ -935,20 +1018,20 @@ const Investment = () => {
     FD_SOLD: {
       cards: [
         {
-          label: "Most Recent Closure",
-          value: "SBI FD"
+          label: "Most Recent FD Closure",
+          value: performanceListData?.mostRecentSale?.assetName || "-"
         },
         {
           label: "Highest Maturity Value",
-          value: " 2,00,000"
+          value: performanceListData?.highestSale?.assetName || "-"
         },
         {
           label: "Lowest Maturity Value",
-          value: " 50,000"
+          value: performanceListData?.lowestSale?.assetName || "-"
         },
         {
           label: "Best FD Return",
-          value: "HDFC FD"
+          value: performanceListData?.bestExit?.assetName || "-"
         }
       ]
     },
@@ -956,23 +1039,23 @@ const Investment = () => {
     BOND_SOLD: {
       cards: [
         {
-          label: "Most Recent Redemption",
-          value: "Govt. Bond"
+          label: "Most Recent Bond Redemption",
+          value: performanceListData?.mostRecentSale?.assetName || "-"
         },
         {
           label: "Highest Maturity Value",
-          value: " 1,50,000"
+          value: performanceListData?.highestSale?.assetName || "-"
         },
         {
           label: "Lowest Maturity Value",
-          value: " 30,000"
+          value: performanceListData?.lowestSale?.assetName || "-"
         },
         {
           label: "Best Bond Return",
-          value: "RBI BOND"
+          value: performanceListData?.bestExit?.assetName || "-"
         }
       ]
-    }
+    },
 
 
   }
@@ -982,19 +1065,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Allocation",
-          value: "Stocks (45%)"
+          value: allocationSummaryData?.largestAllocation
+            ? `${allocationSummaryData.largestAllocation.category} (${allocationSummaryData.largestAllocation.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Allocation",
-          value: "ETF(5%)"
+          value: allocationSummaryData?.smallestAllocation
+            ? `${allocationSummaryData.smallestAllocation.category} (${allocationSummaryData.smallestAllocation.percentage}%)`
+            : "-"
         },
         {
           label: "Asset Classes",
-          value: "5"
+          value: allocationSummaryData?.assetClasses || 0
         },
         {
           label: "Portfolio value",
-          value: " 10,00,000"
+          value: allocationSummaryData?.portfolioValue || 0
         }
       ]
     },
@@ -1003,19 +1090,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Allocation",
-          value: "Stocks (45%)"
+          value: allocationSummaryData?.largestAllocation
+            ? `${allocationSummaryData.largestAllocation.category} (${allocationSummaryData.largestAllocation.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Allocation",
-          value: "ETF(5%)"
+          value: allocationSummaryData?.smallestAllocation
+            ? `${allocationSummaryData.smallestAllocation.category} (${allocationSummaryData.smallestAllocation.percentage}%)`
+            : "-"
         },
         {
           label: "Asset Classes",
-          value: "5"
+          value: allocationSummaryData?.assetClasses || 0
         },
         {
           label: "Active Portfolio value",
-          value: " 8,00,000"
+          value: allocationSummaryData?.portfolioValue || 0
         }
       ]
     },
@@ -1024,19 +1115,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Exit Allocation",
-          value: "Stocks (40%)"
+          value: allocationSummaryData?.largestAllocation
+            ? `${allocationSummaryData.largestAllocation.category} (${allocationSummaryData.largestAllocation.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Exit Allocation",
-          value: "ETF(8%)"
+          value: allocationSummaryData?.smallestAllocation
+            ? `${allocationSummaryData.smallestAllocation.category} (${allocationSummaryData.smallestAllocation.percentage}%)`
+            : "-"
         },
         {
           label: "Asset Classes Sold",
-          value: "4"
+          value: allocationSummaryData?.assetClasses || 0
         },
         {
           label: "Total Sale value",
-          value: " 1,50,000"
+          value: allocationSummaryData?.portfolioValue || 0
         }
       ]
     },
@@ -1045,19 +1140,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Holding",
-          value: "TCS(35%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Holding",
-          value: "Wipro (10%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Stock Holding",
-          value: "8"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Stock Value",
-          value: " 3,50,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1066,19 +1165,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Holding",
-          value: "TCS(50%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Holding",
-          value: "Wipro(8%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Active Stocks",
-          value: "6"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Current Value",
-          value: " 3,00,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1087,19 +1190,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Exit",
-          value: "Infosys (30%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Exit",
-          value: "Wipro (10%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Sold Stocks",
-          value: "2"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Sale Value",
-          value: " 50,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1108,19 +1215,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Fund ",
-          value: "HDFC Mid Cap"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Fund",
-          value: "Axis Bluechi (10%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Active Funds",
-          value: "4"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Current Value",
-          value: " 1,80,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1129,19 +1240,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Fund ",
-          value: "HDFC Mid Cap"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Fund",
-          value: "Axis Bluechi (10%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Fund Holdings",
-          value: "5"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Fund Value",
-          value: " 2,00,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
 
@@ -1151,19 +1266,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Redemption",
-          value: "SBI Small Cao (40%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Redemption",
-          value: "Axis Bluechip (15%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Redeemed Funds",
-          value: "1"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Redemption Value",
-          value: " 20,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1172,19 +1291,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest FD",
-          value: "SBI FD (50%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest FD",
-          value: "ICICI FD (20%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "FD Holdings",
-          value: "4"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "FD Value",
-          value: " 2,50,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1193,19 +1316,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest FD",
-          value: "SBI FD (50%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest FD",
-          value: "ICICI FD (20%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Active FDs",
-          value: "3"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Current Value",
-          value: " 2,00,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1214,19 +1341,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Maturity",
-          value: "HDFC FD (45%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Maturity",
-          value: "ICICI FD (20%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Closed FDs",
-          value: "1"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Maturity Value",
-          value: " 50,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1235,19 +1366,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest ETF",
-          value: "Nitfy ETF (55%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest ETF",
-          value: "Gold ETF (10%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "ETF Holdings",
-          value: "3"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "ETF Value",
-          value: " 1,20,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1256,19 +1391,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest ETF",
-          value: "Nitfy ETF (55%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest ETF",
-          value: "Gold ETF (10%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Active ETFs",
-          value: "2"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Current Value",
-          value: " 1,00,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1277,19 +1416,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest ETF",
-          value: "Nitfy ETF (55%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest ETF",
-          value: "Gold ETF (10%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Sold ETFs",
-          value: "1"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Sale Value",
-          value: " 20,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1298,19 +1441,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Gold Holding",
-          value: "Gold ETF (70%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Gold Holding",
-          value: "Digital Gold (30%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Gold Holdings",
-          value: "2"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
-          lable: "Gold Value",
-          value: " 80,000"
+          label: "Gold Value",
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1319,19 +1466,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Gold Holding",
-          value: "Gold ETF (70%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Gold Holding",
-          value: "Digital Gold (30%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Active Gold Assets",
-          value: "2"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Current Value",
-          value: " 70,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1340,19 +1491,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Gold Exit",
-          value: "Gold ETF (100%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Gold Exit",
-          value: "Gold ETF (100%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Sold Gold Asset",
-          value: "1"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Sale Value",
-          value: " 10,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1361,19 +1516,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Bond",
-          value: "Goverment Bond"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Bond",
-          value: "Corporate Bond"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Bond Holdings",
-          value: "3"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Bond Value",
-          value: " 1,50,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1382,19 +1541,23 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Bond",
-          value: "Goverment Bond"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Bond",
-          value: "Corporate Bond"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Active Bonds",
-          value: "2"
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Current Value",
-          value: " 1,20,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     },
@@ -1403,40 +1566,46 @@ const Investment = () => {
       cards: [
         {
           label: "Largest Redemption",
-          value: "Goverment Bond (100%)"
+          value: allocationSummaryData?.largestHolding
+            ? `${allocationSummaryData.largestHolding.category} (${allocationSummaryData.largestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Smallest Redemption",
-          value: "Goverment Bond (100%)"
+          value: allocationSummaryData?.smallestHolding
+            ? `${allocationSummaryData.smallestHolding.category} (${allocationSummaryData.smallestHolding.percentage}%)`
+            : "-"
         },
         {
           label: "Redeemed Bonds",
-          value: 1
+          value: allocationSummaryData?.totalHoldings || 0
         },
         {
           label: "Maturity Value",
-          value: " 30,000"
+          value: allocationSummaryData?.totalValue || 0
         }
       ]
     }
 
   }
 
+  console.log("Type:", selectType);
+  console.log("Status:", selectStatus);
+  console.log("Key:", `${selectType}_${selectStatus}`);
+
   const currentConfig = analyticsConfig[`${selectType}_${selectStatus}`]
   const currentPerformaceList = performanceListConfig[`${selectType}_${selectStatus}`]
   const currentSummaryCards = allocationSummaryConfig[`${selectType}_${selectStatus}`]
-  console.log(currentConfig)
-
+  // console.log(currentConfig)
+  console.log(analyticsConfig["ETF_ALL"]);
   const handleAddInvestment = async (e) => {
 
     e.preventDefault()
 
-
-
     const token = localStorage.getItem("token")
 
     const response = await createInvestment(investmentData, token)
-  
+
     setShowInvestmentModal(false)
 
     setInvestmentData({
@@ -1458,10 +1627,38 @@ const Investment = () => {
     try {
 
       const token = localStorage.getItem("token")
-
       const response = await getInvestment(token)
-
+      const analytics = await getInvestmentAnalytics(token, selectType, selectStatus)
       setInvestments(response.data.data)
+      console.log(analytics.data.data)
+
+      setAnalyticsData(analytics.data.data)
+
+      const performanceList = await getPerformanceListAnalytics(token, selectType, selectStatus)
+      setperformanceListData(performanceList.data.data)
+      console.log(performanceList.data.data)
+
+      const stocksHolding = await getStocksHoldings(token)
+      setstocksHoldingData(stocksHolding.data.data)
+      console.log(stocksHolding.data.data)
+
+      const allocation = await getInvestmentAllocation(token, selectType, selectStatus)
+      setChartData(allocation.data.data.chart)
+      console.log(allocation.data.data)
+      setAllocationSummaryData(allocation.data.data)
+
+      const insights = await getInsights(token)
+      console.log("insights" ,insights.data.data)
+      setInsightsData(insights.data.data)
+      
+
+      const holdingCounts = await getHoldingCount(token)
+      setHoldingCounts(holdingCounts.data.data)
+      console.log(holdingCounts.data.data)
+   
+
+
+
 
     } catch (error) {
       console.log(error.message)
@@ -1474,10 +1671,15 @@ const Investment = () => {
 
     fetchInvestments()
 
-  }, [])
+  }, [selectStatus, selectType])
 
+  stocksHoldingData.map((data) => {
+    console.log(data.assetName);
 
-
+  })
+ 
+  console.log(analyticsData)
+  
 
   return (
     <>
@@ -1788,7 +1990,7 @@ const Investment = () => {
                         </div> */}
 
                         <div className="form_group">
-                           <label>
+                          <label>
 
                             Status
 
@@ -1958,6 +2160,9 @@ const Investment = () => {
                     <div className="analytical_view_card_container">
 
                       {
+
+
+
                         currentConfig.cards.map((card, index) => (
                           <div className="analytical_view_card" key={index}>
 
@@ -1983,53 +2188,27 @@ const Investment = () => {
                     {selectType === "ALL" &&
                       <div className="performance_analytical">
 
-                        <div className="performance_analytical_card">
-                          <div className="performance_analytical_card_label card_label">
-                            <h4>Stocks</h4>
-                          </div>
+                        {
+                          holdingCounts.map((count,index) => (
+                            <div className="performance_analytical_card" key={index}>
+                              <div className="performance_analytical_card_label card_label">
+                                <h4>{holdingCounts[index].assetType}</h4>
+                              </div>
 
-                          <div className='performance_analytical_card_label card_value' >
+                              <div className='performance_analytical_card_label card_value' >
 
-                            7 Holding
-                          </div>
+                                {holdingCounts[index].holdings} Holding
+                              </div>
 
-                        </div>
+                            </div>
+                          ))
+                        }
 
-                        <div className="performance_analytical_card">
-                          <div className="performance_analytical_card_label card_label">
-                            <h4>Mutual Funds</h4>
-                          </div>
 
-                          <div className='performance_analytical_card_label card_value' >
 
-                            4 Holding
-                          </div>
+                        
 
-                        </div>
-
-                        <div className="performance_analytical_card">
-                          <div className="performance_analytical_card_label card_label">
-                            <h4> FD's </h4>
-                          </div>
-
-                          <div className='performance_analytical_card_label card_value' >
-
-                            4 Holding
-                          </div>
-
-                        </div>
-
-                        <div className="performance_analytical_card">
-                          <div className="performance_analytical_card_label card_label">
-                            <h4>Gold</h4>
-                          </div>
-
-                          <div className='performance_analytical_card_label card_value' >
-
-                            2 Holding
-                          </div>
-
-                        </div>
+                    
 
 
                       </div>
@@ -2045,25 +2224,19 @@ const Investment = () => {
                         </div>
 
                         <div className="stock_list">
-                          <div className="stock">
-                            <h4>TCS</h4>
-                            <p>₹ 5000</p>
-                          </div>
 
-                          <div className="stock">
-                            <h4>TCS</h4>
-                            <p>₹ 5000</p>
-                          </div>
+                          {stocksHoldingData.map((stock) => (
 
-                          <div className="stock">
-                            <h4>TCS</h4>
-                            <p>₹ 5000</p>
-                          </div>
 
-                          <div className="stock">
-                            <h4>TCS</h4>
-                            <p>₹ 5000</p>
-                          </div>
+
+                            <div className="stock" key={stock._id}>
+                              <h4> {stock.assetName}</h4>
+                              <p>₹ 5000 hold</p>
+                            </div>
+
+                          ))
+                          }
+
 
                         </div>
                       </div>
@@ -2100,7 +2273,7 @@ const Investment = () => {
                   < div className="allocation_view">
                     <AllocationChart
                       title="Portfolio Allocation"
-                      data={investmentChartData}
+                      data={chartData}
                       total={totalInvestment}
                     />
 
@@ -2125,21 +2298,10 @@ const Investment = () => {
 
                   </div>
                 }
-
-                <div className="insights_container">
-                  <h3 className="insights_heading">Investment Insights</h3>
-
-                  <div className="insight_card">
-                    <p>Stocks contributed highest returns this month.</p>
-                  </div>
-
-                  <div className="insight_card">
-                    <p>Gold reduced overall portfolio volatility.</p>
-                  </div>
-                  <div className="insight_card">
-                    <p> Diversification across assets is healthy</p>
-                  </div>
-                </div>
+                <Insights
+                 data ={insightsData}
+                />
+                
 
               </div>
 

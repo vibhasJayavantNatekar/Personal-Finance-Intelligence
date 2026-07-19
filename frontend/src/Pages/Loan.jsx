@@ -76,7 +76,7 @@ const Loan = () => {
       cards: [
         {
           label: "Total EMI Burden",
-          value: "12%"
+          value: "12% hold"
         },
         {
           label: "Risk Level",
@@ -127,7 +127,7 @@ const Loan = () => {
       },
       {
         label: "Total Amount Repaid",
-        value: " 6,50,000"
+        value: " 6,50,000 hold"
       },
       {
         label: "Average Laon Size",
@@ -1279,6 +1279,8 @@ const Loan = () => {
 
   console.log(loans)
   console.log(analyticsData?.totalAmountRepaid)
+  console.log(analyticsData)
+
 
 
   return (

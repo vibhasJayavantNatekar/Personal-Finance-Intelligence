@@ -64,7 +64,7 @@ const LoanSidebar = ({ view, setview, selectType, setselectType, selectStatus, s
                                 <option value={"CAR"}>Car Loan</option>
                                 <option value={"GOLD"}>Gold Loan</option>
                                 <option value={"AGRICULTURE"}>Agriculture Loan</option>
-                                <option value={"BUSINESS"}>Bussiness Loan</option>
+                                <option value={"BUSSINESS"}>Bussiness Loan</option>
 
                             </select>
 
