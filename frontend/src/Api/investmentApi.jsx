@@ -1,20 +1,20 @@
 import API from './axios'
 
-export const createInvestment = (InvestmentData , token) =>{
-  return  API.post(
-    "/investment/api/v1/",
-    InvestmentData,
-    {
-        headers: {
-            Authorization: `bearer ${token}`
+export const createInvestment = (InvestmentData, token) => {
+    return API.post(
+        "/investment/api/v1/",
+        InvestmentData,
+        {
+            headers: {
+                Authorization: `bearer ${token}`
+            }
         }
-    }
 
     )
 }
 
-export const getInvestment = (token)=> {
-    
+export const getInvestment = (token) => {
+
     return API.get(
         "/investment/api/v1/",
         {
@@ -26,7 +26,7 @@ export const getInvestment = (token)=> {
 
 }
 
-export const updateInvestment = (id, InvestmentData, token)=> {
+export const updateInvestment = (id, InvestmentData, token) => {
     return API.put(
         `/investment/api/v1/${id}`,
         InvestmentData,
@@ -40,16 +40,16 @@ export const updateInvestment = (id, InvestmentData, token)=> {
 
 export const deleteInvestment = (id, token) => {
     return API.delete(
-            `/investment/api/v1/${id}`,
-            {
-                headers: {
-                    Authorization: `bearer ${token}`
-                }
+        `/investment/api/v1/${id}`,
+        {
+            headers: {
+                Authorization: `bearer ${token}`
             }
+        }
     )
 }
 
-export const getInvestmentAnalytics = (token, type, status ) =>{
+export const getInvestmentAnalytics = (token, type, status) => {
 
     return API.get(
         `/api/v1/investmentAnalytics`,
@@ -66,8 +66,8 @@ export const getInvestmentAnalytics = (token, type, status ) =>{
 
 }
 
-export const getInvestmentAllocation = (token, type, status) =>{
- 
+export const getInvestmentAllocation = (token, type, status) => {
+
     return API.get(
         `/api/v1/investmentAllocation`,
         {
@@ -81,9 +81,9 @@ export const getInvestmentAllocation = (token, type, status) =>{
         }
     )
 
-} 
+}
 
-export const getPerformanceListAnalytics =(token, type, status) => {
+export const getPerformanceListAnalytics = (token, type, status) => {
 
     return API.get(
         `/api/v1/investmentPerformance`,
@@ -111,21 +111,35 @@ export const getInsights = (token) => {
     )
 }
 
-export const getStocksHoldings = (token) =>{
+// export const getStocksHoldings = (token) =>{
+
+//     return API.get(
+//         `/investment/api/v1/stocksholdings`,
+//         {
+//             headers: {
+//                 Authorization: `bearer ${token}`
+//             }
+
+//         }
+//     )
+
+// }
+
+
+export const getStocksHoldings = (token) => {
 
     return API.get(
-        `/investment/api/v1/stocksholdings`,
+        `/api/v1/stockHoldings`,
         {
             headers: {
-                Authorization: `bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
-            
         }
     )
 
 }
 
-export const getHoldingCount = (token) =>{
+export const getHoldingCount = (token) => {
     return API.get(
         `http://localhost:5000/api/v1/holding`,
         {

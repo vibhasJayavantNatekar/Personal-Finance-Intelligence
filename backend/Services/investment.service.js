@@ -1,6 +1,8 @@
 const express = require('express')
 const Investment = require('../Models/investment')
 const mongoose = require('mongoose')
+const axios = require('axios')
+require("dotenv/config")
 
 const buildInvestmentMatch = (userID, type = "ALL", status = "ALL") => {
 
@@ -1305,7 +1307,7 @@ const getHoldingCounts = async (userID) => {
         {
             $match: {
                 userID: new mongoose.Types.ObjectId(userID),
-                investmentStatus: "ACTIVE" 
+                investmentStatus: "ACTIVE"
             }
         },
         {
@@ -1325,10 +1327,102 @@ const getHoldingCounts = async (userID) => {
         }
     ])
 
-  
+
     return result
-    
+
 
 }
 
-module.exports = { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance, getAllAllocation, getTypeAllocation, getHoldingCounts }
+// [
+//     {
+//         assetSymbol: "INFY",
+//         assetName: "Infosys",
+//         quantity: 10,
+//         investedAmt: 10000
+//     }
+// ]
+
+const getStockPrice = async (symbol) => {
+
+     const API_KEY = process.env.STOCK_MARKET_API
+
+    try {
+        const response = await axios.get(
+            "https://stock.indianapi.in/stock",
+            {
+                headers: {
+                    "x-api-key": API_KEY,
+                    "accept": "application/json"
+                },
+
+                params: {
+                    name: symbol
+                }
+            }
+        )
+
+     
+        return {
+            currentPrice: Number(response.data.currentPrice.NSE) || 0,
+            percentChange: Number(response.data.percentChange) || 0
+        }
+
+    } catch (error) {
+       
+        console.log(
+            symbol,
+            error.response?.data || error.message
+        )
+        return {
+             currentPrice:  0,
+            percentChange:  0
+        }
+
+    }
+
+
+
+}
+
+const getStockHoldings = async (userID) => {
+
+
+    const stocks = await Investment.find({ userID, assetType: "STOCK", investmentStatus: "ACTIVE" }).select("assetSymbol assetName quantity investedAmt")
+
+    const stock_names = []
+
+    stocks.map((stock) => {
+        stock_names.push(stock.assetSymbol)
+
+    })
+    console.log(stock_names);
+
+    const stocksHoldings = await Promise.all(
+
+        stocks.map(async (stock) => {
+            const stockData = await getStockPrice(stock.assetSymbol)
+
+            return {
+                assetSymbol: stock.assetSymbol,
+                assetName: stock.assetName,
+                quantity: stock.quantity,
+                 currentPrice: stockData.currentPrice,
+                percentChange: stockData.percentChange,
+
+                holdingValue: stock.quantity * stockData.currentPrice
+
+            }
+        })
+    )
+
+    // const price = await getStockPrice("TCS") || 0 
+    // const price = 0
+
+    console.log(stocksHoldings)
+
+
+    return stocksHoldings
+
+}
+
+module.exports = { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance, getAllAllocation, getTypeAllocation, getHoldingCounts, getStockHoldings }

@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const {requireAuth} = require('../Middleware/authMiddleware')
-const {getDashboardSummary, expenseAnalytics, expenseAllocation, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, loanAnalytics, getHolding, investmentInsights, loanInsights, expensesInsights, expenseCalendar} = require('../Controller/summaryController')
+const {getDashboardSummary, expenseAnalytics, expenseAllocation, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, loanAnalytics, getHolding, investmentInsights, loanInsights, expensesInsights, expenseCalendar, stocksHolding} = require('../Controller/summaryController')
 const { getHoldingCounts } = require('../Services/investment.service')
 
 //Base url - http://localhost:5000/api/v1/
@@ -19,6 +19,7 @@ router.get("/investmentPerformance",requireAuth, investmentPerformance)
 router.get("/investmentAllocation",requireAuth, investmentAllocation)
 router.get("/investmentInsights",requireAuth,investmentInsights)
 router.get('/holding',requireAuth,getHolding)
+router.get('/stockHoldings', requireAuth,stocksHolding)
 
 
 

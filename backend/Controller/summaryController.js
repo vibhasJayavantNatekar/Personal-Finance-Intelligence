@@ -6,7 +6,7 @@ const { buildLoanMatch, getloanOverview, getAllActiveAnalytics, getAllCompletedA
 const { getLoanTypeAllocation, getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation } = require('../Services/loan.serice')
 const { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getHoldingCounts } = require('../Services/investment.service')
 const { getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance } = require("../Services/investment.service")
-const { getAllAllocation, getTypeAllocation } = require('../Services/investment.service')
+const { getAllAllocation, getTypeAllocation, getStockHoldings } = require('../Services/investment.service')
 const { getAllExpenseAnalytics, getCategoryExpenseAnalytics, getCategoryExpenseAllocation, getAllExpenseAllocation, getExpensesCalender } = require('../Services/expenses.service')
 const { getInvestmentInsights } = require('../Services/investment.insight.service')
 const { getLoanInsights } = require('../Services/lon.insights.service')
@@ -624,7 +624,40 @@ const expenseCalendar = async (req, res, next) => {
 
 }
 
-module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights, expensesInsights, expenseCalendar }
+const stocksHolding = async (req, res, next) => {
+
+    const userID = req.user.id
+
+
+    try {
+
+        // const stocks = await Investment.find({ assetType: "STOCK", investmentStatus: "ACTIVE"})
+         const stocks =  await  getStockHoldings(userID)
+
+        res.status(200).json(
+            apiResponse(
+                true,
+                "Fetch Stocks Sucessfully",
+                stocks
+
+            )
+        )
+
+    } catch (error) {
+
+        const err = {
+            status: 500,
+            message: error.message,
+            extraDetails: "Error while fetching details..."
+        }
+
+        next(err)
+
+    }
+
+}
+
+module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights, expensesInsights, expenseCalendar , stocksHolding }
 
 // const expenseSummary = async (req, res, next) => {
 

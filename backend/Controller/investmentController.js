@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const Investment = require('../Models/investment')
 const investment = require('../Models/investment')
-const { getInvestmentInsights } = require("../Services/investment.insight.service");
+const { getInvestmentInsights  } = require("../Services/investment.insight.service")
 const apiResponse = require('../Utils/apiResponse')
 
 //Create Investment
@@ -204,6 +204,7 @@ const getStocksHolding = async (req, res, next) => {
 
 
     try {
+
         const stocks = await Investment.find({ assetType: "STOCK", investmentStatus: "ACTIVE"})
 
         res.status(200).json(

@@ -43,92 +43,118 @@ const getAllExpenseAnalytics = async (userID, month = "ALL", year = "ALL") => {
 
   const result = await Expenses.aggregate([
 
-    {
-      $match: match
-    },
+  {
+    $match: match
+  },
 
-    {
-      $facet: {
+  {
+    $facet: {
 
-        summary: [
+      summary: [
 
-          {
-            $group: {
+        {
+          $group: {
 
-              _id: null,
+            _id: null,
 
-              totalExpense: {
-                $sum: "$amt"
-              },
+            totalExpense: {
+              $sum: "$amt"
+            },
 
-              averageExpense: {
-                $avg: "$amt"
-              },
+            averageExpense: {
+              $avg: "$amt"
+            },
 
-              transactionCount: {
-                $sum: 1
-              }
-
+            transactionCount: {
+              $sum: 1
             }
 
           }
+        }
 
-        ],
+      ],
 
-        highestExpense: [
+      highestExpense: [
 
-          {
-            $sort: {
-              amt: -1
-            }
-          },
-
-          {
-            $limit: 1
+        {
+          $sort: {
+            amt: -1
           }
+        },
 
-        ],
+        {
+          $limit: 1
+        }
 
-        lowestExpense: [
+      ],
 
-          {
-            $sort: {
-              amt: 1
-            }
-          },
+      lowestExpense: [
 
-          {
-            $limit: 1
+        {
+          $sort: {
+            amt: 1
           }
+        },
 
-        ]
+        {
+          $limit: 1
+        }
 
-      }
+      ],
+
+      mostUsedCategory: [
+
+        {
+          $group: {
+            _id: "$category",
+
+            count: {
+              $sum: 1
+            }
+          }
+        },
+
+        {
+          $sort: {
+            count: -1
+          }
+        },
+
+        {
+          $limit: 1
+        }
+
+      ]
 
     }
 
-  ])
-
-  const summary = result[0]?.summary?.[0] || {};
-
-  return {
-
-    totalExpense:
-      summary.totalExpense || 0,
-
-    averageExpense:
-      summary.averageExpense || 0,
-
-    transactionCount:
-      summary.transactionCount || 0,
-
-    highestExpense:
-      result[0]?.highestExpense?.[0] || null,
-
-    lowestExpense:
-      result[0]?.lowestExpense?.[0] || null
-
   }
+
+])
+
+const summary = result[0]?.summary?.[0] || {}
+
+return {
+
+  totalExpense:
+    summary.totalExpense || 0,
+
+  averageExpense:
+    summary.averageExpense || 0,
+
+  transactionCount:
+    summary.transactionCount || 0,
+
+  highestExpense:
+    result[0]?.highestExpense?.[0] || null,
+
+  lowestExpense:
+    result[0]?.lowestExpense?.[0] || null,
+
+  mostUsedCategory:
+    result[0]?.mostUsedCategory?.[0]?._id || null
+
+}
 
 }
 

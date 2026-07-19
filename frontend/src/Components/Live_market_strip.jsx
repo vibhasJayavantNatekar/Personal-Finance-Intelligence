@@ -1,7 +1,7 @@
 import React from 'react'
 import '../Styles/Live_market_strip.css'
 
-const Live_market_strip = () => {
+const Live_market_strip = ({ data }) => {
 
 
 
@@ -12,25 +12,32 @@ const Live_market_strip = () => {
                 <h5>Live Market</h5>
             </div>
 
-            <div className="market_item gain">
-                <h5>TCS</h5>
-                <h6>₹3820</h6>
-                <p>↑ 2.1%</p>
-            </div>
+        
+            {
+                data.slice(0, 3).map((stock) => {
 
-            <div className="market_item loss">
-                <h5>INFY</h5>
-                <h6>₹1540</h6>
-                <p>↓ 1.2%</p>
-            </div>
+                    const isGain = stock.percentChange >= 0
 
-            <div className="market_item gain">
-                <h5>RELIANCE</h5>
-                <h6>₹2880</h6>
-                <p>↑ 0.8%</p>
-            </div>
+                    return (
+                        <div
+                            className={`market_item ${isGain ? "gain" : "loss"}`}
+                            key={stock.assetSymbol}
+                        >
+                            <h5>{stock.assetSymbol}</h5>
 
-           
+                            <h6>₹{stock.currentPrice}</h6>
+
+                            <p>
+                                {isGain ? "↑" : "↓"} {Math.abs(stock.percentChange)}%
+                            </p>
+                        </div>
+                    )
+                })
+            }
+
+
+
+
         </div>
     )
 

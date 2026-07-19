@@ -1597,7 +1597,7 @@ const Investment = () => {
   const currentPerformaceList = performanceListConfig[`${selectType}_${selectStatus}`]
   const currentSummaryCards = allocationSummaryConfig[`${selectType}_${selectStatus}`]
   // console.log(currentConfig)
-  console.log(analyticsConfig["ETF_ALL"]);
+  // console.log(analyticsConfig["ETF_ALL"])
   const handleAddInvestment = async (e) => {
 
     e.preventDefault()
@@ -1630,13 +1630,13 @@ const Investment = () => {
       const response = await getInvestment(token)
       const analytics = await getInvestmentAnalytics(token, selectType, selectStatus)
       setInvestments(response.data.data)
-      console.log(analytics.data.data)
+      // console.log(analytics.data.data)
 
       setAnalyticsData(analytics.data.data)
 
       const performanceList = await getPerformanceListAnalytics(token, selectType, selectStatus)
       setperformanceListData(performanceList.data.data)
-      console.log(performanceList.data.data)
+      // console.log(performanceList.data.data)
 
       const stocksHolding = await getStocksHoldings(token)
       setstocksHoldingData(stocksHolding.data.data)
@@ -1644,17 +1644,17 @@ const Investment = () => {
 
       const allocation = await getInvestmentAllocation(token, selectType, selectStatus)
       setChartData(allocation.data.data.chart)
-      console.log(allocation.data.data)
+      // console.log(allocation.data.data)
       setAllocationSummaryData(allocation.data.data)
 
       const insights = await getInsights(token)
-      console.log("insights" ,insights.data.data)
+      // console.log("insights" ,insights.data.data)
       setInsightsData(insights.data.data)
       
 
       const holdingCounts = await getHoldingCount(token)
       setHoldingCounts(holdingCounts.data.data)
-      console.log(holdingCounts.data.data)
+      // console.log(holdingCounts.data.data)
    
 
 
@@ -1678,7 +1678,7 @@ const Investment = () => {
 
   })
  
-  console.log(analyticsData)
+  // console.log(analyticsData)
   
 
   return (
@@ -2088,7 +2088,9 @@ const Investment = () => {
 
                   </div>
                 )}
-                <Live_market_strip />
+                <Live_market_strip 
+                data={stocksHoldingData}
+                />
 
                 {viewmode === "List" &&
                   <div className="expenses_transactions">
@@ -2225,13 +2227,13 @@ const Investment = () => {
 
                         <div className="stock_list">
 
-                          {stocksHoldingData.map((stock) => (
+                          {stocksHoldingData.map((stock , index) => (
 
 
 
-                            <div className="stock" key={stock._id}>
+                            <div className="stock" key={index}>
                               <h4> {stock.assetName}</h4>
-                              <p>₹ 5000 hold</p>
+                              <p> {stock.holdingValue} </p>
                             </div>
 
                           ))
