@@ -72,6 +72,24 @@ export const getLoanAnalytics  = (token, type, status)=> {
 
 }
 
+export const getLaonAllocation = (token, type, status) => {
+
+    return API.get(
+        "/api/v1/loanAllocation",
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+
+            },
+            params: {
+                type,
+                status
+            }
+        }
+    )
+
+}
+
 export const getEmiAnalysis = (token) => {
     return API.get(
         "/api/v1/emianalysis",

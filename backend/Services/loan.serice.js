@@ -29,71 +29,71 @@ const buildLoanMatch = (userID, loanType = "ALL", loanStatus = "ALL") => {
 
 const getloanOverview = async (userID) => {
 
-    const overview = await Loan.aggregate([
-        {
-            $match: {
-                userID: new mongoose.Types.ObjectId(userID),
-                loanStatus: "ACTIVE"
-            }
+  const overview = await Loan.aggregate([
+    {
+      $match: {
+        userID: new mongoose.Types.ObjectId(userID),
+        loanStatus: "ACTIVE"
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        activeLoans: {
+          $sum: 1
         },
-        {
-            $group: {
-                _id: null,
-                activeLoans: {
-                    $sum: 1
-                },
-                totalPrinciple: {
-                    $sum: "$principleAmount"
-                },
-                monthlyEMI: {
-                    $sum: "$emi"
-                }
-
-            }
+        totalPrinciple: {
+          $sum: "$principleAmount"
+        },
+        monthlyEMI: {
+          $sum: "$emi"
         }
 
-    ])
-    overview[0].lr = 4.5
-    return overview[0]
+      }
+    }
+
+  ])
+  overview[0].lr = 4.5
+  return overview[0]
 
 }
 
 const getEMIAnalysis = async (userID) => {
 
-    const result = await Loan.aggregate([
-        {
-            $match: {
-                userID: new mongoose.Types.ObjectId(userID),
-                loanStatus: "ACTIVE"
-            }
-        },
+  const result = await Loan.aggregate([
+    {
+      $match: {
+        userID: new mongoose.Types.ObjectId(userID),
+        loanStatus: "ACTIVE"
+      }
+    },
 
-        {
-            $group: {
-                _id: "$loanType",
+    {
+      $group: {
+        _id: "$loanType",
 
-                totalEMI: {
-                    $sum: "$emi"
-                }
-            }
-        },
-
-        {
-            $sort: {
-                totalEMI: -1
-            }
-        },
-
-        {
-            $project: {
-                _id: 0,
-                loanType: "$_id",
-                totalEMI: 1
-            }
+        totalEMI: {
+          $sum: "$emi"
         }
-    ])
+      }
+    },
 
-    return result
+    {
+      $sort: {
+        totalEMI: -1
+      }
+    },
+
+    {
+      $project: {
+        _id: 0,
+        loanType: "$_id",
+        totalEMI: 1
+      }
+    }
+  ])
+
+  return result
 }
 
 const getInvestmentOverview = async (userID) => {
@@ -102,7 +102,7 @@ const getInvestmentOverview = async (userID) => {
     {
       $match: {
         userID: new mongoose.Types.ObjectId(userID),
-        
+
       }
     }
   ])
@@ -201,6 +201,10 @@ const getAllCompletedAnalytics = async (userID) => {
             $group: {
               _id: null,
 
+              closedLoans: {
+                $sum: 1
+              },
+
               totalAmountRepaid: {
                 $sum: "$principleAmount"
               },
@@ -215,7 +219,6 @@ const getAllCompletedAnalytics = async (userID) => {
         largestClosedLoan: [
           {
             $sort: {
-
               principleAmount: -1
             }
           },
@@ -225,22 +228,24 @@ const getAllCompletedAnalytics = async (userID) => {
           {
             $project: {
               _id: 0,
-              principalAmount: 1
+              loanType: 1,
+              principleAmount: 1
             }
           }
         ]
-
       }
     }
-
-
-
   ])
 
+  const summary = result[0]?.summary?.[0] || {}
 
-  console.log(result[0]);
-
-  return result[0]
+  return {
+    closedLoans: summary.closedLoans || 0,
+    totalAmountRepaid: summary.totalAmountRepaid || 0,
+    averageLoanSize: summary.averageLoanSize || 0,
+    largestClosedLoan:
+      result[0]?.largestClosedLoan?.[0] || null
+  }
 }
 
 const getPersonalAllAnalytics = async (userID) => {
@@ -293,9 +298,17 @@ const getPersonalAllAnalytics = async (userID) => {
 
   ])
 
-  console.log(result[0]);
+  const summary = result[0]?.summary?.[0] || {}
 
-  return result[0]
+  return {
+    totalPersonalLoan: summary.totalPersonalLoan || 0,
+    averageEMI: summary.averageEMI || 0,
+    averageInterestRate: summary.averageInterestRate || 0,
+    largestPersonalLoan:
+      result[0]?.largestPersonalLoan?.[0]?.principleAmount || 0
+  }
+
+
 }
 
 const getPersonalActiveAnalytics = async (userID) => {
@@ -1097,7 +1110,7 @@ const getGoldAllAnalytics = async (userID) => {
           }
         ],
 
-        largestEducationlLoan: [
+        largestLoan: [
           {
             $sort: {
               principleAmount: -1
@@ -1126,8 +1139,8 @@ const getGoldAllAnalytics = async (userID) => {
       result[0].summary?.[0]
         ?.averageInterestRate || 0,
 
-    largestEducationlLoan:
-      result[0].largestEducationlLoan?.[0]
+    largestLoan:
+      result[0].largestLoan?.[0]
         ?.principleAmount || 0
 
   }
@@ -1311,7 +1324,7 @@ const getAgricultureAllAnalytics = async (userID) => {
           }
         ],
 
-        largestEducationlLoan: [
+        largestLoan: [
           {
             $sort: {
               principleAmount: -1
@@ -1340,8 +1353,8 @@ const getAgricultureAllAnalytics = async (userID) => {
       result[0].summary?.[0]
         ?.averageInterestRate || 0,
 
-    largestEducationlLoan:
-      result[0].largestEducationlLoan?.[0]
+    largestLoan:
+      result[0].largestLoan?.[0]
         ?.principleAmount || 0
 
   }
@@ -1827,22 +1840,22 @@ const getAllAllAllocation = async (userID) => {
 
     largestLoanType: largest
       ? {
-          category: largest._id,
-          amount: largest.totalAmount,
-          percentage: totalBorrowed > 0
-            ? Number(((largest.totalAmount / totalBorrowed) * 100).toFixed(2))
-            : 0
-        }
+        category: largest._id,
+        amount: largest.totalAmount,
+        percentage: totalBorrowed > 0
+          ? Number(((largest.totalAmount / totalBorrowed) * 100).toFixed(2))
+          : 0
+      }
       : null,
 
     smallestLoanType: smallest
       ? {
-          category: smallest._id,
-          amount: smallest.totalAmount,
-          percentage: totalBorrowed > 0
-            ? Number(((smallest.totalAmount / totalBorrowed) * 100).toFixed(2))
-            : 0
-        }
+        category: smallest._id,
+        amount: smallest.totalAmount,
+        percentage: totalBorrowed > 0
+          ? Number(((smallest.totalAmount / totalBorrowed) * 100).toFixed(2))
+          : 0
+      }
       : null,
 
     loanTypes: summary.loanTypes,
@@ -1973,22 +1986,22 @@ const getAllActiveAllocation = async (userID) => {
 
     largestActiveLoanType: largest
       ? {
-          category: largest._id,
-          amount: largest.totalAmount,
-          percentage: totalAmount > 0
-            ? Number(((largest.totalAmount / totalAmount) * 100).toFixed(2))
-            : 0
-        }
+        category: largest._id,
+        amount: largest.totalAmount,
+        percentage: totalAmount > 0
+          ? Number(((largest.totalAmount / totalAmount) * 100).toFixed(2))
+          : 0
+      }
       : null,
 
     smallestActiveLoanType: smallest
       ? {
-          category: smallest._id,
-          amount: smallest.totalAmount,
-          percentage: totalAmount > 0
-            ? Number(((smallest.totalAmount / totalAmount) * 100).toFixed(2))
-            : 0
-        }
+        category: smallest._id,
+        amount: smallest.totalAmount,
+        percentage: totalAmount > 0
+          ? Number(((smallest.totalAmount / totalAmount) * 100).toFixed(2))
+          : 0
+      }
       : null,
 
     activeLoanTypes: summary.activeLoanTypes,
@@ -2121,22 +2134,22 @@ const getAllCompletedAllocation = async (userID) => {
 
     largestCompletedLoanType: largest
       ? {
-          category: largest._id,
-          amount: largest.totalAmount,
-          percentage: totalAmount > 0
-            ? Number(((largest.totalAmount / totalAmount) * 100).toFixed(2))
-            : 0
-        }
+        category: largest._id,
+        amount: largest.totalAmount,
+        percentage: totalAmount > 0
+          ? Number(((largest.totalAmount / totalAmount) * 100).toFixed(2))
+          : 0
+      }
       : null,
 
     smallestCompletedLoanType: smallest
       ? {
-          category: smallest._id,
-          amount: smallest.totalAmount,
-          percentage: totalAmount > 0
-            ? Number(((smallest.totalAmount / totalAmount) * 100).toFixed(2))
-            : 0
-        }
+        category: smallest._id,
+        amount: smallest.totalAmount,
+        percentage: totalAmount > 0
+          ? Number(((smallest.totalAmount / totalAmount) * 100).toFixed(2))
+          : 0
+      }
       : null,
 
     completedLoanTypes: summary.completedLoanTypes,
@@ -2286,7 +2299,7 @@ const getLoanTypeAllocation = async (userID, loanType, status) => {
     completedLoans: summary.totalLoans || 0,
     amountRepaid: summary.totalAmount || 0
   };
-};
+}
 
 
 
@@ -2440,8 +2453,8 @@ const getLoanFullSummary = async (userId) => {
   }
 }
 
-module.exports = {  
-  getLoanTypeAllocation,getloanOverview, getEMIAnalysis,
+module.exports = {
+  getLoanTypeAllocation, getloanOverview, getEMIAnalysis,
   getLoanFullSummary, buildLoanMatch, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getHomeCompletedAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics,
-  getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation 
+  getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation
 }

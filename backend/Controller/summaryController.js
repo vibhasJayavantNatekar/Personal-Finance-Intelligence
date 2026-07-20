@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const apiResponse = require('../Utils/apiResponse')
 const { buildLoanMatch, getloanOverview, getAllActiveAnalytics, getAllCompletedAnalytics, getPersonalAllAnalytics, getPersonalActiveAnalytics, getPersonalCompletedAnalytics, getHomeAllAnalytics, getHomeActiveAnalytics, getEducationAllAnalytics, getEducationActiveAnalytics, getEducationCompletedAnalytics, getCarAllAnalytics, getCarActiveAnalytics, getCarCompletedAnalytics, getGoldAllAnalytics, getGoldActiveAnalytics, getGoldCompletedAnalytics, getAgricultureAllAnalytics, getAgricultureActiveAnalytics, getAgricultureCompletedAnalytics, getBusinessAllAnalytics, getBusinessActiveAnalytics, getBusinessCompletedAnalytics, getHomeCompletedAnalytics
 } = require('../Services/loan.serice')
-const { getLoanTypeAllocation,getEMIAnalysis,  getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation } = require('../Services/loan.serice')
+const { getLoanTypeAllocation, getEMIAnalysis, getAllAllAllocation, getAllActiveAllocation, getAllCompletedAllocation } = require('../Services/loan.serice')
 const { getAllInvestmentAnalytics, getAllSoldInvestmentAnalytics, getInvestmentTypeAnalytics, getInvestmentTypeSoldAnalytics, getHoldingCounts } = require('../Services/investment.service')
 const { getAllPerformance, getTypePerformance, getAllSoldPerformance, getTypeSoldPerformance } = require("../Services/investment.service")
 const { getAllAllocation, getTypeAllocation, getStockHoldings } = require('../Services/investment.service')
@@ -188,7 +188,7 @@ const loanAnalytics = async (req, res, next) => {
 
         buildLoanMatch(userID, type, status)
         let data
-        if (type === "ALL" && status === "ACTIVE" ||status === "ALL"  ) {
+        if (type === "ALL" && (status === "ACTIVE" || status === "ALL")) {
             data = await getAllActiveAnalytics(userID)
         } else if (type === "ALL" && status === "CLOSED") {
             data = await getAllCompletedAnalytics(userID)
@@ -273,7 +273,7 @@ const loanAllocation = async (req, res, next) => {
         else if (type === "ALL" && status === "ACTIVE") {
             data = await getAllActiveAllocation(userID);
         }
-        else if (type === "ALL" && status === "COMPLETED") {
+        else if (type === "ALL" && status === "CLOSED") {
             data = await getAllCompletedAllocation(userID);
         }
         else {
@@ -304,11 +304,11 @@ const loanAllocation = async (req, res, next) => {
 }
 
 const emiAnalysis = async (req, res, next) => {
-    
+
     const userID = req.user.id
 
     try {
-        
+
         const data = await getEMIAnalysis(userID)
 
         res.status(200).json(
@@ -320,7 +320,7 @@ const emiAnalysis = async (req, res, next) => {
         )
 
     } catch (error) {
-        
+
         const err = {
             status: 500,
             message: error.message,
@@ -330,7 +330,7 @@ const emiAnalysis = async (req, res, next) => {
     }
 
 }
- 
+
 
 const investmentAnalytics = async (req, res, next) => {
 
@@ -627,22 +627,22 @@ const expensesInsights = async (req, res, next) => {
 const expenseCalendar = async (req, res, next) => {
 
     const userID = req.user.id
-    const {type = "All", month = 7, year= 2026 } = req.query
+    const { type = "All", month = 7, year = 2026 } = req.query
 
     try {
 
-         const data = await getExpensesCalender(userID, type, month, year)
+        const data = await getExpensesCalender(userID, type, month, year)
 
         res.status(200).json(
             apiResponse(
-                 true,
-                 "Fetch Calendar Expenses Successfully",
-                 data
+                true,
+                "Fetch Calendar Expenses Successfully",
+                data
             )
         )
 
     } catch (error) {
-         
+
         const err = {
             status: 500,
             message: error.message,
@@ -661,7 +661,7 @@ const stocksHolding = async (req, res, next) => {
     try {
 
         // const stocks = await Investment.find({ assetType: "STOCK", investmentStatus: "ACTIVE"})
-         const stocks =  await  getStockHoldings(userID)
+        const stocks = await getStockHoldings(userID)
 
         res.status(200).json(
             apiResponse(
@@ -686,7 +686,7 @@ const stocksHolding = async (req, res, next) => {
 
 }
 
-module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, emiAnalysis, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights, expensesInsights, expenseCalendar , stocksHolding }
+module.exports = { getDashboardSummary, expenseAnalytics, expenseAllocation, getloanOverview, emiAnalysis, loanAnalytics, loanAllocation, investmentAnalytics, investmentPerformance, investmentAllocation, getHolding, investmentInsights, loanInsights, expensesInsights, expenseCalendar, stocksHolding }
 
 // const expenseSummary = async (req, res, next) => {
 

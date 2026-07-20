@@ -4,7 +4,7 @@ import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
 import LoanSidebar from '../Components/LoanSidebar'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
-import { getLoans, createLoan, updateLoan, deleteLoan, getLoanAnalytics, getLoanInsights, getEmiAnalysis } from '../Api/loanApi'
+import { getLoans, createLoan, updateLoan, deleteLoan, getLoanAnalytics, getLaonAllocation, getLoanInsights, getEmiAnalysis } from '../Api/loanApi'
 import AllocationChart from '../Components/AllocationChart'
 import Insights from '../Components/insights'
 
@@ -30,6 +30,7 @@ const Loan = () => {
 
   })
   const [analyticsData, setAnalyticsData] = useState([])
+  const [allocationData, setAllocationData] = useState([])
   const [insightsData, setInsightsData] = useState([])
   const [emianalysisData, setEmianalysisData] = useState([])
 
@@ -114,19 +115,23 @@ const Loan = () => {
     ALL_CLOSED: {
       cards: [{
         label: "Closed Loans",
-        value: ""
+        value: analyticsData?.closedLoans
+          ? `${analyticsData.closedLoans}` : "-"
       },
       {
         label: "Total Amount Repaid",
-        value: " 6,50,000 hold"
+        value: analyticsData?.totalAmountRepaid
+          ? `${analyticsData.totalAmountRepaid}` : "-"
       },
       {
         label: "Average Laon Size",
-        value: " 3,25,000"
+        value: analyticsData?.averageLoanSize
+          ? `${analyticsData.averageLoanSize}` : "-"
       },
       {
         label: "Largest Closed Loan",
-        value: "Education Loan"
+        value: analyticsData?.largestClosedLoan
+          ? `${analyticsData.largestClosedLoan.loanType} (${analyticsData.largestClosedLoan.principleAmount}) ` : "-"
       }
       ]
     },
@@ -189,13 +194,19 @@ const Loan = () => {
           value: analyticsData?.totalAmountRepaid
             ? `${analyticsData?.totalAmountRepaid}` : "-"
         },
+        // {
+        //   label: "Interest Paid",
+        //   value: "On Hold"
+        // },
         {
-          label: "Interest Paid",
-          value: " on hold"
+          label: "Average Loan Size",
+          value: analyticsData?.averageLoanSize
+            ? `₹${analyticsData.averageLoanSize}` : "-"
         },
         {
-          label: "Loan Duration",
-          value: "on hold"
+          label: "Average Loan Duration",
+          value: analyticsData?.averageLoanDuration
+            ? `${analyticsData.averageLoanDuration} Months` : "-"
         },
         {
           label: "Closure Status",
@@ -259,19 +270,27 @@ const Loan = () => {
       cards: [
         {
           label: "Amount Repaid",
-          value: " 4,50,000"
+          value: analyticsData?.totalAmountRepaid
+            ? `${analyticsData?.totalAmountRepaid}` : "-"
+        },
+        // {
+        //   label: "Interest Paid",
+        //   value: "On Hold"
+        // },
+        {
+          label: "Average Loan Size",
+          value: analyticsData?.averageLoanSize
+            ? `₹${analyticsData.averageLoanSize}` : "-"
         },
         {
-          label: "Interest Paid",
-          value: " 60,0000"
-        },
-        {
-          label: "Loan Duration",
-          value: "5 Years"
+          label: "Average Loan Duration",
+          value: analyticsData?.averageLoanDuration
+            ? `${analyticsData.averageLoanDuration} Months` : "-"
         },
         {
           label: "Closure Status",
-          value: "Completed"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData?.closureStatus}` : "-"
         }
       ]
     },
@@ -280,19 +299,23 @@ const Loan = () => {
       cards: [
         {
           label: "Toatl Education Loan",
-          value: "2"
+          value: analyticsData?.totalLoan
+            ? `${analyticsData.totalLoan}` : "-"
         },
         {
           label: "Average EMI",
-          value: " 9,600"
+          value: analyticsData?.averageEMI
+            ? `${analyticsData.averageEMI}` : "-"
         },
         {
           label: "Average Interest Rate",
-          value: "7.2%"
+          value: analyticsData?.averageInterestRate
+            ? `${analyticsData.averageInterestRate} %` : "-"
         },
         {
           label: "Largest Education Loan",
-          value: " 4,00,000"
+          value: analyticsData?.largestEducationlLoan
+            ? `${analyticsData.largestEducationlLoan}` : "-"
         }
       ]
     },
@@ -326,19 +349,27 @@ const Loan = () => {
       cards: [
         {
           label: "Amount Repaid",
-          value: " 4,80,000"
+          value: analyticsData?.totalAmountRepaid
+            ? `${analyticsData?.totalAmountRepaid}` : "-"
+        },
+        // {
+        //   label: "Interest Paid",
+        //   value: "On Hold"
+        // },
+        {
+          label: "Average Loan Size",
+          value: analyticsData?.averageLoanSize
+            ? `₹${analyticsData.averageLoanSize}` : "-"
         },
         {
-          label: "Interest Paid",
-          value: " 80,000"
-        },
-        {
-          label: "Loan Duration",
-          value: "4 Years"
+          label: "Average Loan Duration",
+          value: analyticsData?.averageLoanDuration
+            ? `${analyticsData.averageLoanDuration} Months` : "-"
         },
         {
           label: "Closure Status",
-          value: "Completed"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData?.closureStatus}` : "-"
         }
       ]
     },
@@ -347,23 +378,23 @@ const Loan = () => {
       cards: [
         {
           label: "Toatl Personal Loan",
-          value: analyticsData?.summary?.[0]?.totalPersonalLoan
-            ? `${analyticsData?.summary?.[0]?.totalPersonalLoan}` : "-"
+          value: analyticsData?.totalPersonalLoan
+            ? `${analyticsData.totalPersonalLoan}` : "-"
         },
         {
           label: "Average EMI",
-          value: analyticsData?.summary?.[0]?.averageEMI
-            ? `₹ ${analyticsData?.summary?.[0]?.averageEMI}` : "-"
+          value: analyticsData?.averageEMI
+            ? `${analyticsData?.averageEMI}` : "-"
         },
         {
           label: "Average Interest Rate",
-          value: analyticsData?.summary?.[0]?.averageInterestRate
-            ? `${analyticsData?.summary?.[0]?.averageInterestRate}%` : "-"
+          value: analyticsData?.averageInterestRate
+            ? `${analyticsData.averageInterestRate}` : "-"
         },
         {
           label: "Largest Personal Loan",
-          value: analyticsData?.largestPersonalLoan?.[0]?.principleAmount
-            ? `${analyticsData?.largestPersonalLoan?.[0]?.principleAmount}` : "-"
+          value: analyticsData?.largestPersonalLoan
+            ? `${analyticsData.largestPersonalLoan}` : "-"
         }
       ]
     },
@@ -373,23 +404,23 @@ const Loan = () => {
         {
           label: "Monthly EMI",
           value: analyticsData?.monthlyEMI
-            ? `${analyticsData?.monthlyEMI}` : "-"
+            ? `${analyticsData.monthlyEMI}` : "-"
 
         },
         {
           label: "Interest Rate",
           value: analyticsData?.interestRate
-            ? `${analyticsData?.interestRate}%` : "-"
+            ? `${analyticsData.interestRate}%` : "-"
         },
         {
           label: "Remaining Tenure",
           value: analyticsData?.remainingTenure
-            ? `${analyticsData?.remainingTenure} Months` : "-"
+            ? `${analyticsData.remainingTenure} Months` : "-"
         },
         {
           label: "Risk Level",
           value: analyticsData?.riskLevel
-            ? `${analyticsData?.riskLevel}` : "-"
+            ? `${analyticsData.riskLevel}` : "-"
 
         }
       ]
@@ -402,13 +433,19 @@ const Loan = () => {
           value: analyticsData?.totalAmountRepaid
             ? `${analyticsData?.totalAmountRepaid}` : "-"
         },
+        // {
+        //   label: "Interest Paid",
+        //   value: "On Hold"
+        // },
         {
-          label: "Interest Paid",
-          value: "On Hold"
+          label: "Average Loan Size",
+          value: analyticsData?.averageLoanSize
+            ? `₹${analyticsData.averageLoanSize}` : "-"
         },
         {
-          label: "Loan Duration",
-          value: "On Hold"
+          label: "Average Loan Duration",
+          value: analyticsData?.averageLoanDuration
+            ? `${analyticsData.averageLoanDuration} Months` : "-"
         },
         {
           label: "Closure Status",
@@ -473,20 +510,26 @@ const Loan = () => {
         {
           label: "Amount Repaid",
           value: analyticsData?.totalAmountRepaid
-            ? `${analyticsData.totalAmountRepaid}` : "-"
+            ? `${analyticsData?.totalAmountRepaid}` : "-"
+        },
+        // {
+        //   label: "Interest Paid",
+        //   value: "On Hold"
+        // },
+        {
+          label: "Average Loan Size",
+          value: analyticsData?.averageLoanSize
+            ? `₹${analyticsData.averageLoanSize}` : "-"
         },
         {
-          label: "Interest Paid",
-          value: "hold"
-        },
-        {
-          label: "Loan Duration",
+          label: "Average Loan Duration",
           value: analyticsData?.averageLoanDuration
-            ? `${analyticsData.averageLoanDuration}` : "-"
+            ? `${analyticsData.averageLoanDuration} Months` : "-"
         },
         {
           label: "Closure Status",
-          value: "hold"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData?.closureStatus}` : "-"
         }
       ]
     },
@@ -548,13 +591,19 @@ const Loan = () => {
           value: analyticsData?.totalAmountRepaid
             ? `${analyticsData.totalAmountRepaid}` : "-"
         },
+        // {
+        //   label: "Interest Paid",
+        //   value: "On Hold"
+        // },
         {
-          label: "Interest Paid",
-          value: "hold"
+          label: "Average Loan Size",
+          value: analyticsData?.averageLoanSize
+            ? `₹${analyticsData.averageLoanSize}` : "-"
         },
         {
-          label: "Loan Duration",
-          value: "hold"
+          label: "Average Loan Duration",
+          value: analyticsData?.averageLoanDuration
+            ? `${analyticsData.averageLoanDuration} Months` : "-"
         },
         {
           label: "Closure Status",
@@ -568,23 +617,23 @@ const Loan = () => {
       cards: [
         {
           label: "Total Gold Loans",
-          value: analyticsData?.closureStatus
-            ? `${analyticsData.closureStatus}` : "-"
+          value: analyticsData?.totalLoan
+            ? `${analyticsData.totalLoan}` : "-"
         },
         {
           label: "Average EMI",
-          value: analyticsData?.closureStatus
-            ? `${analyticsData.closureStatus}` : "-"
+          value: analyticsData?.averageEMI
+            ? `${analyticsData.averageEMI}` : "-"
         },
         {
           label: "Average Interest Rate",
-          value: analyticsData?.closureStatus
-            ? `${analyticsData.closureStatus}` : "-"
+          value: analyticsData?.averageInterestRate
+            ? `${analyticsData.averageInterestRate}` : "-"
         },
         {
           label: "Largest Gold Loan",
-          value: analyticsData?.closureStatus
-            ? `${analyticsData.closureStatus}` : "-"
+          value: analyticsData?.largestLoan
+            ? `${analyticsData.largestLoan}` : "-"
         }
       ]
     },
@@ -618,19 +667,27 @@ const Loan = () => {
       cards: [
         {
           label: "Amount Repaid",
-          value: "2,50,000"
+          value: analyticsData?.totalAmountRepaid
+            ? `${analyticsData?.totalAmountRepaid}` : "-"
+        },
+        // {
+        //   label: "Interest Paid",
+        //   value: "On Hold"
+        // },
+        {
+          label: "Average Loan Size",
+          value: analyticsData?.averageLoanSize
+            ? `₹${analyticsData.averageLoanSize}` : "-"
         },
         {
-          label: "Interest Paid",
-          value: "40,000"
-        },
-        {
-          label: "Loan Duration",
-          value: "1 Year"
+          label: "Average Loan Duration",
+          value: analyticsData?.averageLoanDuration
+            ? `${analyticsData.averageLoanDuration} Months` : "-"
         },
         {
           label: "Closure Status",
-          value: "Completed"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData?.closureStatus}` : "-"
         }
       ]
     },
@@ -638,20 +695,24 @@ const Loan = () => {
     AGRICULTURE_ALL: {
       cards: [
         {
-          label: "Total Agriculture Loans",
-          value: "2"
+          label: "Total Gold Loans",
+          value: analyticsData?.totalLoan
+            ? `${analyticsData.totalLoan}` : "-"
         },
         {
           label: "Average EMI",
-          value: "6,500"
+          value: analyticsData?.averageEMI
+            ? `${analyticsData.averageEMI}` : "-"
         },
         {
           label: "Average Interest Rate",
-          value: "7.8%"
+          value: analyticsData?.averageInterestRate
+            ? `${analyticsData.averageInterestRate}` : "-"
         },
         {
-          label: "Largest Agriculture Loan",
-          value: "5,00,000"
+          label: "Largest Gold Loan",
+          value: analyticsData?.largestLoan
+            ? `${analyticsData.largestLoan}` : "-"
         }
       ]
     },
@@ -661,22 +722,22 @@ const Loan = () => {
         {
           label: "Monthly EMI",
           value: analyticsData?.monthlyEMI
-            ? `${analyticsData?.monthlyEMI}` : "-"
+            ? `${analyticsData.monthlyEMI}` : "-"
         },
         {
           label: "Interest Rate",
           value: analyticsData?.interestRate
-            ? `${analyticsData?.interestRate}%` : "-"
+            ? `${analyticsData.interestRate}%` : "-"
         },
         {
           label: "Remaining Tenure",
           value: analyticsData?.remainingTenure
-            ? `${analyticsData?.remainingTenure} Months` : "-"
+            ? `${analyticsData.remainingTenure} Months` : "-"
         },
         {
           label: "Risk Level",
           value: analyticsData?.riskLevel
-            ? `${analyticsData?.riskLevel}` : "-"
+            ? `${analyticsData.riskLevel}` : "-"
         }
       ]
     },
@@ -685,19 +746,27 @@ const Loan = () => {
       cards: [
         {
           label: "Amount Repaid",
-          value: "5,00,000"
+          value: analyticsData?.totalAmountRepaid
+            ? `${analyticsData.totalAmountRepaid}` : "-"
+        },
+        // {
+        //   label: "Interest Paid",
+        //   value: "On Hold"
+        // },
+        {
+          label: "Average Loan Size",
+          value: analyticsData?.averageLoanSize
+            ? `₹${analyticsData.averageLoanSize}` : "-"
         },
         {
-          label: "Interest Paid",
-          value: "75,000"
-        },
-        {
-          label: "Loan Duration",
-          value: "3 Years"
+          label: "Average Loan Duration",
+          value: analyticsData?.averageLoanDuration
+            ? `${analyticsData.averageLoanDuration} Months` : "-"
         },
         {
           label: "Closure Status",
-          value: "Completed"
+          value: analyticsData?.closureStatus
+            ? `${analyticsData.closureStatus}` : "-"
         }
       ]
     }
@@ -711,19 +780,25 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Loan Type",
-          value: "Home Loan (60%)"
+          value: allocationData?.largestLoanType
+            ? `${allocationData.largestLoanType.category} (${allocationData.largestLoanType.amount})` : "-"
+
         },
         {
           label: "Smallest Loan Type",
-          value: "Personal Loan (10%)"
+          value: allocationData?.smallestLoanType
+            ? `${allocationData.smallestLoanType.category} (${allocationData.smallestLoanType.amount})` : "-"
         },
         {
           label: "Loan Types",
-          value: "4"
+          value: allocationData?.loanTypes
+            ? `${allocationData.loanTypes}` : "-"
         },
         {
           label: "Total Borrowed",
-          value: "₹25,00,000"
+          value: allocationData?.totalBorrowed
+            ? `${allocationData.totalBorrowed}` : "-"
+
         }
       ]
     },
@@ -732,40 +807,48 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Active Loan Type",
-          value: "Home Loan (70%)"
+          value: allocationData?.largestActiveLoanType
+            ? `${allocationData.largestActiveLoanType.category} (${allocationData.largestActiveLoanType.amount})` : "-"
         },
         {
           label: "Smallest Active Loan Type",
-          value: "Education Loan (5%)"
+          value: allocationData?.smallestActiveLoanType
+            ? `${allocationData.smallestActiveLoanType.category} (${allocationData.smallestActiveLoanType.amount})` : "-"
         },
         {
           label: "Active Loan Types",
-          value: "3"
+          value: allocationData?.activeLoanTypes
+            ? `${allocationData.activeLoanTypes}` : "-"
         },
         {
           label: "Outstanding Amount",
-          value: "₹18,00,000"
+          value: allocationData?.outstandingAmount
+            ? `${allocationData.outstandingAmount}` : "-"
         }
       ]
     },
 
-    ALL_COMPLETED: {
+    ALL_CLOSED: {
       cards: [
         {
           label: "Largest Completed Loan Type",
-          value: "Education Loan (50%)"
+          value: allocationData?.largestCompletedLoanType
+            ? `${allocationData.largestCompletedLoanType.category} (${allocationData.largestCompletedLoanType.amount})` : "-"
         },
         {
           label: "Smallest Completed Loan Type",
-          value: "Personal Loan (10%)"
+          value: allocationData?.smallestCompletedLoanType
+            ? `${allocationData.smallestCompletedLoanType.category} (${allocationData.smallestCompletedLoanType.amount})` : "-"
         },
         {
           label: "Completed Loan Types",
-          value: "2"
+          value: allocationData?.completedLoanTypes
+            ? `${allocationData.completedLoanTypes}` : "-"
         },
         {
           label: "Total Repaid",
-          value: "₹7,00,000"
+          value: allocationData?.amountRepaid
+            ? `${allocationData.amountRepaid}` : "-"
         }
       ]
     },
@@ -774,19 +857,23 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Home Loan",
-          value: "₹25,00,000"
+          value: allocationData?.largestLoan?.principleAmount
+            ? `${allocationData.largestLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Home Loan",
-          value: "₹15,00,000"
+          value: allocationData?.smallestLoan?.principleAmount
+            ? `${allocationData.smallestLoan.principleAmount}` : "-"
         },
         {
           label: "Home Loans",
-          value: "2"
+          value: allocationData?.totalLoans
+            ? `${allocationData.totalLoans}` : "-"
         },
         {
           label: "Total Home Borrowed",
-          value: "₹40,00,000"
+          value: allocationData?.totalBorrowed
+            ? `${allocationData.totalBorrowed}` : "-"
         }
       ]
     },
@@ -795,40 +882,48 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Active Home Loan",
-          value: "₹25,00,000"
+          value: allocationData?.largestActiveLoan?.principleAmount
+            ? `${allocationData.largestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Active Home Loan",
-          value: "₹25,00,000"
+          value: allocationData?.smallestActiveLoan?.principleAmount
+            ? `${allocationData.smallestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Active Home Loans",
-          value: "1"
+          value: allocationData?.activeLoans
+            ? `${allocationData.activeLoans}` : "-"
         },
         {
           label: "Outstanding Amount",
-          value: "₹20,00,000"
+          value: allocationData?.outstandingAmount
+            ? `${allocationData.outstandingAmount}` : "-"
         }
       ]
     },
 
-    HOME_COMPLETED: {
+    HOME_CLOSED: {
       cards: [
         {
           label: "Largest Completed Home Loan",
-          value: "₹15,00,000"
+          value: allocationData?.largestCompletedLoan?.principleAmount
+            ? `${allocationData.largestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Completed Home Loan",
-          value: "₹15,00,000"
+          value: allocationData?.smallestCompletedLoan?.principleAmount
+            ? `${allocationData.smallestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Completed Home Loans",
-          value: "1"
+          value: allocationData?.completedLoans
+            ? `${allocationData.completedLoans}` : "-"
         },
         {
           label: "Amount Repaid",
-          value: "₹15,00,000"
+          value: allocationData?.amountRepaid
+            ? `${allocationData.amountRepaid}` : "-"
         }
       ]
     },
@@ -837,19 +932,23 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Education Loan",
-          value: "₹4,00,000"
+          value: allocationData?.largestLoan?.principleAmount
+            ? `${allocationData.largestLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Education Loan",
-          value: "₹2,00,000"
+          value: allocationData?.smallestLoan?.principleAmount
+            ? `${allocationData.smallestLoan.principleAmount}` : "-"
         },
         {
           label: "Education Loans",
-          value: "2"
+          value: allocationData?.totalLoans
+            ? `${allocationData.totalLoans}` : "-"
         },
         {
           label: "Total Borrowed",
-          value: "₹6,00,000"
+          value: allocationData?.totalBorrowed
+            ? `${allocationData.totalBorrowed}` : "-"
         }
       ]
     },
@@ -858,40 +957,48 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Active Education Loan",
-          value: "₹4,00,000"
+          value: allocationData?.largestActiveLoan?.principleAmount
+            ? `${allocationData.largestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Active Education Loan",
-          value: "₹4,00,000"
+          value: allocationData?.smallestActiveLoan?.principleAmount
+            ? `${allocationData.smallestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Active Education Loans",
-          value: "1"
+          value: allocationData?.activeLoans
+            ? `${allocationData.activeLoans}` : "-"
         },
         {
           label: "Outstanding Amount",
-          value: "₹1,20,000"
+          value: allocationData?.outstandingAmount
+            ? `${allocationData.outstandingAmount}` : "-"
         }
       ]
     },
 
-    EDUCATION_COMPLETED: {
+    EDUCATION_CLOSED: {
       cards: [
         {
           label: "Largest Completed Education Loan",
-          value: "₹2,00,000"
+          value: allocationData?.largestCompletedLoan
+            ? `${allocationData.largestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Completed Education Loan",
-          value: "₹2,00,000"
+          value: allocationData?.smallestCompletedLoan
+            ? `${allocationData.smallestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Completed Education Loans",
-          value: "1"
+          value: allocationData?.completedLoans
+            ? `${allocationData.completedLoans}` : "-"
         },
         {
           label: "Amount Repaid",
-          value: "₹2,00,000"
+          value: allocationData?.amountRepaid
+            ? `${allocationData.amountRepaid}` : "-"
         }
       ]
     },
@@ -900,19 +1007,23 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Car Loan",
-          value: "₹8,00,000"
+          value: allocationData?.largestLoan?.principleAmount
+            ? `${allocationData.largestLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Car Loan",
-          value: "₹5,00,000"
+          value: allocationData?.smallestLoan?.principleAmount
+            ? `${allocationData.smallestLoan.principleAmount}` : "-"
         },
         {
           label: "Car Loans",
-          value: "2"
+          value: allocationData?.totalLoans
+            ? `${allocationData.totalLoans}` : "-"
         },
         {
           label: "Total Borrowed",
-          value: "₹13,00,000"
+          value: allocationData?.totalBorrowed
+            ? `${allocationData.totalBorrowed}` : "-"
         }
       ]
     },
@@ -921,40 +1032,48 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Active Car Loan",
-          value: "₹8,00,000"
+          value: allocationData?.largestActiveLoan?.principleAmount
+            ? `${allocationData.largestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Active Car Loan",
-          value: "₹8,00,000"
+          value: allocationData?.smallestActiveLoan?.principleAmount
+            ? `${allocationData.smallestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Active Car Loans",
-          value: "1"
+          value: allocationData?.activeLoans
+            ? `${allocationData.activeLoans}` : "-"
         },
         {
           label: "Outstanding Amount",
-          value: "₹5,00,000"
+          value: allocationData?.outstandingAmount
+            ? `${allocationData.outstandingAmount}` : "-"
         }
       ]
     },
 
-    CAR_COMPLETED: {
+    CAR_CLOSED: {
       cards: [
         {
           label: "Largest Completed Car Loan",
-          value: "₹5,00,000"
+          value: allocationData?.largestCompletedLoan
+            ? `${allocationData.largestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Completed Car Loan",
-          value: "₹5,00,000"
+          value: allocationData?.smallestCompletedLoan
+            ? `${allocationData.smallestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Completed Car Loans",
-          value: "1"
+          value: allocationData?.completedLoans
+            ? `${allocationData.completedLoans}` : "-"
         },
         {
           label: "Amount Repaid",
-          value: "₹5,00,000"
+          value: allocationData?.amountRepaid
+            ? `${allocationData.amountRepaid}` : "-"
         }
       ]
     },
@@ -963,19 +1082,23 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Personal Loan",
-          value: "₹3,00,000"
+          value: allocationData?.largestLoan
+            ? `${allocationData.largestLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Personal Loan",
-          value: "₹1,00,000"
+          value: allocationData?.smallestLoan
+            ? `${allocationData.smallestLoan.principleAmount}` : "-"
         },
         {
           label: "Personal Loans",
-          value: "3"
+          value: allocationData?.totalLoans
+            ? `${allocationData.totalLoans}` : "-"
         },
         {
           label: "Total Borrowed",
-          value: "₹5,00,000"
+          value: allocationData?.totalBorrowed
+            ? `${allocationData.totalBorrowed}` : "-"
         }
       ]
     },
@@ -984,40 +1107,48 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Active Personal Loan",
-          value: "₹3,00,000"
+          value: allocationData?.largestActiveLoan
+            ? `${allocationData.largestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Active Personal Loan",
-          value: "₹1,50,000"
+          value: allocationData?.smallestActiveLoan
+            ? `${allocationData.smallestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Active Personal Loans",
-          value: "2"
+          value: allocationData?.activeLoans
+            ? `${allocationData.activeLoans}` : "-"
         },
         {
           label: "Outstanding Amount",
-          value: "₹3,50,000"
+          value: allocationData?.outstandingAmount
+            ? `${allocationData.outstandingAmount}` : "-"
         }
       ]
     },
 
-    PERSONAL_COMPLETED: {
+    PERSONAL_CLOSED: {
       cards: [
         {
           label: "Largest Completed Personal Loan",
-          value: "₹1,00,000"
+          value: allocationData?.largestCompletedLoan
+            ? `${allocationData.largestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Completed Personal Loan",
-          value: "₹1,00,000"
+          value: allocationData?.smallestCompletedLoan
+            ? `${allocationData.smallestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Completed Personal Loans",
-          value: "1"
+          value: allocationData?.completedLoans
+            ? `${allocationData.completedLoans}` : "-"
         },
         {
           label: "Amount Repaid",
-          value: "₹1,00,000"
+          value: allocationData?.amountRepaid
+            ? `${allocationData.amountRepaid}` : "-"
         }
       ]
     },
@@ -1026,19 +1157,23 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Business Loan",
-          value: "₹15,00,000"
+          value: allocationData?.largestLoan?.principleAmount
+            ? `${allocationData.largestLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Business Loan",
-          value: "₹5,00,000"
+          value: allocationData?.smallestLoan?.principleAmount
+            ? `${allocationData.smallestLoan.principleAmount}` : "-"
         },
         {
           label: "Business Loans",
-          value: "2"
+          value: allocationData?.totalLoans
+            ? `${allocationData.totalLoans}` : "-"
         },
         {
           label: "Total Borrowed",
-          value: "₹20,00,000"
+          value: allocationData?.totalBorrowed
+            ? `${allocationData.totalBorrowed}` : "-"
         }
       ]
     },
@@ -1047,40 +1182,48 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Active Business Loan",
-          value: "₹15,00,000"
+          value: allocationData?.largestActiveLoan?.principleAmount
+            ? `${allocationData.largestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Active Business Loan",
-          value: "₹15,00,000"
+          value: allocationData?.smallestActiveLoan?.principleAmount
+            ? `${allocationData.smallestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Active Business Loans",
-          value: "1"
+          value: allocationData?.activeLoans
+            ? `${allocationData.activeLoans}` : "-"
         },
         {
           label: "Outstanding Amount",
-          value: "₹12,00,000"
+          value: allocationData?.outstandingAmount
+            ? `${allocationData.outstandingAmount}` : "-"
         }
       ]
     },
 
-    BUSINESS_COMPLETED: {
+    BUSINESS_CLOSED: {
       cards: [
         {
           label: "Largest Completed Business Loan",
-          value: "₹5,00,000"
+          value: allocationData?.largestCompletedLoan
+            ? `${allocationData.largestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Completed Business Loan",
-          value: "₹5,00,000"
+          value: allocationData?.smallestCompletedLoan
+            ? `${allocationData.smallestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Completed Business Loans",
-          value: "1"
+          value: allocationData?.completedLoans
+            ? `${allocationData.completedLoans}` : "-"
         },
         {
           label: "Amount Repaid",
-          value: "₹5,00,000"
+          value: allocationData?.amountRepaid
+            ? `${allocationData.amountRepaid}` : "-"
         }
       ]
     },
@@ -1089,19 +1232,23 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Gold Loan",
-          value: "₹1,50,000"
+          value: allocationData?.largestLoan?.principleAmount
+            ? `${allocationData.largestLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Gold Loan",
-          value: "₹50,000"
+          value: allocationData?.smallestLoan?.principleAmount
+            ? `${allocationData.smallestLoan.principleAmount}` : "-"
         },
         {
           label: "Gold Loans",
-          value: "3"
+          value: allocationData?.totalLoans
+            ? `${allocationData.totalLoans}` : "-"
         },
         {
           label: "Total Borrowed",
-          value: "₹3,00,000"
+          value: allocationData?.totalBorrowed
+            ? `${allocationData.totalBorrowed}` : "-"
         }
       ]
     },
@@ -1110,40 +1257,48 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Active Gold Loan",
-          value: "₹1,50,000"
+          value: allocationData?.largestActiveLoan?.principleAmount
+            ? `${allocationData.largestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Active Gold Loan",
-          value: "₹1,50,000"
+          value: allocationData?.smallestActiveLoan?.principleAmount
+            ? `${allocationData.smallestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Active Gold Loans",
-          value: "1"
+          value: allocationData?.activeLoans
+            ? `${allocationData.activeLoans}` : "-"
         },
         {
           label: "Outstanding Amount",
-          value: "₹90,000"
+          value: allocationData?.outstandingAmount
+            ? `${allocationData.outstandingAmount}` : "-"
         }
       ]
     },
 
-    GOLD_COMPLETED: {
+    GOLD_CLOSED: {
       cards: [
         {
           label: "Largest Completed Gold Loan",
-          value: "₹1,00,000"
+          value: allocationData?.largestCompletedLoan
+            ? `${allocationData.largestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Completed Gold Loan",
-          value: "₹50,000"
+          value: allocationData?.smallestCompletedLoan
+            ? `${allocationData.smallestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Completed Gold Loans",
-          value: "2"
+          value: allocationData?.completedLoans
+            ? `${allocationData.completedLoans}` : "-"
         },
         {
           label: "Amount Repaid",
-          value: "₹1,50,000"
+          value: allocationData?.amountRepaid
+            ? `${allocationData.amountRepaid}` : "-"
         }
       ]
     },
@@ -1152,19 +1307,23 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Agriculture Loan",
-          value: "₹5,00,000"
+          value: allocationData?.largestLoan?.principleAmount
+            ? `${allocationData.largestLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Agriculture Loan",
-          value: "₹3,00,000"
+          value: allocationData?.smallestLoan?.principleAmount
+            ? `${allocationData.smallestLoan.principleAmount}` : "-"
         },
         {
           label: "Agriculture Loans",
-          value: "2"
+          value: allocationData?.totalLoans
+            ? `${allocationData.totalLoans}` : "-"
         },
         {
           label: "Total Borrowed",
-          value: "₹8,00,000"
+          value: allocationData?.totalBorrowed
+            ? `${allocationData.totalBorrowed}` : "-"
         }
       ]
     },
@@ -1173,40 +1332,48 @@ const Loan = () => {
       cards: [
         {
           label: "Largest Active Agriculture Loan",
-          value: "₹5,00,000"
+          value: allocationData?.largestActiveLoan?.principleAmount
+            ? `${allocationData.largestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Active Agriculture Loan",
-          value: "₹5,00,000"
+          value: allocationData?.smallestActiveLoan?.principleAmount
+            ? `${allocationData.smallestActiveLoan.principleAmount}` : "-"
         },
         {
           label: "Active Agriculture Loans",
-          value: "1"
+          value: allocationData?.activeLoans
+            ? `${allocationData.activeLoans}` : "-"
         },
         {
           label: "Outstanding Amount",
-          value: "₹3,00,000"
+          value: allocationData?.outstandingAmount
+            ? `${allocationData.outstandingAmount}` : "-"
         }
       ]
     },
 
-    AGRICULTURE_COMPLETED: {
+    AGRICULTURE_CLOSED: {
       cards: [
         {
           label: "Largest Completed Agriculture Loan",
-          value: "₹3,00,000"
+          value: allocationData?.largestCompletedLoan
+            ? `${allocationData.largestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Smallest Completed Agriculture Loan",
-          value: "₹3,00,000"
+          value: allocationData?.smallestCompletedLoan
+            ? `${allocationData.smallestCompletedLoan.principleAmount}` : "-"
         },
         {
           label: "Completed Agriculture Loans",
-          value: "1"
+          value: allocationData?.completedLoans
+            ? `${allocationData.completedLoans}` : "-"
         },
         {
           label: "Amount Repaid",
-          value: "₹3,00,000"
+          value: allocationData?.amountRepaid
+            ? `${allocationData.amountRepaid}` : "-"
         }
       ]
     }
@@ -1232,7 +1399,7 @@ const Loan = () => {
 
     alert("Added")
     console.log(loanData)
-
+    fetchLoans()
     setShowLoanModal(false)
     setLoanData({
       loanType: "PERSONAL",
@@ -1259,9 +1426,16 @@ const Loan = () => {
       const analytics = await getLoanAnalytics(token, selectType, selectStatus)
       setAnalyticsData(analytics.data.data)
 
-      console.log("Analytics data" ,analytics.data.data)
+      console.log("Analytics data", analytics.data.data)
 
       console.log(response.data.data)
+
+      const allocation = await getLaonAllocation(token, selectType, selectStatus)
+      console.log("Alocation data", allocation.data.data)
+      setAllocationData(allocation.data.data)
+
+
+
 
       const insights = await getLoanInsights(token)
       console.log(insights.data.data)
@@ -1451,10 +1625,6 @@ const Loan = () => {
                       >
 
 
-
-
-
-
                         <div className="form_group">
 
                           <label>
@@ -1476,10 +1646,10 @@ const Loan = () => {
                             <option value="PERSONAL">Persoanl</option>
                             <option value="HOME">Home</option>
                             <option value="EDUCATION">Education</option>
-                            <option value="BUSINESS">Car</option>
+                            <option value="BUSINESS">Bussiness</option>
                             <option value="CAR">Car</option>
-                            <option value="GOLD">Car</option>
-                            <option value="AGRICULTURE">Car</option>
+                            <option value="GOLD">Gold</option>
+                            <option value="AGRICULTURE">Agriculture</option>
 
 
 

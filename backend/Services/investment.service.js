@@ -1344,7 +1344,7 @@ const getHoldingCounts = async (userID) => {
 
 const getStockPrice = async (symbol) => {
 
-     const API_KEY = process.env.STOCK_MARKET_API
+   //  const API_KEY = process.env.STOCK_MARKET_API
 
     try {
         const response = await axios.get(

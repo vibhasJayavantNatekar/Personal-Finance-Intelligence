@@ -9,7 +9,7 @@ const router = express.Router()
 
 router.post('/', requireAuth, create)
 
-router.get('/', requireAuth, getLoans)
+router.get('/', requireAuth, getLoansByuserID)
 router.get('/loansummary', requireAuth, getloanSummary)
 router.get('/loans', requireAuth, getLoansByuserID)
 
