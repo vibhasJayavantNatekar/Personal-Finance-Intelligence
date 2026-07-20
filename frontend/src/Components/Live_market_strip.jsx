@@ -1,7 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../Styles/Live_market_strip.css'
+import { getStocksHoldings } from '../Api/investmentApi'
 
-const Live_market_strip = ({ data }) => {
+const Live_market_strip = () => {
+
+    const [stockHoldingData, setstockHoldingData] = useState([])
+
+    const fetchHolding = async () => {
+
+        const token = localStorage.getItem("token")
+
+        const response = await getStocksHoldings(token)
+
+        setstockHoldingData(response.data.data)
+
+
+        console.log(response.data.data)
+
+
+    }
+
+    useEffect(() => {
+        fetchHolding()
+
+    }, [])
 
 
 
@@ -12,23 +34,23 @@ const Live_market_strip = ({ data }) => {
                 <h5>Live Market</h5>
             </div>
 
-        
-            {
-                data.slice(0, 3).map((stock) => {
 
-                    const isGain = stock.percentChange >= 0
+            {
+                stockHoldingData.slice(0, 3).map((stock, index) => {
+
+                    const isGain = stockHoldingData.percentChange >= 0
 
                     return (
                         <div
                             className={`market_item ${isGain ? "gain" : "loss"}`}
-                            key={stock.assetSymbol}
+                            key={index}
                         >
-                            <h5>{stock.assetSymbol}</h5>
+                            <h5>{stockHoldingData[index].assetSymbol}</h5>
 
-                            <h6>₹{stock.currentPrice}</h6>
+                            <h6>₹{stockHoldingData[index].currentPrice}</h6>
 
                             <p>
-                                {isGain ? "↑" : "↓"} {Math.abs(stock.percentChange)}%
+                                {isGain ? "↑" : "↓"} {Math.abs(stockHoldingData[index].percentChange)}%
                             </p>
                         </div>
                     )

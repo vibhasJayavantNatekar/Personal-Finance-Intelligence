@@ -188,7 +188,7 @@ const loanAnalytics = async (req, res, next) => {
 
         buildLoanMatch(userID, type, status)
         let data
-        if (type === "ALL" && status === "ACTIVE") {
+        if (type === "ALL" && status === "ACTIVE" ||status === "ALL"  ) {
             data = await getAllActiveAnalytics(userID)
         } else if (type === "ALL" && status === "CLOSED") {
             data = await getAllCompletedAnalytics(userID)
@@ -208,7 +208,7 @@ const loanAnalytics = async (req, res, next) => {
             data = await getEducationAllAnalytics(userID)
         } else if (type === "EDUCATION" && status === "ACTIVE") {
             data = await getEducationActiveAnalytics(userID)
-        } else if (type === "EDUCATION" && status === "COMPLETED") {
+        } else if (type === "EDUCATION" && status === "CLOSED") {
             data = await getEducationCompletedAnalytics(userID)
         } else if (type === "CAR" && status === "ALL") {
             data = await getCarAllAnalytics(userID)
@@ -220,13 +220,13 @@ const loanAnalytics = async (req, res, next) => {
             data = await getGoldAllAnalytics(userID)
         } else if (type === "GOLD" && status === "ACTIVE") {
             data = await getGoldActiveAnalytics(userID)
-        } else if (type === "GOLD" && status === "COMPLETED") {
+        } else if (type === "GOLD" && status === "CLOSED") {
             data = await getGoldCompletedAnalytics(userID)
         } else if (type === "AGRICULTURE" && status === "ALL") {
             data = await getAgricultureAllAnalytics(userID)
         } else if (type === "AGRICULTURE" && status === "ACTIVE") {
             data = await getAgricultureActiveAnalytics(userID)
-        } else if (type === "AGRICULTURE" && status === "COMPLETED") {
+        } else if (type === "AGRICULTURE" && status === "CLOSED") {
             data = await getAgricultureCompletedAnalytics(userID)
         } else if (type === "BUSSINESS" && status === "ALL") {
             data = await getBusinessAllAnalytics(userID)

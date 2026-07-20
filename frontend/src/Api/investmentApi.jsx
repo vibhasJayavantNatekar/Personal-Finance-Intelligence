@@ -132,7 +132,7 @@ export const getStocksHoldings = (token) => {
         `/api/v1/stockHoldings`,
         {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `bearer ${token}`
             }
         }
     )

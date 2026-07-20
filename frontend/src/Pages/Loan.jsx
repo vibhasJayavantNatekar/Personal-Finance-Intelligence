@@ -57,25 +57,29 @@ const Loan = () => {
     0
   )
 
- 
+
   const analyticalConfig = {
     ALL_ALL: {
       cards: [
         {
           label: "Total EMI Burden",
-          value: "12% hold"
+          value: analyticsData?.totalEMIBurden
+            ? `₹${analyticsData.totalEMIBurden}` : "-"
         },
         {
           label: "Risk Level",
-          value: "Low"
+          value: analyticsData?.riskLevel
+            ? `${analyticsData.riskLevel}` : "-"
         },
         {
           label: "Active Loans",
-          value: "3"
+          value: analyticsData?.activeLoans
+            ? `${analyticsData.activeLoans}` : "-"
         },
         {
           label: "Monthly EMI",
-          value: " 28,000"
+          value: analyticsData?.monthlyEMI
+            ? `${analyticsData.monthlyEMI}` : "-"
         }
       ]
     },
@@ -235,15 +239,18 @@ const Loan = () => {
         },
         {
           label: "Interest Rate",
-          value: "9%"
+          value: analyticsData?.interestRate
+            ? `${analyticsData.interestRate} %` : "-"
         },
         {
           label: "Remainning Tenure",
-          value: "36 Months"
+          value: analyticsData?.remainingTenure
+            ? `${analyticsData.remainingTenure}` : "-"
         },
         {
           label: "Risk Level",
-          value: "Low"
+          value: analyticsData?.riskLevel
+            ? `${analyticsData.riskLevel}` : "-"
         }
       ]
     },
@@ -294,19 +301,23 @@ const Loan = () => {
       cards: [
         {
           label: "Monthly EMI",
-          value: " 9,600"
+          value: analyticsData?.monthlyEMI
+            ? `₹${analyticsData.monthlyEMI}` : "-"
         },
         {
           label: "Interest Rate",
-          value: "7.2%"
+          value: analyticsData?.interestRate
+            ? `${analyticsData.interestRate} %` : "-"
         },
         {
           label: "Remaining Tenure",
-          value: "14 Months"
+          value: analyticsData?.remainingTenure
+            ? `${analyticsData.remainingTenure}` : "-"
         },
         {
           label: "Risk Level",
-          value: "Low"
+          value: analyticsData?.riskLevel
+            ? `${analyticsData.riskLevel}` : "-"
         }
       ]
     },
@@ -514,8 +525,8 @@ const Loan = () => {
         },
         {
           label: "Interest Rate",
-          value: analyticsData?.interestRate
-            ? `${analyticsData.interestRate}` : "-"
+          value: analyticsData?.interestRat
+            ? `${analyticsData.interestRat}` : "-"
         },
         {
           label: "Remaining Tenure",
@@ -582,19 +593,23 @@ const Loan = () => {
       cards: [
         {
           label: "Monthly EMI",
-          value: "4,500"
+          value: analyticsData?.monthlyEMI
+            ? `₹${analyticsData.monthlyEMI}` : "-"
         },
         {
           label: "Interest Rate",
-          value: "10.5%"
+          value: analyticsData?.interestRate
+            ? `${analyticsData.interestRate} %` : "-"
         },
         {
           label: "Remaining Tenure",
-          value: "10 Months"
+          value: analyticsData?.remainingTenure
+            ? `${analyticsData.remainingTenure}` : "-"
         },
         {
           label: "Risk Level",
-          value: "Low"
+          value: analyticsData?.riskLevel
+            ? `${analyticsData.riskLevel}` : "-"
         }
       ]
     },
@@ -645,19 +660,23 @@ const Loan = () => {
       cards: [
         {
           label: "Monthly EMI",
-          value: "6,500"
+          value: analyticsData?.monthlyEMI
+            ? `${analyticsData?.monthlyEMI}` : "-"
         },
         {
           label: "Interest Rate",
-          value: "7.8%"
+          value: analyticsData?.interestRate
+            ? `${analyticsData?.interestRate}%` : "-"
         },
         {
           label: "Remaining Tenure",
-          value: "18 Months"
+          value: analyticsData?.remainingTenure
+            ? `${analyticsData?.remainingTenure} Months` : "-"
         },
         {
           label: "Risk Level",
-          value: "Low"
+          value: analyticsData?.riskLevel
+            ? `${analyticsData?.riskLevel}` : "-"
         }
       ]
     },
@@ -1240,7 +1259,7 @@ const Loan = () => {
       const analytics = await getLoanAnalytics(token, selectType, selectStatus)
       setAnalyticsData(analytics.data.data)
 
-      console.log(analytics.data.data)
+      console.log("Analytics data" ,analytics.data.data)
 
       console.log(response.data.data)
 
@@ -1271,9 +1290,7 @@ const Loan = () => {
 
   }, [selectType, selectStatus])
 
-  console.log(loans)
-  console.log(analyticsData?.totalAmountRepaid)
-  console.log(analyticsData)
+
 
 
 

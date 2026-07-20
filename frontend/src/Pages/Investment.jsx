@@ -1638,9 +1638,7 @@ const Investment = () => {
       setperformanceListData(performanceList.data.data)
       // console.log(performanceList.data.data)
 
-      const stocksHolding = await getStocksHoldings(token)
-      setstocksHoldingData(stocksHolding.data.data)
-      console.log(stocksHolding.data.data)
+     
 
       const allocation = await getInvestmentAllocation(token, selectType, selectStatus)
       setChartData(allocation.data.data.chart)
@@ -1650,14 +1648,16 @@ const Investment = () => {
       const insights = await getInsights(token)
       // console.log("insights" ,insights.data.data)
       setInsightsData(insights.data.data)
-      
+
 
       const holdingCounts = await getHoldingCount(token)
       setHoldingCounts(holdingCounts.data.data)
       // console.log(holdingCounts.data.data)
-   
 
 
+      const stocksHolding = await getStocksHoldings(token)
+      setstocksHoldingData(stocksHolding.data.data)
+      console.log(stocksHolding.data.data)
 
 
     } catch (error) {
@@ -1677,9 +1677,9 @@ const Investment = () => {
     console.log(data.assetName);
 
   })
- 
+
   // console.log(analyticsData)
-  
+
 
   return (
     <>
@@ -2088,9 +2088,7 @@ const Investment = () => {
 
                   </div>
                 )}
-                <Live_market_strip 
-                data={stocksHoldingData}
-                />
+              <Live_market_strip /> 
 
                 {viewmode === "List" &&
                   <div className="expenses_transactions">
@@ -2191,7 +2189,7 @@ const Investment = () => {
                       <div className="performance_analytical">
 
                         {
-                          holdingCounts.map((count,index) => (
+                          holdingCounts.map((count, index) => (
                             <div className="performance_analytical_card" key={index}>
                               <div className="performance_analytical_card_label card_label">
                                 <h4>{holdingCounts[index].assetType}</h4>
@@ -2208,9 +2206,9 @@ const Investment = () => {
 
 
 
-                        
 
-                    
+
+
 
 
                       </div>
@@ -2227,7 +2225,7 @@ const Investment = () => {
 
                         <div className="stock_list">
 
-                          {stocksHoldingData.map((stock , index) => (
+                          {stocksHoldingData.map((stock, index) => (
 
 
 
@@ -2301,9 +2299,9 @@ const Investment = () => {
                   </div>
                 }
                 <Insights
-                 data ={insightsData}
+                  data={insightsData}
                 />
-                
+
 
               </div>
 
