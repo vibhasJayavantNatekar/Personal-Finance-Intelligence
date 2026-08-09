@@ -3,6 +3,7 @@ import '../Styles/Expenses.css'
 import Sidebar from '../Components/Sidebar'
 import Navbar from '../Components/Navbar'
 import ExpensesSidebar from '../Components/ExpensesSidebar'
+import DetailsModel from '../Components/DetailsModel'
 import { useSearchParams } from 'react-router-dom'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { createExpense, getExpenses, deleteExpenses, updateExpenses, getExpensesAllocation, getExpensesAnalytics, getExpensesCalender, getExpensesInsights } from '../Api/expensesApi'
@@ -17,6 +18,8 @@ const Expenses = () => {
   const [month, setMonth] = useState('All')
   const [selectedType, setSelectedType] = useState('ALL')
   const [selectTPP, setselectTPP] = useState("10")
+  const [selectedExpenses, setselectedExpenses] = useState(null)
+  const [showDetailsModel, setshowDetailsModel] = useState(false)
 
   const [expenses, setExpenses] = useState([])
   const [error, setError] = useState("")
@@ -58,6 +61,23 @@ const Expenses = () => {
   console.log("VIEW MODE:", setviewmode)
 
   
+  const fields = selectedExpenses ? [
+
+    {
+        label: "Amount",
+        value: `₹${selectedExpenses.amt}`
+    },
+
+    {
+        label: "Category",
+        value: selectedExpenses.category
+    },
+
+    {
+        label: "Date",
+        value: new Date(selectedExpenses.date).toLocaleDateString()
+    }
+  ]: []
  
   const fetchExpenses = async () => {
 
@@ -93,6 +113,17 @@ const Expenses = () => {
     }
   }
 
+  const handleDeleteExpenses = async (e)=> {
+
+    e.preventDefault()
+    
+    const token = localStorage.getItem("token")
+    await deleteExpenses(selectedExpenses._id ,token)
+
+    setshowDetailsModel(false)
+    fetchExpenses()
+
+  }
 
 
 
@@ -359,6 +390,19 @@ const Expenses = () => {
                 </div>
               </div>
 
+
+          
+              
+                  <DetailsModel
+                  showDetailsModel={showDetailsModel}
+                  setshowDetailsModel={setshowDetailsModel}
+                  title="Expense Details"
+                  fields={fields}
+                  handleDelete={handleDeleteExpenses}
+                  />
+                
+               
+
               {ShowExpensesModal && (
                 <div div className="modal_overlay">
 
@@ -582,7 +626,10 @@ const Expenses = () => {
                         .map((exp) => (
                           <div
                             key={exp._id}
-                            className="exp_transaction_row transaction_row">
+                            className="exp_transaction_row transaction_row"
+                            onClick={()=>{  setshowDetailsModel(true) 
+                              setselectedExpenses(exp) }}
+                            >
 
                             <p>{formatDate(exp.date)} </p>
                             <span className="category_tag">

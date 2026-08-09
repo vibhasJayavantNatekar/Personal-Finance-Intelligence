@@ -8,6 +8,7 @@ import Insights from '../Components/insights'
 import AllocationChart from '../Components/AllocationChart'
 import { createInvestment, getInvestment, updateInvestment, deleteInvestment, getInvestmentAnalytics, getPerformanceListAnalytics, getInvestmentAllocation, getStocksHoldings, getHoldingCount, getInsights } from '../Api/investmentApi'
 import { all } from 'axios'
+import DetailsModel from '../Components/DetailsModel'
 
 const Investment = () => {
 
@@ -24,6 +25,8 @@ const Investment = () => {
   const [chartData, setChartData] = useState([])
   const [holdingCounts, setHoldingCounts] = useState([])
   const [insightsData, setInsightsData] = useState([])
+  const [showDetailsModal, setshowDetailsModal] = useState(false)
+  const [selectedInvestment, setselectedInvestment] = useState(null)
   const [investmentData, setInvestmentData] = useState({
 
     assetType: "STOCK",
@@ -1589,6 +1592,63 @@ const Investment = () => {
 
   }
 
+  const fields = [];
+
+  if (selectedInvestment) {
+
+    fields.push(
+      {
+        label: "Asset Type",
+        value: selectedInvestment.assetType
+      },
+      {
+        label: "Asset Name",
+        value: selectedInvestment.assetName
+      },
+      {
+        label: "Invested Amount",
+        value: `₹${selectedInvestment.investedAmt}`
+      },
+      {
+        label: "Purchase Date",
+        value: new Date(selectedInvestment.purchaseDate).toLocaleDateString()
+      },
+      {
+        label: "Status",
+        value: selectedInvestment.investmentStatus
+      }
+    );
+
+    if (
+      selectedInvestment.assetType === "STOCK" ||
+      selectedInvestment.assetType === "ETF"
+    ) {
+      fields.splice(2, 0,
+        {
+          label: "Asset Symbol",
+          value: selectedInvestment.assetSymbol
+        },
+        {
+          label: "Quantity",
+          value: selectedInvestment.quantity
+        }
+      );
+    }
+
+    if (selectedInvestment.investmentStatus === "SOLD") {
+      fields.push(
+        {
+          label: "Sell Date",
+          value: new Date(selectedInvestment.sellDate).toLocaleDateString()
+        },
+        {
+          label: "Sell Amount",
+          value: `₹${selectedInvestment.sellAmount}`
+        }
+      );
+    }
+  }
+
   console.log("Type:", selectType);
   console.log("Status:", selectStatus);
   console.log("Key:", `${selectType}_${selectStatus}`);
@@ -1638,7 +1698,7 @@ const Investment = () => {
       setperformanceListData(performanceList.data.data)
       // console.log(performanceList.data.data)
 
-     
+
 
       const allocation = await getInvestmentAllocation(token, selectType, selectStatus)
       setChartData(allocation.data.data.chart)
@@ -1664,6 +1724,19 @@ const Investment = () => {
       console.log(error.message)
 
     }
+
+  }
+
+  const handleDelete = async (e) => {
+
+    e.preventDefault()
+
+    const token = localStorage.getItem("token")
+    await deleteInvestment(selectedInvestment._id, token)
+
+    setshowDetailsModal(false)
+    
+    fetchInvestments()
 
   }
 
@@ -1760,7 +1833,14 @@ const Investment = () => {
 
               <div className="section_content">
 
+                <DetailsModel
+                  showDetailsModel={showDetailsModal}
+                  setshowDetailsModel={setshowDetailsModal}
+                  title="Investment Details"
+                  fields={fields}
+                  handleDelete={handleDelete}
 
+                />
 
                 <div className="section_toolbar">
                   <div className="toolbar_left">
@@ -1790,7 +1870,7 @@ const Investment = () => {
                 </div>
 
                 {ShowInvestmentModal && (
-                  <div div className="modal_overlay">
+                  <div className="modal_overlay">
 
 
 
@@ -2088,7 +2168,7 @@ const Investment = () => {
 
                   </div>
                 )}
-              <Live_market_strip /> 
+                <Live_market_strip />
 
                 {viewmode === "List" &&
                   <div className="expenses_transactions">
@@ -2128,7 +2208,13 @@ const Investment = () => {
                           .map((investment) => (
                             <div
                               key={investment._id}
-                              className="transaction_row">
+                              className="transaction_row"
+                              onClick={() => {
+                                setselectedInvestment(investment)
+                                setshowDetailsModal(true)
+                              }
+                              }
+                            >
 
                               <p>{investment.purchaseDate}</p>
                               <span className="category_tag">

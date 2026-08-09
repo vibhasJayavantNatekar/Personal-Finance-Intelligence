@@ -7,6 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recha
 import { getLoans, createLoan, updateLoan, deleteLoan, getLoanAnalytics, getLaonAllocation, getLoanInsights, getEmiAnalysis } from '../Api/loanApi'
 import AllocationChart from '../Components/AllocationChart'
 import Insights from '../Components/insights'
+import DetailsModel from '../Components/DetailsModel'
 
 const Loan = () => {
 
@@ -33,6 +34,8 @@ const Loan = () => {
   const [allocationData, setAllocationData] = useState([])
   const [insightsData, setInsightsData] = useState([])
   const [emianalysisData, setEmianalysisData] = useState([])
+  const [showDetailsModal , setshowDetailsModal] = useState(false)
+  const [selectedLoan , setselectedLaon] = useState(null)
 
   // const [totalLoan, setTotalLoan] = useState(0)
   const loanChartData = [
@@ -1383,6 +1386,37 @@ const Loan = () => {
   const currentAnalysisConfig = analyticalConfig[`${selectType}_${selectStatus}`]
   const currentAllocationConfig = allocationCardConfig[`${selectType}_${selectStatus}`]
 
+  const fields = selectedLoan ? [
+    {
+        label: "Loan Type",
+        value: selectedLoan.loanType
+    },
+    {
+        label: "Principal Amount",
+        value: `₹${selectedLoan.principleAmount}`
+    },
+    {
+        label: "Interest Rate",
+        value: `${selectedLoan.interestRate}%`
+    },
+    {
+        label: "Tenure",
+        value: `${selectedLoan.tenure} Months`
+    },
+    {
+        label: "EMI",
+        value: `₹${selectedLoan.emi}`
+    },
+    {
+        label: "Start Date",
+        value: new Date(selectedLoan.startDate).toLocaleDateString()
+    },
+    {
+        label: "Loan Status",
+        value: selectedLoan.loanStatus
+    }
+] : []
+
   const maxEmi = Math.max(
     ...emianalysisData.map(item => item.totalEMI)
   )
@@ -1455,6 +1489,19 @@ const Loan = () => {
     } catch (error) {
       selectErrorBarsSettings(error.response?.data?.message)
     }
+
+  }
+
+  const handleDeleteLoan = async (e) => {
+
+    e.preventDefault()
+
+    const token = localStorage.getItem("token")
+    await deleteLoan(selectedLoan._id, token)
+
+    setshowDetailsModal(false)
+    fetchLoans()
+
 
   }
 
@@ -1549,6 +1596,14 @@ const Loan = () => {
 
               </div>
 
+              <DetailsModel
+              showDetailsModel={showDetailsModal}
+              setshowDetailsModel={setshowDetailsModal}
+              title={"Loan Details"}
+              fields={fields}
+              handleDelete={handleDeleteLoan}
+
+              />
 
               <div className="section_content">
 
@@ -1882,7 +1937,11 @@ const Loan = () => {
 
                             <div
                               key={loan._id}
-                              className="transaction_row">
+                              className="transaction_row"
+                              onClick={()=> {setselectedLaon(loan)
+                                setshowDetailsModal(true)
+                              }}
+                              >
 
                               <p>{loan.startDate}</p>
                               <span className="category_tag">

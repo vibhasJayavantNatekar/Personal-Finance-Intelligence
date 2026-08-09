@@ -170,7 +170,7 @@ const deleteLoan = async (req, res, next) => {
     const { id } = req.params
 
     try {
-        const delLoan = await Loan.getLoanbyIdAndDelete(id)
+        const delLoan = await Loan.findByIdAndDelete(id)
         res.status(200).json(
 
             apiResponse(
