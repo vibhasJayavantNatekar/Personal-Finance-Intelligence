@@ -3,7 +3,7 @@ const express = require("express")
 const mongoose = require('mongoose')
 const apiResponse = require('../Utils/apiResponse')
 const { getTotalExpenseByUser, spendByCategory, monthTomonthTrend } = require('../Services/expenses.service')
-const {getExpenseInsights} = require('../Services/expenseInsight.service')
+const { getExpenseInsights } = require('../Services/expenseInsight.service')
 
 //Create Expenses
 
@@ -27,7 +27,7 @@ const createExpense = async (req, res, next) => {
 
     } catch (error) {
 
-       
+
 
         const err = {
             status: 500,
@@ -99,13 +99,53 @@ const getExpensesByUserID = async (req, res, next) => {
     const userID = req.user.id;
 
     try {
+
+        // 1. Get pagination values from URL
+        const page = Math.max(Number(req.query.page) || 1, 1)
+        const limit = Math.min(
+            Math.max(Number(req.query.limit) || 10, 1),
+            100
+        )
+
+        // 2. Calculate how many records to skip
+        const skip = (page - 1) * limit
+
+        // 3. Get only the required expenses
         const expenses = await Expenses.find({ userID })
+            .sort({ date: -1 })
+            .skip(skip)
+            .limit(limit)
+
+        // 4. Get total number of expenses
+        const totalExpenses = await Expenses.countDocuments({
+            userID
+        })
+
+        // 5. Calculate total pages
+        const totalPages = Math.ceil(totalExpenses / limit)
+
+
+
+        // const expenses = await Expenses.find({ userID })
         res.status(200).json(
             apiResponse(
                 true,
                 "Expenses Fetch Successfully",
-                expenses
+                {
+                    expenses: expenses,
+
+                    pagination: {
+                        currentPage: page,
+                        limit: limit,
+                        totalRecords: totalExpenses,
+                        totalPages: totalPages,
+                        hasNextPage: page < totalPages,
+                        hasPreviousPage: page > 1
+                    }
+                }
             )
+
+
 
         )
     } catch (error) {
@@ -201,7 +241,7 @@ const getTotalExpenses = async (req, res, next) => {
 
         )
     } catch (error) {
-       
+
         const err = {
             status: 500,
             message: error.message,
@@ -295,7 +335,7 @@ const expenseInsights = async (req, res, next) => {
 
 }
 
-module.exports = {expenseInsights}
+module.exports = { expenseInsights }
 
 module.exports = { createExpense, getExpenses, updateExpense, deleteExpense, getExpensesByID, getExpensesByUserID, getTotalExpenses, spendingByCategory, monthTomonthSpending, expenseInsights }
 

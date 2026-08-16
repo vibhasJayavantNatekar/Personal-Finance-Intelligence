@@ -78,11 +78,11 @@ const ExpensesSidebar = ({ view, setview, month, setmonth, selectedType, setSele
                                
                                value={TPP}
                                onChange={(e) => 
-                                setTPP(e.target.value)
+                                setTPP(Number(e.target.value))
                                }
 
                             >
-
+                                <option>5</option>
                                 <option>10</option>
                                 <option>20</option>
                                 <option>30</option>

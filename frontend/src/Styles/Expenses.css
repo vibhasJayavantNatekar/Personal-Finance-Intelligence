@@ -199,6 +199,67 @@
     font-weight: 600;
 }
 
+.expenses_pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+
+    margin-top: 1.5rem;
+    padding: 1rem 0;
+}
+
+
+/* Previous / Next buttons */
+
+.expenses_pagination button {
+    padding: 0.55rem 1rem;
+
+    border: 1px solid #374151;
+    border-radius: 0.5rem;
+
+    background-color: #1F2937;
+    color: #F9FAFB;
+
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+
+/* Hover */
+
+.expenses_pagination button:hover:not(:disabled) {
+    background-color: #D88B52;
+    border-color: #D88B52;
+    color: #FFFFFF;
+}
+
+
+/* Disabled */
+
+.expenses_pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+
+/* Page text */
+
+.expenses_pagination span {
+    min-width: 90px;
+
+    text-align: center;
+
+    color: #A7B1C2;
+
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
 
 
 /* calendar view */

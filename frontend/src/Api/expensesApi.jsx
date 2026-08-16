@@ -16,7 +16,7 @@ export const createExpense = (expenseData, token) => {
 
 }
 
-export const getExpenses = (token) => {
+export const getExpenses = (token, page = 1, limit = 10) => {
 
     return API.get(
         "/expenses/api/v1/",
@@ -24,6 +24,10 @@ export const getExpenses = (token) => {
         {
             headers: {
                 Authorization: `Bearer ${token}`
+            },
+                params: {
+                page,
+                limit
             }
         }
     )

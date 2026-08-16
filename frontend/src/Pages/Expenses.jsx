@@ -17,7 +17,7 @@ const Expenses = () => {
   const [expensesType, setExpensesType] = useState('ALL')
   const [month, setMonth] = useState('All')
   const [selectedType, setSelectedType] = useState('ALL')
-  const [selectTPP, setselectTPP] = useState("10")
+  const [selectTPP, setselectTPP] = useState(10)
   const [selectedExpenses, setselectedExpenses] = useState(null)
   const [showDetailsModel, setshowDetailsModel] = useState(false)
 
@@ -36,6 +36,12 @@ const Expenses = () => {
   const [analyticsData, setanalyticsData] = useState([])
   const [expensesCalenderData, setExpensesCalenderData] = useState([])
   const [insightsData, setInsightsData] = useState([])
+  const [page, setPage] = useState(1)
+  const [limit] = useState(10)
+
+  const [totalPages, setTotalPages] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(false)
+  const [hasPreviousPage, setHasPreviousPage] = useState(false)
 
   const months = {
     Jan: 1,
@@ -60,25 +66,25 @@ const Expenses = () => {
 
   console.log("VIEW MODE:", setviewmode)
 
-  
+
   const fields = selectedExpenses ? [
 
     {
-        label: "Amount",
-        value: `₹${selectedExpenses.amt}`
+      label: "Amount",
+      value: `₹${selectedExpenses.amt}`
     },
 
     {
-        label: "Category",
-        value: selectedExpenses.category
+      label: "Category",
+      value: selectedExpenses.category
     },
 
     {
-        label: "Date",
-        value: new Date(selectedExpenses.date).toLocaleDateString()
+      label: "Date",
+      value: new Date(selectedExpenses.date).toLocaleDateString()
     }
-  ]: []
- 
+  ] : []
+
   const fetchExpenses = async () => {
 
     try {
@@ -89,7 +95,7 @@ const Expenses = () => {
 
       console.log(getYear)
 
-      const response = await getExpenses(token)
+      const response = await getExpenses(token, page, selectTPP)
       console.log(selectedType, months[getMonth], getYear)
 
       const allocation = await getExpensesAllocation(token, selectedType.toUpperCase(), months[getMonth], getYear)
@@ -97,14 +103,22 @@ const Expenses = () => {
       const insights = await getExpensesInsights(token)
       const expensesCalender = await getExpensesCalender(token, selectedType, months[getMonth], getYear)
       console.log(allocation.data.data.totalExpense)
-      
+      const expenseData = response.data.data
+      console.log(expenseData.
+        expenses
+      )
+
+
       setanalyticsData(analytics.data.data)
       setchartData(allocation.data.data?.chart)
       setTotalExpense(allocation.data.data.totalExpense)
-      setExpenses(response.data.data)
+      setExpenses(expenseData.expenses)
       setExpensesCalenderData(expensesCalender.data.data)
       setInsightsData(insights.data.data)
 
+      setTotalPages(expenseData.pagination.totalPages)
+      setHasNextPage(expenseData.pagination.hasNextPage)
+      setHasPreviousPage(expenseData.pagination.hasPreviousPage)
 
     } catch (error) {
 
@@ -113,12 +127,12 @@ const Expenses = () => {
     }
   }
 
-  const handleDeleteExpenses = async (e)=> {
+  const handleDeleteExpenses = async (e) => {
 
     e.preventDefault()
-    
+
     const token = localStorage.getItem("token")
-    await deleteExpenses(selectedExpenses._id ,token)
+    await deleteExpenses(selectedExpenses._id, token)
 
     setshowDetailsModel(false)
     fetchExpenses()
@@ -184,29 +198,6 @@ const Expenses = () => {
     "#06B6D4"
   ]
 
-  // const chartData = [
-
-  //   {
-  //     category: "Food",
-  //     amount: 5000
-  //   },
-
-  //   {
-  //     category: "Travel",
-  //     amount: 3000
-  //   },
-
-  //   {
-  //     category: "Bills",
-  //     amount: 2000
-  //   },
-
-  //   {
-  //     category: "Shopping",
-  //     amount: 1500
-  //   }
-
-  // ]
 
 
   const isCurrentDay = (day) => {
@@ -223,7 +214,7 @@ const Expenses = () => {
 
     fetchExpenses();
 
-  }, [selectedType, month,])
+  }, [selectedType, month, page, selectTPP])
 
   console.log(analyticsData)
   const analyticsConfig = {
@@ -391,17 +382,17 @@ const Expenses = () => {
               </div>
 
 
-          
-              
-                  <DetailsModel
-                  showDetailsModel={showDetailsModel}
-                  setshowDetailsModel={setshowDetailsModel}
-                  title="Expense Details"
-                  fields={fields}
-                  handleDelete={handleDeleteExpenses}
-                  />
-                
-               
+
+
+              <DetailsModel
+                showDetailsModel={showDetailsModel}
+                setshowDetailsModel={setshowDetailsModel}
+                title="Expense Details"
+                fields={fields}
+                handleDelete={handleDeleteExpenses}
+              />
+
+
 
               {ShowExpensesModal && (
                 <div div className="modal_overlay">
@@ -627,9 +618,11 @@ const Expenses = () => {
                           <div
                             key={exp._id}
                             className="exp_transaction_row transaction_row"
-                            onClick={()=>{  setshowDetailsModel(true) 
-                              setselectedExpenses(exp) }}
-                            >
+                            onClick={() => {
+                              setshowDetailsModel(true)
+                              setselectedExpenses(exp)
+                            }}
+                          >
 
                             <p>{formatDate(exp.date)} </p>
                             <span className="category_tag">
@@ -648,6 +641,29 @@ const Expenses = () => {
 
 
                   </div>
+
+                  <div className="expenses_pagination">
+
+                    <button
+                      disabled={!hasPreviousPage}
+                      onClick={() => setPage(page - 1)}
+                    >
+                      Previous
+                    </button>
+
+                    <span>
+                      Page {page} of {totalPages}
+                    </span>
+
+                    <button
+                      disabled={!hasNextPage}
+                      onClick={() => setPage(page + 1)}
+                    >
+                      Next
+                    </button>
+
+                  </div>
+
 
                 </div>
 
@@ -747,7 +763,7 @@ const Expenses = () => {
 
                 // <AllocationChart 
 
-          
+
                 // />
 
 
