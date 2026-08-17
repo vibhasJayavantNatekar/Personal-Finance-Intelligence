@@ -104,11 +104,11 @@ const LoanSidebar = ({ view, setview, selectType, setselectType, selectStatus, s
                             <select className="section_sidebar_dropdown_options"
                                 value={selectTPP}
                                 onChange={
-                                    (e) => setselectTPP(e.target.value)
+                                    (e) => setselectTPP(Number(e.target.value))
                                 }
 
                             >
-
+                                <option>5</option>
                                 <option>10</option>
                                 <option>20</option>
                                 <option>30</option>

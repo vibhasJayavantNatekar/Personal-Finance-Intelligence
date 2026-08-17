@@ -12,7 +12,7 @@ router.put('/closed/:userID' , Closed) //Closed Investments
 
 
 router.post('/', requireAuth , createInvestment) //Create investment
-router.get('/',requireAuth , getInvestment)  //Retrive investment
+router.get('/',requireAuth , getInvestmentByUserId)  //Retrive investment
 router.get('/user',requireAuth,getInvestmentByUserId) //Get Investment by userID
 router.get('/stocksholdings',requireAuth, getStocksHolding) //Get Stocks Holdings
 

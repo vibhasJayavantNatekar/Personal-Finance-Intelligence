@@ -1,12 +1,16 @@
 import API from './axios'
 
-export const getLoans = async (token) => {
+export const getLoans = async (token, page, limit) => {
 
     return API.get(
         "/loan/api/v1/",
         {
             headers: {
                 Authorization: `Bearer ${token}`
+            },
+            params: {
+                page,
+                limit
             }
         }
     )

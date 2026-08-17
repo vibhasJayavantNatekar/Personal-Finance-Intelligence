@@ -8,6 +8,7 @@ import { getLoans, createLoan, updateLoan, deleteLoan, getLoanAnalytics, getLaon
 import AllocationChart from '../Components/AllocationChart'
 import Insights from '../Components/insights'
 import DetailsModel from '../Components/DetailsModel'
+import Expenses from './Expenses'
 
 const Loan = () => {
 
@@ -15,9 +16,14 @@ const Loan = () => {
   const [viewmode, setViewmode] = useState("List")
   const [selectType, setselectType] = useState("ALL")
   const [selectStatus, setselectStatus] = useState("ALL")
-  const [selectTPP, setselectTPP] = useState("10")
+  const [selectTPP, setselectTPP] = useState(10)
   const [loans, setloans] = useState([])
   const [Error, setError] = useState("")
+  const [page, setPage] = useState(1)
+
+  const [totalPages, setTotalPages] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(false)
+  const [hasPreviousPage, setHasPreviousPage] = useState(false)
   const [loanData, setLoanData] = useState({
 
     loanType: "PERSONAL",
@@ -34,8 +40,8 @@ const Loan = () => {
   const [allocationData, setAllocationData] = useState([])
   const [insightsData, setInsightsData] = useState([])
   const [emianalysisData, setEmianalysisData] = useState([])
-  const [showDetailsModal , setshowDetailsModal] = useState(false)
-  const [selectedLoan , setselectedLaon] = useState(null)
+  const [showDetailsModal, setshowDetailsModal] = useState(false)
+  const [selectedLoan, setselectedLaon] = useState(null)
 
   // const [totalLoan, setTotalLoan] = useState(0)
   const loanChartData = [
@@ -1388,34 +1394,34 @@ const Loan = () => {
 
   const fields = selectedLoan ? [
     {
-        label: "Loan Type",
-        value: selectedLoan.loanType
+      label: "Loan Type",
+      value: selectedLoan.loanType
     },
     {
-        label: "Principal Amount",
-        value: `₹${selectedLoan.principleAmount}`
+      label: "Principal Amount",
+      value: `₹${selectedLoan.principleAmount}`
     },
     {
-        label: "Interest Rate",
-        value: `${selectedLoan.interestRate}%`
+      label: "Interest Rate",
+      value: `${selectedLoan.interestRate}%`
     },
     {
-        label: "Tenure",
-        value: `${selectedLoan.tenure} Months`
+      label: "Tenure",
+      value: `${selectedLoan.tenure} Months`
     },
     {
-        label: "EMI",
-        value: `₹${selectedLoan.emi}`
+      label: "EMI",
+      value: `₹${selectedLoan.emi}`
     },
     {
-        label: "Start Date",
-        value: new Date(selectedLoan.startDate).toLocaleDateString()
+      label: "Start Date",
+      value: new Date(selectedLoan.startDate).toLocaleDateString()
     },
     {
-        label: "Loan Status",
-        value: selectedLoan.loanStatus
+      label: "Loan Status",
+      value: selectedLoan.loanStatus
     }
-] : []
+  ] : []
 
   const maxEmi = Math.max(
     ...emianalysisData.map(item => item.totalEMI)
@@ -1453,9 +1459,17 @@ const Loan = () => {
     try {
 
       const token = localStorage.getItem("token")
-      const response = await getLoans(token)
+      const response = await getLoans(token, page, selectTPP)
+      const loanData = response.data.data
+      setloans(loanData.loans)
+      console.log(loanData.loans);
 
-      setloans(response.data.data)
+
+      setTotalPages(loanData.pagination.totalPages)
+      setHasNextPage(loanData.pagination.hasNextPage)
+      setHasPreviousPage(loanData.pagination.hasPreviousPage)
+
+
 
       const analytics = await getLoanAnalytics(token, selectType, selectStatus)
       setAnalyticsData(analytics.data.data)
@@ -1487,7 +1501,7 @@ const Loan = () => {
 
 
     } catch (error) {
-      selectErrorBarsSettings(error.response?.data?.message)
+      setError(error.response?.data?.message)
     }
 
   }
@@ -1509,7 +1523,7 @@ const Loan = () => {
 
     fetchLoans()
 
-  }, [selectType, selectStatus])
+  }, [selectType, selectStatus, page, selectTPP])
 
 
 
@@ -1597,11 +1611,11 @@ const Loan = () => {
               </div>
 
               <DetailsModel
-              showDetailsModel={showDetailsModal}
-              setshowDetailsModel={setshowDetailsModal}
-              title={"Loan Details"}
-              fields={fields}
-              handleDelete={handleDeleteLoan}
+                showDetailsModel={showDetailsModal}
+                setshowDetailsModel={setshowDetailsModal}
+                title={"Loan Details"}
+                fields={fields}
+                handleDelete={handleDeleteLoan}
 
               />
 
@@ -1938,10 +1952,11 @@ const Loan = () => {
                             <div
                               key={loan._id}
                               className="transaction_row"
-                              onClick={()=> {setselectedLaon(loan)
+                              onClick={() => {
+                                setselectedLaon(loan)
                                 setshowDetailsModal(true)
                               }}
-                              >
+                            >
 
                               <p>{loan.startDate}</p>
                               <span className="category_tag">
@@ -1963,10 +1978,32 @@ const Loan = () => {
 
 
 
+                      <div className="expenses_pagination">
 
+                        <button
+                          disabled={!hasPreviousPage}
+                          onClick={() => setPage(page - 1)}
+                        >
+                          Previous
+                        </button>
+
+                        <span>
+                          Page {page} of {totalPages}
+                        </span>
+
+                        <button
+                          disabled={!hasNextPage}
+                          onClick={() => setPage(page + 1)}
+                        >
+                          Next
+                        </button>
+
+                      </div>
 
 
                     </div>
+
+
 
                   </div>
                 }

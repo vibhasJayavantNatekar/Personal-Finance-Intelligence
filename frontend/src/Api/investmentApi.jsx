@@ -13,13 +13,17 @@ export const createInvestment = (InvestmentData, token) => {
     )
 }
 
-export const getInvestment = (token) => {
+export const getInvestment = (token, page, limit) => {
 
     return API.get(
         "/investment/api/v1/",
         {
             headers: {
                 Authorization: `bearer ${token}`
+            },
+            params: {
+                page,
+                limit
             }
         }
     )

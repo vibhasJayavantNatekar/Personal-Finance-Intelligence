@@ -16,7 +16,7 @@ export const createExpense = (expenseData, token) => {
 
 }
 
-export const getExpenses = (token, page = 1, limit = 10) => {
+export const getExpenses = (token, page , limit ) => {
 
     return API.get(
         "/expenses/api/v1/",

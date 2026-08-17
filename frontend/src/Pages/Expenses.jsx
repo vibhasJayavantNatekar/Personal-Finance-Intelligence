@@ -37,7 +37,6 @@ const Expenses = () => {
   const [expensesCalenderData, setExpensesCalenderData] = useState([])
   const [insightsData, setInsightsData] = useState([])
   const [page, setPage] = useState(1)
-  const [limit] = useState(10)
 
   const [totalPages, setTotalPages] = useState(1)
   const [hasNextPage, setHasNextPage] = useState(false)

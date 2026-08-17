@@ -173,13 +173,40 @@ const getInvestmentByUserId = async (req, res, next) => {
     const userID = req.user.id
 
     try {
-        const investment = await Investment.find({ userID })
+
+        const page = Math.max(Number(req.query.page) || 1, 1)
+        const limit = Math.min(Math.max(Number(req.query.limit) || 10, 1), 100 )
+
+        const skip = (page - 1) * limit
+
+        const investment = await Investment.find({userID})
+        .sort({date: -1})
+        .skip(skip)
+        .limit(limit)
+
+        const totalInvestment = await Investment.countDocuments({userID})
+
+
+        const totalPages = Math.ceil(totalInvestment / limit)
+
+
+        // const investment = await Investment.find({ userID })
         res.status(200).json(
 
             apiResponse(
                 true,
                 "Fetch Investment Successfully",
-                expense
+                {
+                    investment: investment,
+                    pagination: {
+                        currentPage: page,
+                        limit: limit,
+                        totalRecords: totalInvestment,
+                        totalPages: totalPages,
+                        hasNextPage: page < totalPages,
+                        hasPreviousPage: page > 1
+                    }
+                }
             )
 
         )

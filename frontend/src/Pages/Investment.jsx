@@ -16,7 +16,7 @@ const Investment = () => {
   const [viewmode, setViewmode] = useState("List")
   const [selectType, setselectType] = useState("ALL")
   const [selectStatus, setselectStatus] = useState("ALL")
-  const [selectTPP, setselectTPP] = useState("10")
+  const [selectTPP, setselectTPP] = useState(10)
   const [Investments, setInvestments] = useState([])
   const [analyticsData, setAnalyticsData] = useState([])
   const [allocationSummaryData, setAllocationSummaryData] = useState([])
@@ -27,6 +27,10 @@ const Investment = () => {
   const [insightsData, setInsightsData] = useState([])
   const [showDetailsModal, setshowDetailsModal] = useState(false)
   const [selectedInvestment, setselectedInvestment] = useState(null)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(false)
+  const [hasPreviousPage, setHasPreviousPage] = useState(false)
   const [investmentData, setInvestmentData] = useState({
 
     assetType: "STOCK",
@@ -1687,9 +1691,17 @@ const Investment = () => {
     try {
 
       const token = localStorage.getItem("token")
-      const response = await getInvestment(token)
+      const response = await getInvestment(token, page, selectTPP)
       const analytics = await getInvestmentAnalytics(token, selectType, selectStatus)
-      setInvestments(response.data.data)
+      const investmentData = response.data.data
+
+      console.log(response.data)
+      
+
+      setInvestments(investmentData.investment)
+      setTotalPages(investmentData.pagination.totalPages)
+      setHasNextPage(investmentData.pagination.hasNextPage)
+      setHasPreviousPage(investmentData.pagination.hasPreviousPage)
       // console.log(analytics.data.data)
 
       setAnalyticsData(analytics.data.data)
@@ -1735,7 +1747,7 @@ const Investment = () => {
     await deleteInvestment(selectedInvestment._id, token)
 
     setshowDetailsModal(false)
-    
+
     fetchInvestments()
 
   }
@@ -1744,7 +1756,7 @@ const Investment = () => {
 
     fetchInvestments()
 
-  }, [selectStatus, selectType])
+  }, [selectStatus, selectType, page, selectTPP])
 
   stocksHoldingData.map((data) => {
     console.log(data.assetName);
@@ -2234,6 +2246,28 @@ const Investment = () => {
 
 
                     </div>
+
+                       <div className="expenses_pagination">
+
+                    <button
+                      disabled={!hasPreviousPage}
+                      onClick={() => setPage(page - 1)}
+                    >
+                      Previous
+                    </button>
+
+                    <span>
+                      Page {page} of {totalPages}
+                    </span>
+
+                    <button
+                      disabled={!hasNextPage}
+                      onClick={() => setPage(page + 1)}
+                    >
+                      Next
+                    </button>
+
+                  </div>
 
                   </div>
 
