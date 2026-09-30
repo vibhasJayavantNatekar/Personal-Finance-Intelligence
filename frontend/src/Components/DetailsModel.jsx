@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import DeleteModal from './DeleteModal'
+import EditModal from './EditModel'
 
-const DetailsModel = ({ showDetailsModel, setshowDetailsModel, title, fields, handleDelete }) => {
+const DetailsModel = ({ showDetailsModel, setshowDetailsModel, title, fields, handleDelete, handleEdit  }) => {
 
     const [showDeleteModal, setshowDeleteModal] = useState(false)
+    const [showEditModal, setshowEditModal] = useState(false)
 
     useEffect(() => {
         if (!showDetailsModel) {
@@ -23,6 +25,15 @@ const DetailsModel = ({ showDetailsModel, setshowDetailsModel, title, fields, ha
                     showDeleteModal={showDeleteModal}
                     setshowDeleteModal={setshowDeleteModal}
                     handleDelete={handleDelete}
+                />
+
+                <EditModal
+                  showEditModal={showEditModal}
+                  setshowEditModal={setshowEditModal}
+                  fields={fields}
+                  handleUpdate={handleEdit}
+
+                  
                 />
 
                 <div className="modal">
@@ -67,7 +78,7 @@ const DetailsModel = ({ showDetailsModel, setshowDetailsModel, title, fields, ha
                             Close
                         </button>
 
-                        <button className="save_btn" >
+                        <button className="save_btn" onClick={()=> setshowEditModal(true)} >
                             Edit
                         </button>
 

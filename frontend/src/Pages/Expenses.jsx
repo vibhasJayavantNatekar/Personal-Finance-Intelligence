@@ -138,6 +138,20 @@ const Expenses = () => {
 
   }
 
+  const handleEditExpenses = async (editExpenseData) => {
+
+    const token = localStorage.getItem("token")
+
+    await updateExpenses(
+        selectedExpenses._id,
+        editExpenseData,
+        token
+    )
+
+    setshowDetailsModel(false)
+    fetchExpenses()
+}
+
 
 
   const handleAddExpense = async (e) => {
@@ -389,6 +403,7 @@ const Expenses = () => {
                 title="Expense Details"
                 fields={fields}
                 handleDelete={handleDeleteExpenses}
+                handleEdit={handleEditExpenses}
               />
 
 

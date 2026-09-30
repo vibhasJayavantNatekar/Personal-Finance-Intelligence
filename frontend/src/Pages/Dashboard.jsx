@@ -13,8 +13,11 @@ import {
   ResponsiveContainer
 } from "recharts"
 import { FaExpeditedssl } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
 const Dashboard = () => {
+
+ const navigate = useNavigate()
 
    const data = [
     {
@@ -84,7 +87,7 @@ const Dashboard = () => {
                     <span> ₹ 50,000</span>
                   </div>
 
-                  <button className="details_btn">
+                  <button className="details_btn" onClick={()=> navigate('/expenses')} >
                     View Details
                   </button>
 
